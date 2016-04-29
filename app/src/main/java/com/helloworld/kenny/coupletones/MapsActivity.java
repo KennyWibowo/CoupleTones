@@ -13,6 +13,7 @@ import android.view.View;
 
 import java.util.ArrayList;
 
+
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
