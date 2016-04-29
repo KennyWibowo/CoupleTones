@@ -15,6 +15,9 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import android.view.View;
+
+import java.util.ArrayList;
 
 import java.io.IOException;
 import java.util.List;
@@ -25,6 +28,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private GoogleMap mMap;
     private EditText searchText;
     private MapsActivity me;
+    private ArrayList<LatLng> storage = new ArrayList<LatLng>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +47,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
 
+    public void addLocation(View view) {
+        mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+
+            @Override
+            public void onMapClick(LatLng point) {
+                storage.add(point);
+                mMap.clear();
+                mMap.addMarker(new MarkerOptions().position(point));
+            }
+        });
+
+    }
     /**
      * Manipulates the map once available.
      * This callback is triggered when the map is ready to be used.
