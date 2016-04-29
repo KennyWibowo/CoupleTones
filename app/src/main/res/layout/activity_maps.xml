@@ -10,7 +10,6 @@
         android:layout_height="fill_parent"
         >
 
-
         <EditText
             android:id="@+id/searchView1"
             android:layout_width="325dp"
@@ -38,6 +37,7 @@
             tools:layout="@layout/abc_list_menu_item_checkbox"
             android:layout_alignParentTop="true" />
     </FrameLayout>
+
 
     <Button
         android:layout_width="wrap_content"
