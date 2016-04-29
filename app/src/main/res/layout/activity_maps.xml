@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.google_map.MainActivity" >
+    tools:context="com.helloworld.kenny.coupletones.MapsActivity" >
 
     <fragment xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:map="http://schemas.android.com/apk/res-auto"
@@ -30,12 +30,14 @@
         android:background="@android:color/white" >
     </EditText>
 
-    <!--<Button
-        android:id="@+id/button1"
-        android:layout_width="28dp"
-        android:layout_height="25dp"
-        android:layout_alignBaseline="@+id/searchView1"
-        android:layout_alignBottom="@+id/searchView1"
-        android:layout_alignRight="@+id/searchView1" />-->
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Add Location"
+        android:id="@+id/button"
+        android:layout_gravity="right|top"
+        android:layout_alignParentTop="true"
+        android:onClick="addLocation"
+        android:layout_alignParentStart="true" />
 
 </RelativeLayout>
