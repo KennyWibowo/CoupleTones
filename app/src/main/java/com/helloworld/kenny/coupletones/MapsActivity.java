@@ -7,6 +7,7 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
+import android.location.LocationListener;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
@@ -17,7 +18,7 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 
 import com.google.android.gms.location.*;
-import com.google.android.gms.location.LocationListener;
+//import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -57,19 +58,40 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         searchText.addTextChangedListener(watcher);
 
-<<<<<<< HEAD
+//<<<<<<< HEAD
         //final MapView view = (MapView) findViewById(R.id.map);
-
-
-        LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
         LocationListener locationListener = new LocationListener() {
+            @Override
+            public void onLocationChanged(Location location) {
+                mMap.clear();
+                mMap.addMarker(new MarkerOptions().position(new LatLng(location.getLatitude(),location.getLongitude())).title("update location"));
+            }
+
+            @Override
+            public void onStatusChanged(String provider, int status, Bundle extras) {
+
+            }
+
+            @Override
+            public void onProviderEnabled(String provider) {
+
+            }
+
+            @Override
+            public void onProviderDisabled(String provider) {
+
+            }
+        };
+        /*LocationListener locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
                 mMap.clear();
                 mMap.addMarker(new MarkerOptions().position(new LatLng(location.getLatitude(), location.getLongitude())).title("update location"));
 
             }
-        };
+        };*/
+
+        LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
@@ -82,13 +104,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 100);
             return;
         }
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
-=======
->>>>>>> 219c11c12e7f371e8544aec1dff411a1b2bd13e4
+
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0,locationListener);
+//=======
+//>>>>>>> 219c11c12e7f371e8544aec1dff411a1b2bd13e4
     }
 
 
     public void addLocation(View view) {
+
 
 
     }
