@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 
 import com.google.android.gms.location.*;
@@ -26,6 +27,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 //import com.google.android.gms.maps.*;
 
 import android.view.View;
+import android.widget.ListView;
 
 import java.util.ArrayList;
 
@@ -38,7 +40,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private GoogleMap mMap;
     private EditText searchText;
     private MapsActivity me;
-    private ArrayList<LatLng> storage = new ArrayList<LatLng>();
+    private ArrayList<String> storage = new ArrayList<String>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +57,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         searchText.addTextChangedListener(watcher);
 
+<<<<<<< HEAD
         //final MapView view = (MapView) findViewById(R.id.map);
 
 
@@ -80,19 +83,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             return;
         }
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+=======
+>>>>>>> 219c11c12e7f371e8544aec1dff411a1b2bd13e4
     }
 
 
     public void addLocation(View view) {
-        mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
 
-            @Override
-            public void onMapClick(LatLng point) {
-                storage.add(point);
-                mMap.clear();
-                mMap.addMarker(new MarkerOptions().position(point));
-            }
-        });
 
     }
     /**
