@@ -1,14 +1,15 @@
+<android.support.v4.widget.DrawerLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/drawer_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.google_map.MainActivity">
-
-    <FrameLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        >
+    tools:context="com.helloworld.kenny.coupletones.MapsActivity">
 
         <EditText
             android:id="@+id/searchView1"
@@ -36,17 +37,24 @@
             tools:context="com.helloworld.kenny.coupletones.MapsActivity"
             tools:layout="@layout/abc_list_menu_item_checkbox"
             android:layout_alignParentTop="true" />
-    </FrameLayout>
 
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Add Location"
-        android:id="@+id/button"
-        android:layout_gravity="right|top"
-        android:layout_alignParentTop="true"
-        android:onClick="addLocation"
-        android:layout_alignParentStart="true" />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Add Location"
+            android:id="@+id/button"
+            android:layout_gravity="left|bottom"
+            android:onClick="addLocation"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentStart="true" />
 
 </RelativeLayout>
+    <ListView android:id="@+id/left_drawer"
+        android:layout_width="240dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:choiceMode="singleChoice"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="0dp"
+        android:background="#111"/>
+</android.support.v4.widget.DrawerLayout>
