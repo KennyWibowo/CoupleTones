@@ -57,7 +57,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         searchText.addTextChangedListener(watcher);
 
-<<<<<<< HEAD
+//<<<<<<< HEAD
         //final MapView view = (MapView) findViewById(R.id.map);
 
 
@@ -82,9 +82,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 100);
             return;
         }
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
-=======
->>>>>>> 219c11c12e7f371e8544aec1dff411a1b2bd13e4
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, (android.location.LocationListener) locationListener);
+
+//>>>>>>> 219c11c12e7f371e8544aec1dff411a1b2bd13e4
     }
 
 
