@@ -20,7 +20,6 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.EditText;
 
-import com.daimajia.swipe.SwipeLayout;
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -36,6 +35,7 @@ import com.helloworld.kenny.coupletones.Favorites.Exceptions.InvalidNameExceptio
 import com.helloworld.kenny.coupletones.Favorites.Exceptions.NameInUseException;
 import com.helloworld.kenny.coupletones.Favorites.FavoriteEntry;
 import com.helloworld.kenny.coupletones.Favorites.Favorites;
+import com.helloworld.kenny.coupletones.SwipeAdapter.FavoriteSwipeAdapter;
 
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -80,7 +80,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         searchLayout.bringToFront();
 
         favorites = new Favorites();
-        favoriteSwipeAdapter = new FavoriteSwipeAdapter<FavoriteEntry>(me, R.layout.listview_item, R.id.listview_item_text, favorites.getAllEntries());
+        favoriteSwipeAdapter = new FavoriteSwipeAdapter<FavoriteEntry>(me, R.layout.listview_item, R.id.listview_item_text, favorites);
         rightDrawer.setAdapter(favoriteSwipeAdapter);
 
         //SETUPS
@@ -171,7 +171,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     public void buttonDeleteFavorite(View view) {
-        SwipeLayout swipeLayout = (SwipeLayout) view.getParent().getParent();
+        /*SwipeLayout swipeLayout = (SwipeLayout) view.getParent().getParent();
         TextView nameView = (TextView) swipeLayout.findViewById(R.id.listview_item_text);
         String name = nameView.getText().toString();
         int pos = favorites.lookupPosition(name);
@@ -181,8 +181,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         favorites.deleteEntry(pos);
 
         // Notify the swipeAdapter and close everything
+        favoriteSwipeAdapter.remove(swipeLayout);
         favoriteSwipeAdapter.notifyDataSetChanged();
-        favoriteSwipeAdapter.closeAllItems();
+        favoriteSwipeAdapter.closeAllItems();*/
         Toast.makeText(me, "Favorite deleted successfully", Toast.LENGTH_SHORT).show();
     }
 
@@ -220,6 +221,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         final EditText et = new EditText(this);
 
         et.setGravity(Gravity.CENTER);
+        et.setHint(R.string.new_location);
+
         builder.setView(et);
 
         builder.setCancelable(true)
