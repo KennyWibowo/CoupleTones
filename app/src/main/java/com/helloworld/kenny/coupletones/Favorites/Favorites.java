@@ -21,19 +21,19 @@ public class Favorites {
         favorites = new HashMap<String, FavoriteEntry>();
     }
 
-    public void insertNewFavEntry(String name, LatLng location) {
+    public void addEntry(String name, LatLng location) {
         FavoriteEntry newFav = new FavoriteEntry(name, location);
         favorites.put(name, newFav);
     }
 
-    public void deleteFavEntry(String name) throws NoSuchElementException{
+    public void deleteEntry(String name) throws NoSuchElementException{
         FavoriteEntry temp = favorites.remove(name);
         if(temp == null) {
             throw new NoSuchElementException("Favorite Entry Does Not Exist");
         }
     }
 
-    public FavoriteEntry getFavEntry(String name) {
+    public FavoriteEntry getEntry(String name) {
         FavoriteEntry temp = favorites.get(name);
         if(temp == null) {
             throw new NoSuchElementException("Favorite Entry Does Not Exist");
@@ -42,7 +42,7 @@ public class Favorites {
         }
     }
 
-    public ArrayList<String> getAllFavEntries() {
+    public ArrayList<String> getAllEntries() {
         ArrayList<String> allFavs = new ArrayList<String>();
 
         for(Map.Entry<String, FavoriteEntry> e : favorites.entrySet()) {
