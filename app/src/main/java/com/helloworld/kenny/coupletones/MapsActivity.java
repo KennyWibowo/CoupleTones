@@ -35,6 +35,9 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.helloworld.kenny.coupletones.Favorites.Exceptions.InvalidNameException;
+import com.helloworld.kenny.coupletones.Favorites.Exceptions.NameInUseException;
+import com.helloworld.kenny.coupletones.Favorites.FavoriteEntry;
 import com.helloworld.kenny.coupletones.Favorites.Favorites;
 //import com.google.android.gms.maps.*;
 
@@ -56,7 +59,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private DrawerLayout drawer;
 
     private Favorites favorites;
-    private FavoriteSwipeAdapter<String> favoriteSwipeAdapter;
+    private FavoriteSwipeAdapter<FavoriteEntry> favoriteSwipeAdapter;
 
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
@@ -83,12 +86,54 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         searchText.addTextChangedListener(watcher);
 
         favorites = new Favorites();
-        favoriteSwipeAdapter = new FavoriteSwipeAdapter<String>(me, R.layout.listview_item, R.id.listview_item_text, favorites.getAllEntries());
+        favoriteSwipeAdapter = new FavoriteSwipeAdapter<FavoriteEntry>(me, R.layout.listview_item, R.id.listview_item_text, favorites.getAllEntries());
         rightDrawer.setAdapter(favoriteSwipeAdapter);
 
         //SETUPS
         setupRightDrawer();
+        setupLocationListener();
 
+
+    }
+
+    public void setupRightDrawer() {
+
+        TextView title = new TextView(me);
+        title.setText("Favorites");
+        title.setTextSize(TypedValue.COMPLEX_UNIT_SP, 25);
+        title.setTextColor(getResources().getColor(R.color.colorBlack));
+        title.setHeight(120);
+        title.setGravity(Gravity.CENTER);
+
+        rightDrawer.addHeaderView(title);
+
+        DrawerLayout.DrawerListener drawerListener = new DrawerLayout.DrawerListener() {
+            @Override
+            public void onDrawerSlide(View drawerView, float slideOffset) {
+                favoriteSwipeAdapter.closeAllItems();
+            }
+
+            @Override
+            public void onDrawerOpened(View drawerView) {
+
+            }
+
+            @Override
+            public void onDrawerClosed(View drawerView) {
+
+            }
+
+            @Override
+            public void onDrawerStateChanged(int newState) {
+
+            }
+        };
+
+        drawer.addDrawerListener(drawerListener);
+
+    }
+
+    public void setupLocationListener() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
@@ -133,43 +178,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
-    public void setupRightDrawer() {
-
-        TextView title = new TextView(me);
-        title.setText("Favorites");
-        title.setTextSize(TypedValue.COMPLEX_UNIT_SP, 25);
-        title.setTextColor(getResources().getColor(R.color.colorBlack));
-        title.setHeight(120);
-        title.setGravity(Gravity.CENTER);
-
-        rightDrawer.addHeaderView(title);
-
-        DrawerLayout.DrawerListener drawerListener = new DrawerLayout.DrawerListener() {
-            @Override
-            public void onDrawerSlide(View drawerView, float slideOffset) {
-                favoriteSwipeAdapter.closeAllItems();
-            }
-
-            @Override
-            public void onDrawerOpened(View drawerView) {
-
-            }
-
-            @Override
-            public void onDrawerClosed(View drawerView) {
-
-            }
-
-            @Override
-            public void onDrawerStateChanged(int newState) {
-
-            }
-        };
-
-        drawer.addDrawerListener(drawerListener);
-
-    }
-
     public void deleteFavorite(View view) {
         SwipeLayout toDelete = (SwipeLayout) view.getParent().getParent();
 
@@ -202,8 +210,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             favorites.addEntry(et.getText().toString(), pointFinal);
                             favoriteSwipeAdapter.notifyDataSetChanged();
                             Toast.makeText(me, "Favorite location added successfully", Toast.LENGTH_SHORT).show();
-                        } catch( Exception e ){
+                        } catch( NameInUseException e ){
                             Toast.makeText(me, "Name already in use", Toast.LENGTH_SHORT).show();
+                        } catch( InvalidNameException e ) {
+                            Toast.makeText(me, "Invalid name for favorite", Toast.LENGTH_SHORT).show();
                         }
                     }
                 })
@@ -250,6 +260,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     }
 
+    //TODO: change this into a button
     private final TextWatcher watcher = new TextWatcher() {
 
         public void afterTextChanged(Editable s) {

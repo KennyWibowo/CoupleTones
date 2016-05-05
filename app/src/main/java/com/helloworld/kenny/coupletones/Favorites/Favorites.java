@@ -4,6 +4,8 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.StreetViewPanoramaCamera;
+import com.helloworld.kenny.coupletones.Favorites.Exceptions.InvalidNameException;
+import com.helloworld.kenny.coupletones.Favorites.Exceptions.NameInUseException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -20,26 +22,26 @@ public class Favorites {
 
     public Favorites() {
         favorites = new ArrayList<FavoriteEntry>();
-        favoriteNames = new ArrayList<String>();
     }
 
-    public void addEntry(String name, LatLng location) throws Exception{
+    //TODO change these exceptions to specific ones
+    public void addEntry(String name, LatLng location) throws InvalidNameException, NameInUseException {
         if(lookupPosition(name) != -1)
-            throw new Exception("Name already in use");
+            throw new NameInUseException("Name already in use");
+        if(name.equals(""))
+            throw new InvalidNameException("Invalid name");
 
         FavoriteEntry newFav = new FavoriteEntry(name, location);
         favorites.add(newFav);
-        favoriteNames.add(name);
     }
 
-    public void deleteEntry(int position) throws NoSuchElementException{
+    public void deleteEntry(int position) {
         favorites.remove(position);
-        favoriteNames.remove(position);
     }
 
     public int lookupPosition(String name) {
-        for(int i = 0; i <favoriteNames.size(); i++) {
-            if(favoriteNames.get(i).equals(name))
+        for(int i = 0; i <favorites.size(); i++) {
+            if(favorites.get(i).toString().equals(name))
                 return i;
         }
         return -1;
@@ -54,8 +56,8 @@ public class Favorites {
         return temp;
     }
 
-    public ArrayList<String> getAllEntries() {
-        return favoriteNames;
+    public ArrayList<FavoriteEntry> getAllEntries() {
+        return favorites;
     }
 
 }
