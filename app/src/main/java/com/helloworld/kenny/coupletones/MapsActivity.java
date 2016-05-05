@@ -34,6 +34,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.helloworld.kenny.coupletones.Favorites.Exceptions.InvalidNameException;
 import com.helloworld.kenny.coupletones.Favorites.Exceptions.NameInUseException;
@@ -181,7 +182,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void deleteFavorite(View view) {
         SwipeLayout toDelete = (SwipeLayout) view.getParent().getParent();
 
+        favorites.getEntry(favorites.lookupPosition(((TextView) toDelete.findViewById(R.id.listview_item_text)).getText().toString())).getMarker().remove();
         favorites.deleteEntry(favorites.lookupPosition(((TextView) toDelete.findViewById(R.id.listview_item_text)).getText().toString()));
+
         favoriteSwipeAdapter.notifyDataSetChanged();
 
         favoriteSwipeAdapter.closeAllItems();
@@ -189,7 +192,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     @Override
-    public void onMapClick(LatLng point) {
+    public void onMapClick(final LatLng point) {
 
         //Source: http://developer.android.com/guide/topics/ui/dialogs.html
 
@@ -209,6 +212,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         try {
                             favorites.addEntry(et.getText().toString(), pointFinal);
                             favoriteSwipeAdapter.notifyDataSetChanged();
+                            Marker marker = mMap.addMarker(new MarkerOptions().position(point).title(et.getText().toString()));
+                            favorites.getEntry(favorites.size()-1).setMarker(marker);
                             Toast.makeText(me, "Favorite location added successfully", Toast.LENGTH_SHORT).show();
                         } catch( NameInUseException e ){
                             Toast.makeText(me, "Name already in use", Toast.LENGTH_SHORT).show();
