@@ -171,14 +171,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     public void buttonDeleteFavorite(View view) {
-        SwipeLayout toDelete = (SwipeLayout) view.getParent().getParent();
+        SwipeLayout swipeLayout = (SwipeLayout) view.getParent().getParent();
+        TextView nameView = (TextView) swipeLayout.findViewById(R.id.listview_item_text);
+        String name = nameView.getText().toString();
+        int pos = favorites.lookupPosition(name);
 
-        //TODO: clean this up!
-        favorites.getEntry(favorites.lookupPosition(((TextView) toDelete.findViewById(R.id.listview_item_text)).getText().toString())).getMarker().remove();
-        favorites.deleteEntry(favorites.lookupPosition(((TextView) toDelete.findViewById(R.id.listview_item_text)).getText().toString()));
+        // Delete the marker from the map, then the actual entry
+        favorites.getEntry(pos).getMarker().remove();
+        favorites.deleteEntry(pos);
 
+        // Notify the swipeAdapter and close everything
         favoriteSwipeAdapter.notifyDataSetChanged();
-
         favoriteSwipeAdapter.closeAllItems();
         Toast.makeText(me, "Favorite deleted successfully", Toast.LENGTH_SHORT).show();
     }
@@ -187,15 +190,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         String location = searchBar.getText().toString();
         List<Address> addressList = null;
 
-        if (location != null || !location.equals("")) {
+        if (!location.equals("")) {
             Geocoder geocoder = new Geocoder(me);
             try {
                 addressList = geocoder.getFromLocationName(location, 1);
             } catch (IOException e) {
                 e.printStackTrace();
+                return;
             }
 
-            if (addressList.size() > 0) {
+            if (addressList != null && addressList.size() > 0) {
                 Address address = addressList.get(0);
                 LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
                 mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, (float) 14.7));
@@ -257,10 +261,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        // Add a marker in Sydney and move the camera
-        //LatLng sydney = new LatLng(-34, 151);
-        //mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        //mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
             return;
