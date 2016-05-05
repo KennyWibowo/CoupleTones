@@ -5,25 +5,41 @@
     android:layout_height="match_parent">
 
 
+
     <FrameLayout
         android:id="@+id/main"
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
 
-        <EditText
-            android:id="@+id/searchView1"
-            android:layout_width="325dp"
-            android:layout_height="34dp"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginLeft="18dp"
-            android:layout_marginRight="18dp"
-            android:layout_marginTop="14dp"
-            android:background="@android:color/white"
-            android:hint="Search Location"
-            android:paddingLeft="18dp"
-            android:paddingRight="18dp"
-            android:textColor="@android:color/black" />
+        <LinearLayout
+            android:id="@+id/search_layout"
+            android:layout_width="300dp"
+            android:layout_height="62dp">
+
+            <EditText
+                android:id="@+id/search_bar"
+                android:layout_width="220dp"
+                android:layout_height="34dp"
+                android:layout_marginLeft="18dp"
+                android:layout_marginRight="18dp"
+                android:layout_marginTop="14dp"
+                android:background="@color/colorTranslucentGrey"
+                android:hint="Search Location"
+                android:paddingLeft="18dp"
+                android:paddingRight="18dp"
+                android:textColor="@android:color/black" />
+                <ImageButton
+                    android:id="@+id/search_button"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginEnd="18dp"
+                    android:gravity="center"
+                    android:layout_gravity="center"
+                    android:src="@drawable/search"
+                    android:background="@color/colorTranslucentGrey"
+                    android:contentDescription="search"
+                    android:onClick="buttonSearch"/>
+        </LinearLayout>
 
 
         <fragment xmlns:android="http://schemas.android.com/apk/res/android"
@@ -38,8 +54,7 @@
             android:layout_alignParentTop="true" />
 
 
-</FrameLayout>
-
+    </FrameLayout>
     <ListView android:id="@+id/left_drawer"
         android:layout_width="240dp"
         android:layout_height="match_parent"

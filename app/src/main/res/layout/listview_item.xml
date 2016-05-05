@@ -42,7 +42,7 @@
             android:text="Delete"
             android:textColor="#FF5534"
             android:layout_gravity="center_vertical"
-            android:onClick="deleteFavorite"/>
+            android:onClick="buttonDeleteFavorite"/>
     </LinearLayout>
     <!-- Bottom View End-->
 
