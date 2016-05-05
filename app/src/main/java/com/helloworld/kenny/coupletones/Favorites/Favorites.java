@@ -20,6 +20,7 @@ public class Favorites {
 
     public Favorites() {
         favorites = new ArrayList<FavoriteEntry>();
+        favoriteNames = new ArrayList<String>();
     }
 
     public void addEntry(String name, LatLng location) {
