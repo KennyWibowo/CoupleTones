@@ -37,15 +37,6 @@
             tools:layout="@layout/abc_list_menu_item_checkbox"
             android:layout_alignParentTop="true" />
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Remove Last Location"
-            android:id="@+id/button"
-            android:layout_gravity="left|bottom"
-            android:onClick="removeLocation"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentStart="true" />
 
 </FrameLayout>
 
@@ -53,18 +44,12 @@
         android:layout_width="240dp"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:choiceMode="singleChoice"
-        android:divider="@android:color/transparent"
-        android:dividerHeight="0dp"
         android:background="#FFF"/>
-
-    <ListView android:id="@+id/right_drawer"
+    <ListView
+        android:id="@+id/right_drawer"
         android:layout_width="240dp"
         android:layout_height="match_parent"
         android:layout_gravity="end"
-        android:choiceMode="singleChoice"
-        android:divider="@android:color/transparent"
-        android:dividerHeight="0dp"
         android:background="#FFF"/>
 </android.support.v4.widget.DrawerLayout>
 
