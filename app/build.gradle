@@ -28,6 +28,7 @@ dependencies {
     compile 'com.google.android.gms:play-services-auth:8.4.0'
     compile 'com.google.android.gms:play-services-gcm:8.4.0'
     compile 'com.google.android.gms:play-services-identity:8.4.0'
+    compile 'com.google.android.gms:play-services-base:8.4.0'
 
     // For AndroidSwipeLayout: https://github.com/daimajia/AndroidSwipeLayout
     compile 'com.android.support:recyclerview-v7:23.0.0'
