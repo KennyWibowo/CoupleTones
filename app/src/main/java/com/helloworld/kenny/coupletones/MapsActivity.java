@@ -204,6 +204,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
                 mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, (float) 14.7));
             } else {
+                Toast.makeText(me, "No results found by search", Toast.LENGTH_SHORT).show();
             }
         }
     }
