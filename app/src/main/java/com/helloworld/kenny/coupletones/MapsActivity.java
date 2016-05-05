@@ -184,6 +184,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         favoriteSwipeAdapter.notifyDataSetChanged();
         favoriteSwipeAdapter.closeAllItems();
         Toast.makeText(me, "Favorite deleted successfully", Toast.LENGTH_SHORT).show();
+
+        System.out.println(favorites.toString());
     }
 
     public void buttonSearch(View view) {
@@ -232,6 +234,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             Marker marker = mMap.addMarker(new MarkerOptions().position(point).title(et.getText().toString()));
                             favorites.getEntry(favorites.size() - 1).setMarker(marker);
                             Toast.makeText(me, "Favorite location added successfully", Toast.LENGTH_SHORT).show();
+
+                            System.out.println(favorites.toString());
                         } catch (NameInUseException e) {
                             Toast.makeText(me, "Name already in use", Toast.LENGTH_SHORT).show();
                         } catch (InvalidNameException e) {
