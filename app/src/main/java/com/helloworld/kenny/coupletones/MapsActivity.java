@@ -1,7 +1,9 @@
 package com.helloworld.kenny.coupletones;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
@@ -30,6 +32,8 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.helloworld.kenny.coupletones.Favorites.FavoriteEntry;
+import com.helloworld.kenny.coupletones.Favorites.Favorites;
 //import com.google.android.gms.maps.*;
 
 import android.view.View;
@@ -47,8 +51,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private EditText searchText;
     private MapsActivity me;
     private ListView lists;
-    private ArrayList<String> storage = new ArrayList<String>();
+    //private ArrayList<String> storage = new ArrayList<String>();
     private UiSettings myUiSetting;
+
+    private Favorites favorites;
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -59,7 +65,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
-        lists = (ListView) findViewById(R.id.left_drawer);
+        lists = (ListView) findViewById(R.id.right_drawer);
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -72,9 +78,35 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         searchText.addTextChangedListener(watcher);
 
+        favorites = new Favorites();
+
 
 //<<<<<<< HEAD
         //final MapView view = (MapView) findViewById(R.id.map);
+
+        /*LocationListener locationListener = new LocationListener() {
+            @Override
+            public void onLocationChanged(Location location) {
+                mMap.clear();
+                mMap.addMarker(new MarkerOptions().position(new LatLng(location.getLatitude(), location.getLongitude())).title("update location"));
+
+            }
+        };*/
+
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 100);
+            return;
+        }
+        LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+
         LocationListener locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
@@ -98,63 +130,60 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             }
         };
-        /*LocationListener locationListener = new LocationListener() {
-            @Override
-            public void onLocationChanged(Location location) {
-                mMap.clear();
-                mMap.addMarker(new MarkerOptions().position(new LatLng(location.getLatitude(), location.getLongitude())).title("update location"));
-
-            }
-        };*/
-
-        LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
-
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 100);
-            return;
-        }
-//<<<<<<< HEAD
-        // locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, (android.location.LocationListener) locationListener);
-
-//=======
-
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
-//=======
-//>>>>>>> 955019d80d6dc422fc58077e145f4304b894b52e
-//>>>>>>> 219c11c12e7f371e8544aec1dff411a1b2bd13e4
+
+
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
 
-    public void removeLocation(View view) {
+    /*public void removeLocation(View view) {
         if(storage.size() != 0) {
 
             storage.remove(storage.size() - 1);
-            ArrayAdapter<String> adapt = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, storage);
+            ArrayAdapter<String> adapt = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, favorites.getAllEntries());
             lists.setAdapter(adapt);
         }
 
-    }
+    }*/
 
     @Override
     public void onMapClick(LatLng point) {
         System.out.println("Hello World!");
 
-        storage.add(Double.toString(point.latitude) + " " + Double.toString(point.longitude));
-        ArrayAdapter<String> adapt = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, storage);
-        lists.setAdapter(adapt);
+        //Source: http://developer.android.com/guide/topics/ui/dialogs.html
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        final EditText et = new EditText(this);
+        final LatLng pointFinal = point;
+
+        builder.setView(et);
+
+        builder.setCancelable(true)
+                .setMessage("Input name for new favorite location")
+                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        System.out.println(et.getText().toString());
+
+                        favorites.addEntry(et.getText().toString(), pointFinal);
+                        ArrayAdapter<String> adapt = new ArrayAdapter<String>(me, android.R.layout.simple_list_item_1, favorites.getAllEntries());
+                        lists.setAdapter(adapt);
+                    }
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // User cancelled the dialog
+                    }
+                });
+
+        AlertDialog namePrompt = builder.create();
+        namePrompt.show();
+
 
     }
-
 
 
     /**
@@ -171,25 +200,19 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap = googleMap;
 
         // Add a marker in Sydney and move the camera
-        LatLng sydney = new LatLng(-34, 151);
+        //LatLng sydney = new LatLng(-34, 151);
         //mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
         //mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
+
             return;
         }
+
         mMap.setMyLocationEnabled(true);
         mMap.setOnMapClickListener(this);
 
         myUiSetting = mMap.getUiSettings();
         myUiSetting.setZoomControlsEnabled(true);
-
 
     }
 
@@ -211,7 +234,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 if (addressList.size() > 0) {
                     Address address = addressList.get(0);
                     LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
-                    mMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
+                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, (float) 15.0));
                 }
             }
         }
