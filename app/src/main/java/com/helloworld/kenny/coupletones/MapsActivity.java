@@ -5,7 +5,6 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
-import android.content.res.ColorStateList;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -16,8 +15,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
@@ -27,7 +24,6 @@ import com.daimajia.swipe.SwipeLayout;
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
-//import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -40,8 +36,8 @@ import com.helloworld.kenny.coupletones.Favorites.Exceptions.InvalidNameExceptio
 import com.helloworld.kenny.coupletones.Favorites.Exceptions.NameInUseException;
 import com.helloworld.kenny.coupletones.Favorites.FavoriteEntry;
 import com.helloworld.kenny.coupletones.Favorites.Favorites;
-//import com.google.android.gms.maps.*;
 
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -49,12 +45,14 @@ import android.widget.Toast;
 import java.io.IOException;
 import java.util.List;
 
+
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMapClickListener {
 
     private Context context = this;
     private MapsActivity me = this;
     private GoogleMap mMap;
-    private EditText searchText;
+    private LinearLayout searchLayout;
+    private EditText searchBar;
     private ListView rightDrawer;
     private UiSettings myUiSetting;
     private DrawerLayout drawer;
@@ -73,18 +71,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
 
-        searchText = (EditText) findViewById(R.id.searchView1);
+        // Reference setup
+        searchLayout = (LinearLayout) findViewById(R.id.search_layout);
+        searchBar = (EditText) findViewById(R.id.search_bar);
         rightDrawer = (ListView) findViewById(R.id.right_drawer);
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
-
-        searchText.bringToFront();
-
-        searchText.addTextChangedListener(watcher);
+        searchLayout.bringToFront();
 
         favorites = new Favorites();
         favoriteSwipeAdapter = new FavoriteSwipeAdapter<FavoriteEntry>(me, R.layout.listview_item, R.id.listview_item_text, favorites.getAllEntries());
@@ -135,14 +128,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     public void setupLocationListener() {
+        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
+
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 100);
             return;
         }
@@ -179,7 +170,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
-    public void deleteFavorite(View view) {
+    public void buttonDeleteFavorite(View view) {
         SwipeLayout toDelete = (SwipeLayout) view.getParent().getParent();
 
         //TODO: clean this up!
@@ -190,6 +181,26 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         favoriteSwipeAdapter.closeAllItems();
         Toast.makeText(me, "Favorite deleted successfully", Toast.LENGTH_SHORT).show();
+    }
+
+    public void buttonSearch(View view) {
+        String location = searchBar.getText().toString();
+        List<Address> addressList = null;
+
+        if (location != null || !location.equals("")) {
+            Geocoder geocoder = new Geocoder(me);
+            try {
+                addressList = geocoder.getFromLocationName(location, 1);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            if (addressList.size() > 0) {
+                Address address = addressList.get(0);
+                LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, (float) 14.7));
+            }
+        }
     }
 
     @Override
@@ -209,16 +220,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .setMessage("Input name for new favorite location")
                 .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-
                         try {
                             favorites.addEntry(et.getText().toString(), pointFinal);
                             favoriteSwipeAdapter.notifyDataSetChanged();
                             Marker marker = mMap.addMarker(new MarkerOptions().position(point).title(et.getText().toString()));
-                            favorites.getEntry(favorites.size()-1).setMarker(marker);
+                            favorites.getEntry(favorites.size() - 1).setMarker(marker);
                             Toast.makeText(me, "Favorite location added successfully", Toast.LENGTH_SHORT).show();
-                        } catch( NameInUseException e ){
+                        } catch (NameInUseException e) {
                             Toast.makeText(me, "Name already in use", Toast.LENGTH_SHORT).show();
-                        } catch( InvalidNameException e ) {
+                        } catch (InvalidNameException e) {
                             Toast.makeText(me, "Invalid name for favorite", Toast.LENGTH_SHORT).show();
                         }
                     }
@@ -231,8 +241,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         AlertDialog namePrompt = builder.create();
         namePrompt.show();
-
-
     }
 
 
@@ -265,37 +273,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         myUiSetting.setZoomControlsEnabled(true);
 
     }
-
-    //TODO: change this into a button
-    private final TextWatcher watcher = new TextWatcher() {
-
-        public void afterTextChanged(Editable s) {
-
-            String location = searchText.getText().toString();
-            List<Address> addressList = null;
-
-            if (location != null || !location.equals("")) {
-                Geocoder geocoder = new Geocoder(me);
-                try {
-                    addressList = geocoder.getFromLocationName(location, 1);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-                if (addressList.size() > 0) {
-                    Address address = addressList.get(0);
-                    LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
-                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, (float) 15.0));
-                }
-            }
-        }
-
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-        }
-
-        public void onTextChanged(CharSequence s, int start, int before, int count) {
-        }
-    };
 
     @Override
     public void onStart() {
