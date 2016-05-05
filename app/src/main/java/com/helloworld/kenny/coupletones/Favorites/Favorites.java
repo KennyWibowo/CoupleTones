@@ -16,6 +16,7 @@ import java.util.NoSuchElementException;
 public class Favorites {
 
     private ArrayList<FavoriteEntry> favorites;
+    private ArrayList<String> favoriteNames;
 
     public Favorites() {
         favorites = new ArrayList<FavoriteEntry>();
@@ -24,18 +25,21 @@ public class Favorites {
     public void addEntry(String name, LatLng location) {
         FavoriteEntry newFav = new FavoriteEntry(name, location);
         favorites.add(newFav);
+        favoriteNames.add(name);
     }
 
     public void deleteEntry(int position) throws NoSuchElementException{
-        FavoriteEntry temp = favorites.remove(position);
+        favorites.remove(position);
+        favoriteNames.remove(position);
     }
 
     public FavoriteEntry getEntry(int position) {
         FavoriteEntry temp = favorites.get(position);
+        return temp;
     }
 
-    public ArrayList<FavoriteEntry> getAllEntries() {
-        return favorites;
+    public ArrayList<String> getAllEntries() {
+        return favoriteNames;
     }
 
 }
