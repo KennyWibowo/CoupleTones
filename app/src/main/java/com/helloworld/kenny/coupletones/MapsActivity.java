@@ -16,10 +16,16 @@ import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
+import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 
+import com.daimajia.swipe.SwipeLayout;
+import com.daimajia.swipe.adapters.ArraySwipeAdapter;
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -38,6 +44,7 @@ import com.helloworld.kenny.coupletones.Favorites.Favorites;
 
 import android.view.View;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -49,7 +56,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private GoogleMap mMap;
     private EditText searchText;
-    private MapsActivity me;
+    private Context me;
     private ListView lists;
     //private ArrayList<String> storage = new ArrayList<String>();
     private UiSettings myUiSetting;
@@ -66,6 +73,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
         lists = (ListView) findViewById(R.id.right_drawer);
+        listViewSetup();
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -79,20 +87,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         searchText.addTextChangedListener(watcher);
 
         favorites = new Favorites();
-
-
-//<<<<<<< HEAD
-        //final MapView view = (MapView) findViewById(R.id.map);
-
-        /*LocationListener locationListener = new LocationListener() {
-            @Override
-            public void onLocationChanged(Location location) {
-                mMap.clear();
-                mMap.addMarker(new MarkerOptions().position(new LatLng(location.getLatitude(), location.getLongitude())).title("update location"));
-
-            }
-        };*/
-
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
@@ -139,15 +133,56 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
 
-    /*public void removeLocation(View view) {
-        if(storage.size() != 0) {
+    int favoritePostion = -1;
 
-            storage.remove(storage.size() - 1);
-            ArrayAdapter<String> adapt = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, favorites.getAllEntries());
-            lists.setAdapter(adapt);
-        }
+    public void listViewSetup() {
+        lists.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                ((SwipeLayout)(lists.getChildAt(position - lists.getFirstVisiblePosition()))).open(true);
+                favoritePostion = position;
+            }
+        });
+        lists.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return false;
+            }
+        });
+        lists.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                Toast.makeText(me, "OnItemLongClickListener", Toast.LENGTH_SHORT).show();
+                return true;
+            }
+        });
+        lists.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
 
-    }*/
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+
+            }
+        });
+
+        lists.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                favoritePostion = position;
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
+    }
+
+    public void deleteFavorite(View view) {
+        System.out.println("Button pressed at: " + favoritePostion);
+    }
 
     @Override
     public void onMapClick(LatLng point) {
@@ -169,8 +204,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         System.out.println(et.getText().toString());
 
                         favorites.addEntry(et.getText().toString(), pointFinal);
-                        ArrayAdapter<String> adapt = new ArrayAdapter<String>(me, android.R.layout.simple_list_item_1, favorites.getAllEntries());
-                        lists.setAdapter(adapt);
+
+                        lists.setAdapter(
+                                new ArraySwipeAdapter<String>(me, R.layout.listview_item, R.id.listview_item_text, favorites.getAllEntries()){
+                                    @Override
+                                    public int getSwipeLayoutResourceId(int position) {
+                                        return R.id.right_swipe_layout;
+                                    }
+                                }
+                        );
                     }
                 })
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
