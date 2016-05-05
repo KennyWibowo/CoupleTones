@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
+import android.content.res.ColorStateList;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -14,22 +15,18 @@ import android.net.Uri;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.support.v4.widget.DrawerLayout;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
-import android.view.MotionEvent;
+import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.View;
-import android.widget.AbsListView;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
 
 import com.daimajia.swipe.SwipeLayout;
-import com.daimajia.swipe.adapters.ArraySwipeAdapter;
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.*;
 //import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -38,30 +35,29 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.helloworld.kenny.coupletones.Favorites.FavoriteEntry;
 import com.helloworld.kenny.coupletones.Favorites.Favorites;
 //import com.google.android.gms.maps.*;
 
-import android.view.View;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
-
-import java.util.ArrayList;
 
 import java.io.IOException;
 import java.util.List;
 
-
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMapClickListener {
 
+    private Context context = this;
+    private MapsActivity me = this;
     private GoogleMap mMap;
     private EditText searchText;
-    private Context me;
-    private ListView lists;
-    //private ArrayList<String> storage = new ArrayList<String>();
+    private ListView rightDrawer;
     private UiSettings myUiSetting;
+    private DrawerLayout drawer;
 
     private Favorites favorites;
+    private FavoriteSwipeAdapter<String> favoriteSwipeAdapter;
+
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -72,21 +68,26 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
-        lists = (ListView) findViewById(R.id.right_drawer);
-        listViewSetup();
+
+        searchText = (EditText) findViewById(R.id.searchView1);
+        rightDrawer = (ListView) findViewById(R.id.right_drawer);
+        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        searchText = (EditText) findViewById(R.id.searchView1);
         searchText.bringToFront();
-        me = this;
 
         searchText.addTextChangedListener(watcher);
 
         favorites = new Favorites();
+        favoriteSwipeAdapter = new FavoriteSwipeAdapter<String>(me, R.layout.listview_item, R.id.listview_item_text, favorites.getAllEntries());
+        rightDrawer.setAdapter(favoriteSwipeAdapter);
+
+        //SETUPS
+        setupRightDrawer();
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
@@ -132,87 +133,78 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
+    public void setupRightDrawer() {
 
-    int favoritePostion = -1;
+        TextView title = new TextView(me);
+        title.setText("Favorites");
+        title.setTextSize(TypedValue.COMPLEX_UNIT_SP, 25);
+        title.setTextColor(getResources().getColor(R.color.colorBlack));
+        title.setHeight(120);
+        title.setGravity(Gravity.CENTER);
 
-    public void listViewSetup() {
-        lists.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        rightDrawer.addHeaderView(title);
+
+        DrawerLayout.DrawerListener drawerListener = new DrawerLayout.DrawerListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                ((SwipeLayout)(lists.getChildAt(position - lists.getFirstVisiblePosition()))).open(true);
-                favoritePostion = position;
+            public void onDrawerSlide(View drawerView, float slideOffset) {
+                favoriteSwipeAdapter.closeAllItems();
             }
-        });
-        lists.setOnTouchListener(new View.OnTouchListener() {
+
             @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                return false;
-            }
-        });
-        lists.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(me, "OnItemLongClickListener", Toast.LENGTH_SHORT).show();
-                return true;
-            }
-        });
-        lists.setOnScrollListener(new AbsListView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(AbsListView view, int scrollState) {
+            public void onDrawerOpened(View drawerView) {
 
             }
 
             @Override
-            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+            public void onDrawerClosed(View drawerView) {
 
-            }
-        });
-
-        lists.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                favoritePostion = position;
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> parent) {
+            public void onDrawerStateChanged(int newState) {
+
             }
-        });
+        };
+
+        drawer.addDrawerListener(drawerListener);
+
     }
 
     public void deleteFavorite(View view) {
-        System.out.println("Button pressed at: " + favoritePostion);
+        SwipeLayout toDelete = (SwipeLayout) view.getParent().getParent();
+
+        favorites.deleteEntry(favorites.lookupPosition(((TextView) toDelete.findViewById(R.id.listview_item_text)).getText().toString()));
+        favoriteSwipeAdapter.notifyDataSetChanged();
+
+        favoriteSwipeAdapter.closeAllItems();
+        Toast.makeText(me, "Favorite deleted successfully", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onMapClick(LatLng point) {
-        System.out.println("Hello World!");
 
         //Source: http://developer.android.com/guide/topics/ui/dialogs.html
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
-        final EditText et = new EditText(this);
         final LatLng pointFinal = point;
+        final EditText et = new EditText(this);
 
+        et.setGravity(Gravity.CENTER);
         builder.setView(et);
 
         builder.setCancelable(true)
                 .setMessage("Input name for new favorite location")
                 .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        System.out.println(et.getText().toString());
 
-                        favorites.addEntry(et.getText().toString(), pointFinal);
-
-                        lists.setAdapter(
-                                new ArraySwipeAdapter<String>(me, R.layout.listview_item, R.id.listview_item_text, favorites.getAllEntries()){
-                                    @Override
-                                    public int getSwipeLayoutResourceId(int position) {
-                                        return R.id.right_swipe_layout;
-                                    }
-                                }
-                        );
+                        try {
+                            favorites.addEntry(et.getText().toString(), pointFinal);
+                            favoriteSwipeAdapter.notifyDataSetChanged();
+                            Toast.makeText(me, "Favorite location added successfully", Toast.LENGTH_SHORT).show();
+                        } catch( Exception e ){
+                            Toast.makeText(me, "Name already in use", Toast.LENGTH_SHORT).show();
+                        }
                     }
                 })
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {

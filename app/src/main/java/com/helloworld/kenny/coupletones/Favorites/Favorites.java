@@ -23,7 +23,10 @@ public class Favorites {
         favoriteNames = new ArrayList<String>();
     }
 
-    public void addEntry(String name, LatLng location) {
+    public void addEntry(String name, LatLng location) throws Exception{
+        if(lookupPosition(name) != -1)
+            throw new Exception("Name already in use");
+
         FavoriteEntry newFav = new FavoriteEntry(name, location);
         favorites.add(newFav);
         favoriteNames.add(name);
@@ -32,6 +35,18 @@ public class Favorites {
     public void deleteEntry(int position) throws NoSuchElementException{
         favorites.remove(position);
         favoriteNames.remove(position);
+    }
+
+    public int lookupPosition(String name) {
+        for(int i = 0; i <favoriteNames.size(); i++) {
+            if(favoriteNames.get(i).equals(name))
+                return i;
+        }
+        return -1;
+    }
+
+    public int size() {
+        return favorites.size();
     }
 
     public FavoriteEntry getEntry(int position) {
