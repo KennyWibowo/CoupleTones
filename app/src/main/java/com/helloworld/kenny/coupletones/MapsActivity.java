@@ -182,6 +182,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void deleteFavorite(View view) {
         SwipeLayout toDelete = (SwipeLayout) view.getParent().getParent();
 
+        //TODO: clean this up!
         favorites.getEntry(favorites.lookupPosition(((TextView) toDelete.findViewById(R.id.listview_item_text)).getText().toString())).getMarker().remove();
         favorites.deleteEntry(favorites.lookupPosition(((TextView) toDelete.findViewById(R.id.listview_item_text)).getText().toString()));
 
