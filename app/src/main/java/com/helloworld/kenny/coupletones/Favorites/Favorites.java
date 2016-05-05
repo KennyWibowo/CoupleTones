@@ -24,7 +24,6 @@ public class Favorites {
         favorites = new ArrayList<FavoriteEntry>();
     }
 
-    //TODO change these exceptions to specific ones
     public void addEntry(String name, LatLng location) throws InvalidNameException, NameInUseException {
         if(lookupPosition(name) != -1)
             throw new NameInUseException("Name already in use");
