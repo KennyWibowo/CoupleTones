@@ -15,44 +15,27 @@ import java.util.NoSuchElementException;
  */
 public class Favorites {
 
-    private HashMap<String, FavoriteEntry> favorites;
+    private ArrayList<FavoriteEntry> favorites;
 
     public Favorites() {
-        favorites = new HashMap<String, FavoriteEntry>();
+        favorites = new ArrayList<FavoriteEntry>();
     }
 
     public void addEntry(String name, LatLng location) {
         FavoriteEntry newFav = new FavoriteEntry(name, location);
-        favorites.put(name, newFav);
+        favorites.add(newFav);
     }
 
-    public void deleteEntry(String name) throws NoSuchElementException{
-        FavoriteEntry temp = favorites.remove(name);
-        if(temp == null) {
-            throw new NoSuchElementException("Favorite Entry Does Not Exist");
-        }
+    public void deleteEntry(int position) throws NoSuchElementException{
+        FavoriteEntry temp = favorites.remove(position);
     }
 
-    public FavoriteEntry getEntry(String name) {
-        FavoriteEntry temp = favorites.get(name);
-        if(temp == null) {
-            throw new NoSuchElementException("Favorite Entry Does Not Exist");
-        } else {
-            return temp;
-        }
+    public FavoriteEntry getEntry(int position) {
+        FavoriteEntry temp = favorites.get(position);
     }
 
-    public ArrayList<String> getAllEntries() {
-        ArrayList<String> allFavs = new ArrayList<String>();
-
-        for(Map.Entry<String, FavoriteEntry> e : favorites.entrySet()) {
-            String key = e.getKey();
-            FavoriteEntry val = e.getValue();
-
-            allFavs.add(val.toString());
-        }
-
-        return allFavs;
+    public ArrayList<FavoriteEntry> getAllEntries() {
+        return favorites;
     }
 
 }
