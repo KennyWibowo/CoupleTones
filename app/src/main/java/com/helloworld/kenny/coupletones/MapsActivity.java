@@ -20,6 +20,7 @@ import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 
 import com.daimajia.swipe.SwipeLayout;
@@ -63,6 +64,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private UiSettings myUiSetting;
     private DrawerLayout drawer;
 
+    private Button buttonRemovePartner;
+    private Button buttonAddPartner;
+
     private Favorites favorites;
     private FavoriteSwipeAdapter<FavoriteEntry> favoriteSwipeAdapter;
 
@@ -86,6 +90,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         rightDrawer = (ListView) findViewById(R.id.right_drawer);
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 
+        buttonAddPartner = (Button) findViewById(R.id.add_partner);
+        buttonRemovePartner = (Button) findViewById(R.id.remove_partner);
+
         favorites = new Favorites();
         favoriteSwipeAdapter = new FavoriteSwipeAdapter<FavoriteEntry>(me, R.layout.listview_item, R.id.listview_item_text, favorites.getAllEntries());
         rightDrawer.setAdapter(favoriteSwipeAdapter);
@@ -96,8 +103,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     }
 
-    public void getDeviceId(View view)
-    {
+    public void getDeviceId(View view) {
         new AsyncTask<Void, Void, String>() {
 
             @Override
@@ -232,6 +238,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         AlertDialog displayReg = register.create();
         displayReg.show();*/
+        buttonAddPartner.setVisibility(View.GONE);
+        buttonRemovePartner.setVisibility(View.VISIBLE);
+    }
+
+    public void buttonRemovePartner(View view) {
+        buttonAddPartner.setVisibility(View.VISIBLE);
+        buttonRemovePartner.setVisibility(View.GONE);
     }
 
     public void buttonDeleteFavorite(View view) {
