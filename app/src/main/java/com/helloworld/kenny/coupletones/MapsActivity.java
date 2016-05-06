@@ -96,7 +96,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     }
 
-    public void getRegId() {
+    public void getDeviceId(View view)
+    {
         new AsyncTask<Void, Void, String>() {
 
             @Override
@@ -118,7 +119,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
 
             @Override
-            protected void onPostExecute(String msg) {EditTextForRegID.setText(msg);
+            protected void onPostExecute(String msg) {
+                AlertDialog.Builder show = new AlertDialog.Builder(me);
+                show.setCancelable(true);
+                show.setMessage(msg);
+                AlertDialog display = show.create();
+                display.show();
             }
         }.execute(null, null, null);
     }

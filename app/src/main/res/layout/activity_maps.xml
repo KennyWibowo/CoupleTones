@@ -79,7 +79,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="left"
                 android:layout_marginRight="5dp"
-                android:text="Get Device ID" />
+                android:text="Get Device ID"
+                android:onClick="getDeviceId"/>
         </LinearLayout>
     </RelativeLayout>
 
