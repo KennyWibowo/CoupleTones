@@ -217,6 +217,23 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
+    public void buttonAddPartner(View view)
+    {
+        /*final EditText username = new EditText(this);
+
+        AlertDialog.Builder register = new AlertDialog.Builder(me);
+        register.setCancelable(true);
+        register.setMessage("Please input partner information");
+        register.setPositiveButton("Submit", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+
+            }
+        });
+
+        AlertDialog displayReg = register.create();
+        displayReg.show();*/
+    }
+
     public void buttonDeleteFavorite(View view) {
         SwipeLayout swipeLayout = (SwipeLayout) view.getParent().getParent();
         TextView nameView = (TextView) swipeLayout.findViewById(R.id.listview_item_text);

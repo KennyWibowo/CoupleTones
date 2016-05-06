@@ -72,7 +72,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="left"
             android:layout_marginRight="5dp"
-            android:text="Add Partner" />
+            android:text="Add Partner"
+            android:onClick="buttonAddPartner"/>
             <Button
                 android:id="@+id/get_id"
                 android:layout_width="wrap_content"
