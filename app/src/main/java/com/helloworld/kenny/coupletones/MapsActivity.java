@@ -11,10 +11,12 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.location.LocationListener;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
@@ -23,6 +25,7 @@ import android.widget.EditText;
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -50,7 +53,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private Context context = this;
     private MapsActivity me = this;
+
     private GoogleMap mMap;
+    private GoogleCloudMessaging gcm;
+
     private LinearLayout searchLayout;
     private EditText searchBar;
     private ListView rightDrawer;
@@ -59,6 +65,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private Favorites favorites;
     private FavoriteSwipeAdapter<FavoriteEntry> favoriteSwipeAdapter;
+
+    private String regid = "";
+    private String PROJECT_NUMBER = "";
 
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
@@ -87,7 +96,33 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         setupRightDrawer();
         setupLocationListener();
 
+    }
 
+    public void getRegId() {
+        new AsyncTask<Void, Void, String>() {
+
+            @Override
+            protected String doInBackground(Void... params) {
+                String msg = "";
+                try {
+                    if(gcm == null) {
+                        gcm = GoogleCloudMessaging.getInstance(getApplicationContext());
+                    }
+
+                    regid = gcm.register(PROJECT_NUMBER);
+                    msg = "Device registered, registration ID=" + regid;
+                    Log.i("GCM", "!!!!! " + regid);
+
+                } catch(IOException ex) {
+                    msg = "Error: " + ex.getMessage();
+                }
+                return msg;
+            }
+
+            @Override
+            protected void onPostExecute(String msg) {EditTextForRegID.setText(msg);
+            }
+        }.execute(null, null, null);
     }
 
     public void setupRightDrawer() {
