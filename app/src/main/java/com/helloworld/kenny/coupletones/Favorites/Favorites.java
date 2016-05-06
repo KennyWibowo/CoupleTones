@@ -59,4 +59,20 @@ public class Favorites {
         return favorites;
     }
 
+    public String toString() {
+        StringBuilder sb = new StringBuilder("Entries: ");
+
+        for(int i = 0; i < favorites.size()-1; i++) {
+            sb.append(favorites.get(i).toString() + ", ");
+        }
+
+        if(favorites.size()>0) {
+            sb.append(favorites.get(favorites.size()-1));
+        } else {
+            sb.append("(empty)");
+        }
+
+        return sb.toString();
+    }
+
 }
