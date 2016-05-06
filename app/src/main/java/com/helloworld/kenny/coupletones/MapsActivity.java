@@ -86,8 +86,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         rightDrawer = (ListView) findViewById(R.id.right_drawer);
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 
-        searchLayout.bringToFront();
-
         favorites = new Favorites();
         favoriteSwipeAdapter = new FavoriteSwipeAdapter<FavoriteEntry>(me, R.layout.listview_item, R.id.listview_item_text, favorites.getAllEntries());
         rightDrawer.setAdapter(favoriteSwipeAdapter);

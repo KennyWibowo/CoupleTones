@@ -4,12 +4,23 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-
-
-    <FrameLayout
+    <RelativeLayout
         android:id="@+id/main"
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
+
+
+        <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:map="http://schemas.android.com/apk/res-auto"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:id="@+id/map"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:context="com.helloworld.kenny.coupletones.MapsActivity"
+            tools:layout="@layout/abc_list_menu_item_checkbox"
+            android:layout_alignParentTop="true" />
+
 
         <LinearLayout
             android:id="@+id/search_layout"
@@ -28,33 +39,21 @@
                 android:paddingLeft="18dp"
                 android:paddingRight="18dp"
                 android:textColor="@android:color/black" />
-                <ImageButton
-                    android:id="@+id/search_button"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_marginEnd="18dp"
-                    android:gravity="center"
-                    android:layout_gravity="center"
-                    android:src="@drawable/search"
-                    android:background="@color/colorTranslucentGrey"
-                    android:contentDescription="search"
-                    android:onClick="buttonSearch"/>
+            <ImageButton
+                android:id="@+id/search_button"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginEnd="18dp"
+                android:gravity="center"
+                android:layout_gravity="center"
+                android:src="@drawable/search"
+                android:background="@color/colorTranslucentGrey"
+                android:contentDescription="search"
+                android:onClick="buttonSearch"/>
         </LinearLayout>
 
+    </RelativeLayout>
 
-        <fragment xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:map="http://schemas.android.com/apk/res-auto"
-            xmlns:tools="http://schemas.android.com/tools"
-            android:id="@+id/map"
-            android:name="com.google.android.gms.maps.SupportMapFragment"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            tools:context="com.helloworld.kenny.coupletones.MapsActivity"
-            tools:layout="@layout/abc_list_menu_item_checkbox"
-            android:layout_alignParentTop="true" />
-
-
-    </FrameLayout>
     <RelativeLayout android:id="@+id/left_drawer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
