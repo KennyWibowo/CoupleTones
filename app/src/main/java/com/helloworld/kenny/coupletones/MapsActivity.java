@@ -22,6 +22,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.view.LayoutInflater;
 
 import com.daimajia.swipe.SwipeLayout;
 import com.google.android.gms.appindexing.Action;
@@ -40,6 +41,7 @@ import com.helloworld.kenny.coupletones.Favorites.Exceptions.InvalidNameExceptio
 import com.helloworld.kenny.coupletones.Favorites.Exceptions.NameInUseException;
 import com.helloworld.kenny.coupletones.Favorites.FavoriteEntry;
 import com.helloworld.kenny.coupletones.Favorites.Favorites;
+import com.helloworld.kenny.coupletones.Partner.PartnerInformation;
 
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -63,6 +65,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private ListView rightDrawer;
     private UiSettings myUiSetting;
     private DrawerLayout drawer;
+    private PartnerInformation info;
 
     private Button buttonRemovePartner;
     private Button buttonAddPartner;
@@ -225,26 +228,55 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     public void buttonAddPartner(View view)
     {
-        /*final EditText username = new EditText(this);
+        final EditText username = new EditText(this);
 
         AlertDialog.Builder register = new AlertDialog.Builder(me);
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        final View store = inflater.inflate(R.layout.alert_text_partner, null);
+
+        register.setView(store);
         register.setCancelable(true);
         register.setMessage("Please input partner information");
         register.setPositiveButton("Submit", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                EditText email = (EditText) store.findViewById(R.id.partner_email);
+                EditText partner_id = (EditText) store.findViewById(R.id.partner_id);
+
+                info = new PartnerInformation(partner_id.getText().toString(), email.getText().toString());
+                buttonAddPartner.setVisibility(View.GONE);
+                buttonRemovePartner.setVisibility(View.VISIBLE);
+            }
+        });
+        register.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
 
             }
         });
 
         AlertDialog displayReg = register.create();
-        displayReg.show();*/
-        buttonAddPartner.setVisibility(View.GONE);
-        buttonRemovePartner.setVisibility(View.VISIBLE);
+        displayReg.show();
+
     }
 
     public void buttonRemovePartner(View view) {
-        buttonAddPartner.setVisibility(View.VISIBLE);
-        buttonRemovePartner.setVisibility(View.GONE);
+
+        AlertDialog.Builder remove = new AlertDialog.Builder(me);
+        remove.setMessage("Are you sure you want to remove your partner?");
+        remove.setPositiveButton("Yes!", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                info = null;
+                buttonAddPartner.setVisibility(View.VISIBLE);
+                buttonRemovePartner.setVisibility(View.GONE);
+            }
+        });
+        remove.setNegativeButton("No!", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+
+            }
+        });
+
+        AlertDialog displayWarn = remove.create();
+        displayWarn.show();
     }
 
     public void buttonDeleteFavorite(View view) {

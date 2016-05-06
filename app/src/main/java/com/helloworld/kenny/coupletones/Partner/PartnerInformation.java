@@ -1,4 +1,4 @@
-package com.helloworld.kenny.coupletones.Parnter;
+package com.helloworld.kenny.coupletones.Partner;
 
 /**
  * Created by Kenny on 5/5/2016.
