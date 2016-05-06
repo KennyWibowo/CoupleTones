@@ -67,7 +67,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private FavoriteSwipeAdapter<FavoriteEntry> favoriteSwipeAdapter;
 
     private String regid = "";
-    private String PROJECT_NUMBER = "";
+    private String PROJECT_NUMBER = "366742322722";
 
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
