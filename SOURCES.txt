@@ -1,0 +1,5 @@
+https://design.google.com/icons/
+
+https://github.com/daimajia/AndroidSwipeLayout
+
+Labs
