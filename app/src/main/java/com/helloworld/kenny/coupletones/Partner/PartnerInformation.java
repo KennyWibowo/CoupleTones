@@ -11,7 +11,7 @@ public class PartnerInformation {
     public PartnerInformation(String regId, String email) {
         this.regId = regId;
         this.email = email;
-        // TODO: some sort of string verification on the email?
+        // TODO: some sort of string verification on the email/id?
     }
 
     public String getRegId() {
