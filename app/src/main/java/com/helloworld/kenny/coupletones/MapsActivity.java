@@ -121,8 +121,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             @Override
             protected void onPostExecute(String msg) {
                 AlertDialog.Builder show = new AlertDialog.Builder(me);
-                show.setCancelable(true);
-                show.setMessage(msg);
+
+                // Dialog settings
+                show.setCancelable(true)
+                    .setMessage(msg)
+                        .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+
+                            }
+                        });
+
                 AlertDialog display = show.create();
                 display.show();
             }
