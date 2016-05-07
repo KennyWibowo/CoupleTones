@@ -41,6 +41,7 @@ import com.helloworld.kenny.coupletones.Favorites.Exceptions.InvalidNameExceptio
 import com.helloworld.kenny.coupletones.Favorites.Exceptions.NameInUseException;
 import com.helloworld.kenny.coupletones.Favorites.FavoriteEntry;
 import com.helloworld.kenny.coupletones.Favorites.Favorites;
+import com.helloworld.kenny.coupletones.Partner.Exceptions.PartnerAlreadyRegisteredException;
 import com.helloworld.kenny.coupletones.Partner.PartnerInformation;
 
 import android.widget.LinearLayout;
@@ -57,6 +58,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private Context context = this;
     private MapsActivity me = this;
 
+    private GoogleApiClient client;
     private GoogleMap mMap;
     private GoogleCloudMessaging gcm;
 
@@ -65,7 +67,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private ListView rightDrawer;
     private UiSettings myUiSetting;
     private DrawerLayout drawer;
-    private PartnerInformation info;
+    private final PartnerInformation partnerInformation = new PartnerInformation();
 
     private Button buttonRemovePartner;
     private Button buttonAddPartner;
@@ -73,14 +75,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private Favorites favorites;
     private FavoriteSwipeAdapter<FavoriteEntry> favoriteSwipeAdapter;
 
-    private String regid = "";
     private String PROJECT_NUMBER = "366742322722";
+    private boolean autoRegistered = false;
 
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
      */
-    private GoogleApiClient client;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,59 +93,24 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         searchBar = (EditText) findViewById(R.id.search_bar);
         rightDrawer = (ListView) findViewById(R.id.right_drawer);
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-
         buttonAddPartner = (Button) findViewById(R.id.add_partner);
         buttonRemovePartner = (Button) findViewById(R.id.remove_partner);
 
+        // setup data structures and variables
         favorites = new Favorites();
         favoriteSwipeAdapter = new FavoriteSwipeAdapter<FavoriteEntry>(me, R.layout.listview_item, R.id.listview_item_text, favorites.getAllEntries());
         rightDrawer.setAdapter(favoriteSwipeAdapter);
 
         //SETUPS
+        setupDeviceId();
         setupRightDrawer();
         setupLocationListener();
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
 
     }
 
-    public void getDeviceId(View view) {
-        new AsyncTask<Void, Void, String>() {
-
-            @Override
-            protected String doInBackground(Void... params) {
-                String msg = "";
-                try {
-                    if(gcm == null) {
-                        gcm = GoogleCloudMessaging.getInstance(getApplicationContext());
-                    }
-
-                    regid = gcm.register(PROJECT_NUMBER);
-                    msg = "Device registered, registration ID=" + regid;
-                    Log.i("GCM", "!!!!! " + regid);
-
-                } catch(IOException ex) {
-                    msg = "Error: " + ex.getMessage();
-                }
-                return msg;
-            }
-
-            @Override
-            protected void onPostExecute(String msg) {
-                AlertDialog.Builder show = new AlertDialog.Builder(me);
-
-                // Dialog settings
-                show.setCancelable(true)
-                    .setMessage(msg)
-                        .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-
-                            }
-                        });
-
-                AlertDialog display = show.create();
-                display.show();
-            }
-        }.execute(null, null, null);
-    }
 
     public void setupRightDrawer() {
 
@@ -221,13 +187,74 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
 
 
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
-    public void buttonAddPartner(View view)
-    {
+    public void setupDeviceId() {
+        synchronized (partnerInformation) {
+
+            new AsyncTask<Void, Void, Boolean>() {
+
+                @Override
+                protected Boolean doInBackground(Void... params) {
+                    String msg = "";
+                    String regid = "";
+                    boolean autoRegistered = false;
+
+                    try {
+                        if (gcm == null) {
+                            gcm = GoogleCloudMessaging.getInstance(getApplicationContext());
+                        }
+
+                        regid = gcm.register(PROJECT_NUMBER);
+                        msg = "Device registered, registration ID=" + regid;
+                        Log.i("GCM", "!!!!! " + regid);
+
+                        autoRegistered = partnerInformation.registerOwnRegId(regid);
+
+                    } catch (IOException ex) {
+                        msg = "Error: " + ex.getMessage();
+                    }
+
+                    return autoRegistered;
+                }
+
+                @Override
+                protected void onPostExecute(Boolean autoRegistered) {
+                    me.autoRegistered = autoRegistered;
+
+                    if(autoRegistered) {
+                        buttonAddPartner.setVisibility(View.GONE);
+                        buttonRemovePartner.setVisibility(View.VISIBLE);
+                    }
+                }
+            }.execute(null, null, null);
+        }
+    }
+
+    public void buttonGetDeviceId(View view) {
+        String regId = partnerInformation.getOwnRegId();
+
+        if(regId == null || regId.equals(""))
+            setupDeviceId();
+
+        AlertDialog.Builder show = new AlertDialog.Builder(me);
+
+        synchronized (partnerInformation) {
+            // Dialog settings
+            show.setCancelable(true)
+                    .setMessage("Reg Id: " + partnerInformation.getOwnRegId())
+                    .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+
+                        }
+                    });
+
+            AlertDialog display = show.create();
+            display.show();
+        }
+    }
+
+    public void buttonAddPartner(View view) {
         final EditText username = new EditText(this);
 
         AlertDialog.Builder register = new AlertDialog.Builder(me);
@@ -242,9 +269,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 EditText email = (EditText) store.findViewById(R.id.partner_email);
                 EditText partner_id = (EditText) store.findViewById(R.id.partner_id);
 
-                info = new PartnerInformation(partner_id.getText().toString(), email.getText().toString());
-                buttonAddPartner.setVisibility(View.GONE);
-                buttonRemovePartner.setVisibility(View.VISIBLE);
+                try {
+                    partnerInformation.registerPartner(partner_id.getText().toString(), email.getText().toString());
+                    buttonAddPartner.setVisibility(View.GONE);
+                    buttonRemovePartner.setVisibility(View.VISIBLE);
+                    Toast.makeText(me, "Partner successfully registered", Toast.LENGTH_SHORT).show();
+                } catch (PartnerAlreadyRegisteredException e) {
+                    Toast.makeText(me, "Oops! Partner already registered", Toast.LENGTH_SHORT).show();
+                }
             }
         });
         register.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -264,9 +296,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         remove.setMessage("Are you sure you want to remove your partner?");
         remove.setPositiveButton("Yes!", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-                info = null;
+                partnerInformation.clear();
                 buttonAddPartner.setVisibility(View.VISIBLE);
                 buttonRemovePartner.setVisibility(View.GONE);
+                Toast.makeText(me, "Partner successfully removed", Toast.LENGTH_SHORT).show();
             }
         });
         remove.setNegativeButton("No!", new DialogInterface.OnClickListener() {

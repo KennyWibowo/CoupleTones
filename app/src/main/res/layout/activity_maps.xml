@@ -97,7 +97,7 @@
                 android:layout_marginRight="5dp"
                 android:text="Get Device ID"
                 android:backgroundTint="@color/colorSecondary"
-                android:onClick="getDeviceId"/>
+                android:onClick="buttonGetDeviceId"/>
         </LinearLayout>
     </RelativeLayout>
 
