@@ -57,6 +57,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private Context context = this;
     private MapsActivity me = this;
 
+    private GoogleApiClient client;
     private GoogleMap mMap;
     private GoogleCloudMessaging gcm;
 
@@ -80,7 +81,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
      */
-    private GoogleApiClient client;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,6 +103,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         //SETUPS
         setupRightDrawer();
         setupLocationListener();
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
 
     }
 
@@ -221,9 +224,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
 
 
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
     public void buttonAddPartner(View view)
