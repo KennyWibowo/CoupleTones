@@ -2,4 +2,6 @@ https://design.google.com/icons/
 
 https://github.com/daimajia/AndroidSwipeLayout
 
+http://developer.android.com/training/notify-user/build-notification.html
+
 Labs
