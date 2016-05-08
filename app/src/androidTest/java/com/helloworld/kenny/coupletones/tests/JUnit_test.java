@@ -20,6 +20,10 @@ public class JUnit_test extends ActivityInstrumentationTestCase2<MapsActivity> {
         super(MapsActivity.class);
     }
 
+    /**
+     * Tests add functionality of Favorites data structure
+     * @throws Exception
+     */
     public void test_add() throws Exception
     {
         Favorites favorites = new Favorites();
@@ -32,9 +36,18 @@ public class JUnit_test extends ActivityInstrumentationTestCase2<MapsActivity> {
             check = true;
             assertTrue(check);
         }
-        assertTrue(check);
+
+        if(favorites.size() != 1)
+        {
+            check = false;
+        }
+        assertTrue(false);
     }
 
+    /**
+     * Tests size functionality of Favorites data structure
+     * @throws Exception
+     */
     public void test_size() throws Exception
     {
         Favorites favorites = new Favorites();
@@ -49,6 +62,10 @@ public class JUnit_test extends ActivityInstrumentationTestCase2<MapsActivity> {
     }
 
 
+    /**
+     * Tests deleteEntry functionality of Favorites data structure
+     * @throws Exception
+     */
     public void test_entry() throws Exception
     {
         Favorites favorites = new Favorites();
@@ -63,6 +80,11 @@ public class JUnit_test extends ActivityInstrumentationTestCase2<MapsActivity> {
         assertEquals("Church", favorites.getEntry(0).getName());
     }
 
+
+    /**
+     * Tests existence method of Favorites data structure
+     * @throws Exception
+     */
     public void test_exist() throws Exception
     {
         Favorites favorites = new Favorites();

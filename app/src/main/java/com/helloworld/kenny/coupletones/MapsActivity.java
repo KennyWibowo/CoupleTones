@@ -121,7 +121,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     }
 
-
+    /**
+     * Sets up the right drawer for the list of favorite locations
+     */
     public void setupRightDrawer() {
 
         TextView title = new TextView(me);
@@ -159,6 +161,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     }
 
+    /**
+     * Creates the Location Listener for acquiring current locations
+     */
     public void setupLocationListener() {
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -222,6 +227,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     }
 
+    /**
+     * Sets up api services for retrieving device i.d.
+     */
     public void setupDeviceId() {
         synchronized (partnerInformation) {
 
@@ -264,6 +272,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
+    /**
+     * Button Method for retrieving i.d.
+     * @param view
+     */
     public void buttonGetDeviceId(View view) {
         String regId = partnerInformation.getOwnRegId();
 
@@ -289,6 +301,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         onReachedFavoriteLocation(new FavoriteEntry("Sixth College", new LatLng(0,0)));
     }
 
+    /**
+     * Button for adding partner
+     * @param view
+     */
     public void buttonAddPartner(View view) {
         final EditText username = new EditText(this);
 
@@ -325,6 +341,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     }
 
+    /**
+     * Button for removing partner
+     * @param view
+     */
     public void buttonRemovePartner(View view) {
 
         AlertDialog.Builder remove = new AlertDialog.Builder(me);
@@ -347,6 +367,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         displayWarn.show();
     }
 
+    /**
+     * Button for deleting favorites
+     * @param view
+     */
     public void buttonDeleteFavorite(View view) {
         SwipeLayout swipeLayout = (SwipeLayout) view.getParent().getParent();
         TextView nameView = (TextView) swipeLayout.findViewById(R.id.listview_item_text);
@@ -365,6 +389,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         System.out.println(favorites.toString());
     }
 
+    /**
+     * Button for searching locations
+     * @param view
+     */
     public void buttonSearch(View view) {
         String location = searchBar.getText().toString();
         List<Address> addressList = null;
@@ -388,6 +416,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
+    /**
+     * Handling event-driven case where user clicks a location on the Map
+     * @param point
+     */
     @Override
     public void onMapClick(final LatLng point) {
 
@@ -430,6 +462,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         namePrompt.show();
     }
 
+    /**
+     * Handling event where user reaches a favorite location
+     * @param entry
+     */
     public void onReachedFavoriteLocation(FavoriteEntry entry) {
         //TODO: move this to the intent?
         // Message: Partner has reached location "(blah blah)"
@@ -491,6 +527,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     }
 
+    /**
+     * Application-api instantiation
+     */
     @Override
     public void onStart() {
         super.onStart();
@@ -511,6 +550,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         AppIndex.AppIndexApi.start(client, viewAction);
     }
 
+    /**
+     * When API services stop
+     */
     @Override
     public void onStop() {
         super.onStop();
@@ -531,6 +573,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         client.disconnect();
     }
 
+    /**
+     * Calculates the distance between two points via the distance formula
+     * @param lat1
+     * @param lat2
+     * @param lon1
+     * @param lon2
+     * @param el1
+     * @param el2
+     * @return
+     */
     public boolean compDistance(double lat1, double lat2, double lon1, double lon2, double el1,
                             double el2){
         final int R = 6371;
