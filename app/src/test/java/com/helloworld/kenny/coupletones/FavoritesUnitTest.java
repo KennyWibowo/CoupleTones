@@ -1,4 +1,4 @@
-package com.helloworld.kenny.coupletones.tests;
+package com.helloworld.kenny.coupletones;
 
 import android.test.ActivityInstrumentationTestCase2;
 import android.test.AndroidTestCase;
@@ -11,14 +11,23 @@ import com.helloworld.kenny.coupletones.favorites.*;
 import com.google.android.gms.maps.model.LatLng;
 import com.helloworld.kenny.coupletones.favorites.exceptions.*;
 
+import org.junit.Test;
+
+import java.util.Map;
+
 /**
  * To work on unit tests, switch the Test Artifact in the Build Variants view.
  */
 
-public class FavoritesUnitTest extends InstrumentationTestCase
+public class FavoritesUnitTest extends ActivityInstrumentationTestCase2<MapsActivity>
 {
 
+    public FavoritesUnitTest()
+    {
+        super(MapsActivity.class);
+    }
 
+    @Test
     public void check_repeat_add() throws Exception
     {
         Favorites favorites = new Favorites();
@@ -35,7 +44,7 @@ public class FavoritesUnitTest extends InstrumentationTestCase
 
     }
 
-
+    @Test
     public void check_add_size() throws Exception
     {
         Favorites favorites = new Favorites();
@@ -49,7 +58,7 @@ public class FavoritesUnitTest extends InstrumentationTestCase
         assertEquals(7, favorites.size());
     }
 
-
+    @Test
     public void check_lost_entry() throws Exception
     {
         Favorites favorites = new Favorites();
@@ -64,7 +73,7 @@ public class FavoritesUnitTest extends InstrumentationTestCase
         assertEquals("Church", favorites.getEntry(0).getName());
     }
 
-
+    @Test
     public void check_entry_exists() throws Exception
     {
         Favorites favorites = new Favorites();
