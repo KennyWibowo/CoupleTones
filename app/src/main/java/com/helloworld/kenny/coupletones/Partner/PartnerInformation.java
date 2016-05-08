@@ -8,8 +8,8 @@ import com.helloworld.kenny.coupletones.partner.exceptions.PartnerAlreadyRegiste
 public class PartnerInformation {
 
     // TODO: some sort of string verification on the email/id?
-    private String partnerRegId;
-    private String myRegId;
+    public static String partnerRegId;
+    public static String myRegId;
     private String email;
     private boolean registered;
 
@@ -31,8 +31,8 @@ public class PartnerInformation {
      *
      *  This should auto-register both apps to each other!
      * */
-    private static final String REG_ID_1 = "INSERT_REG_ID_HERE";
-    private static final String REG_ID_2 = "INSERT_REG_ID_HERE";
+    public static final String REG_ID_1 = "INSERT_REG_ID_HERE";
+    public static final String REG_ID_2 = "INSERT_REG_ID_HERE";
 
     private static final String EMAIL_1 = "dummy1@dummymail.com";
     private static final String EMAIL_2 = "dummy2@dummymail.com";
@@ -75,11 +75,11 @@ public class PartnerInformation {
         this.email = email;
     }
 
-    public String getOwnRegId() {
+    public static String getOwnRegId() {
         return myRegId;
     }
 
-    public String getRegId() {
+    public static String getRegId() {
         return partnerRegId;
     }
 

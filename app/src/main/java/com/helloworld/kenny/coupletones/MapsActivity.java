@@ -2,8 +2,10 @@ package com.helloworld.kenny.coupletones;
 
 import android.Manifest;
 import android.app.AlertDialog;
+import android.app.Notification;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
@@ -16,6 +18,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
+import android.text.TextUtils;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -37,10 +40,12 @@ import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.helloworld.kenny.coupletones.favorites.Entry;
 import com.helloworld.kenny.coupletones.favorites.exceptions.InvalidNameException;
 import com.helloworld.kenny.coupletones.favorites.exceptions.NameInUseException;
 import com.helloworld.kenny.coupletones.favorites.FavoriteEntry;
 import com.helloworld.kenny.coupletones.favorites.Favorites;
+import com.helloworld.kenny.coupletones.gcm.GcmSendIntentService;
 import com.helloworld.kenny.coupletones.partner.exceptions.PartnerAlreadyRegisteredException;
 import com.helloworld.kenny.coupletones.partner.PartnerInformation;
 
@@ -78,6 +83,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private String PROJECT_NUMBER = "366742322722";
     private boolean autoRegistered = false;
+    //private TextView mTxtMsg;
 
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
@@ -166,13 +172,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         LocationListener locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
-                mMap.clear();
-                mMap.addMarker(new MarkerOptions().position(new LatLng(location.getLatitude(), location.getLongitude())).title("update location"));
+                //mMap.clear();
+                //mMap.addMarker(new MarkerOptions().position(new LatLng(location.getLatitude(), location.getLongitude())).title("update location"));
                 double lat =  location.getLatitude();
                 double lng = location.getLongitude();
                 double alt = location.getAltitude();
                 boolean inRange = false;
-
+                FavoriteEntry favEntry = null;
                 ArrayList<FavoriteEntry> favs = favorites.getAllEntries();
                 for (int i = 0; i < favorites.size(); i++){
                     LatLng ref = favs.get(i).getLocation();
@@ -180,16 +186,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     double refLng = ref.longitude;
                     double refAlt = alt;
                     inRange = compDistance(lat, refLat, lng, refLng, alt, refAlt);
-                    if(inRange) break;
+                    if(inRange){
+                        favEntry = favs.get(i);
+                        break;
+                    }
                 }
 
-                if(inRange){
-
+                if(inRange && favEntry != null){
+                    System.out.print("In Range!!!\n");
+                    onReachedFavoriteLocation(favEntry);
                 }
-
-
-
-
 
 
             }
@@ -420,10 +426,22 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         namePrompt.show();
     }
 
-    public void onReachedFavoriteLocation() {
+    public void onReachedFavoriteLocation(FavoriteEntry entry) {
         //TODO: copy GcmDemoFragment.sendMessage
         // Message: Partner has reached location "(blah blah)"
+
+        Intent msgIntent = new Intent(this, GcmSendIntentService.class);
+        msgIntent.setAction("com.helloworld.kenny.coupletones.ECHO");
+
+        //String msgTxt = "message sent "+msg;
+        //Crouton.showText(this, msgTxt, Notification.Style.INFO);
+        msgIntent.putExtra("PartnerID", partnerInformation.getRegId());
+        msgIntent.putExtra("Sender RegID",partnerInformation.getOwnRegId());
+        msgIntent.putExtra("ProjectID",PROJECT_NUMBER);
+        msgIntent.putExtra("Location Name", entry.getName());
+        this.startService(msgIntent);
     }
+
 
 
     /**
