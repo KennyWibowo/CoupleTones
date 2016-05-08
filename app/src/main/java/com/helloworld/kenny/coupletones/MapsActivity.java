@@ -298,7 +298,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             display.show();
         }
 
-        onReachedFavoriteLocation(new FavoriteEntry("Sixth College", new LatLng(0,0)));
+        //onReachedFavoriteLocation(new FavoriteEntry("Sixth College", new LatLng(0,0)));
     }
 
     /**
@@ -469,6 +469,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onReachedFavoriteLocation(FavoriteEntry entry) {
         //TODO: move this to the intent?
         // Message: Partner has reached location "(blah blah)"
+
+        entry.visit();
 
         System.out.println("Sending a message to: " + partnerInformation.getRegId());
 
