@@ -434,6 +434,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         //TODO: move this to the intent?
         // Message: Partner has reached location "(blah blah)"
 
+        entry.visit();
+
         System.out.println("Sending a message to: " + partnerInformation.getRegId());
 
         try {
