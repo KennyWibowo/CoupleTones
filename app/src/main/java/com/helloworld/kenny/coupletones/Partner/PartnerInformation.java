@@ -1,6 +1,6 @@
-package com.helloworld.kenny.coupletones.Partner;
+package com.helloworld.kenny.coupletones.partner;
 
-import com.helloworld.kenny.coupletones.Partner.Exceptions.PartnerAlreadyRegisteredException;
+import com.helloworld.kenny.coupletones.partner.exceptions.PartnerAlreadyRegisteredException;
 
 /**
  * Created by Kenny on 5/5/2016.

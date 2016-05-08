@@ -41,15 +41,13 @@ import com.helloworld.kenny.coupletones.Favorites.Exceptions.InvalidNameExceptio
 import com.helloworld.kenny.coupletones.Favorites.Exceptions.NameInUseException;
 import com.helloworld.kenny.coupletones.Favorites.FavoriteEntry;
 import com.helloworld.kenny.coupletones.Favorites.Favorites;
-import com.helloworld.kenny.coupletones.Partner.Exceptions.PartnerAlreadyRegisteredException;
-import com.helloworld.kenny.coupletones.Partner.PartnerInformation;
+import com.helloworld.kenny.coupletones.partner.exceptions.PartnerAlreadyRegisteredException;
+import com.helloworld.kenny.coupletones.partner.PartnerInformation;
 
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -421,6 +419,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         AlertDialog namePrompt = builder.create();
         namePrompt.show();
     }
+
+    public void onReachedFavoriteLocation() {
+        //TODO: copy GcmDemoFragment.sendMessage
+        // Message: Partner has reached location "(blah blah)"
+    }
+
 
     /**
      * Manipulates the map once available.
