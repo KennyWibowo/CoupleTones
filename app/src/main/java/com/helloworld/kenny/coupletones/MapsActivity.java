@@ -6,6 +6,7 @@ import android.app.Notification;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
@@ -14,6 +15,7 @@ import android.location.LocationManager;
 import android.location.LocationListener;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.preference.PreferenceManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
@@ -283,6 +285,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             AlertDialog display = show.create();
             display.show();
         }
+
+        onReachedFavoriteLocation(new FavoriteEntry("Sixth College", new LatLng(0,0)));
     }
 
     public void buttonAddPartner(View view) {
@@ -430,19 +434,37 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         //TODO: copy GcmDemoFragment.sendMessage
         // Message: Partner has reached location "(blah blah)"
 
-        Intent msgIntent = new Intent(this, GcmSendIntentService.class);
-        msgIntent.setAction("com.helloworld.kenny.coupletones.ECHO");
+        System.out.println("Sending a message to: " + partnerInformation.getRegId());
 
-        //String msgTxt = "message sent "+msg;
-        //Crouton.showText(this, msgTxt, Notification.Style.INFO);
-        msgIntent.putExtra("PartnerID", partnerInformation.getRegId());
-        msgIntent.putExtra("Sender RegID",partnerInformation.getOwnRegId());
-        msgIntent.putExtra("ProjectID",PROJECT_NUMBER);
-        msgIntent.putExtra("Location Name", entry.getName());
-        this.startService(msgIntent);
+        try {
+            String partnerId = partnerInformation.getRegId();
+            Bundle data = new Bundle();
+            data.putString("action", "com.helloworld.kenny.coupletones.ECHO");
+            data.putString("message", "Your partner reached: "+ entry.getName());
+            data.putString("Partner ID", partnerId);
+            //String id = Integer.toString(getNextMsgId());
+            gcm.send(PROJECT_NUMBER + "@gcm.googleapis.com",""+getNextMessageId(), data);
+            //msgId++;
+            //Log.v("grokkingandroid", "sent message: " + msg);
+        } catch (IOException e) {
+            System.out.println("uh oh");
+        }
     }
 
+    private int id;
 
+    private int getNextMessageId() {
+        SharedPreferences prefs = getPrefs();
+        int id = prefs.getInt("keyMsgId", 0);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putInt("keyMsgId", ++id);
+        editor.commit();
+        return id;
+    }
+
+    private SharedPreferences getPrefs() {
+        return PreferenceManager.getDefaultSharedPreferences(this);
+    }
 
     /**
      * Manipulates the map once available.

@@ -35,13 +35,14 @@ public class GcmMessageHandler extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
         //TODO make sure that this is all good
+        System.out.println("MessageHandler - Message received!");
         Bundle extras = intent.getExtras();
 
         GoogleCloudMessaging gcm = GoogleCloudMessaging.getInstance(this);
 
         String messageType = gcm.getMessageType(intent);
 
-        mes = extras.getString("title");
+        mes = extras.getString("message");
         showMessage(mes);
 
         Log.i("GCM", "Received: (" + messageType + ") " + extras.getString("title"));
@@ -55,8 +56,9 @@ public class GcmMessageHandler extends IntentService {
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)
                 //.setSmallIcon(R.drawable.);
-                .setContentTitle("GCM notification")
-                .setContentText(msg);
+                .setContentTitle("Partner reached favorite location!")
+                .setContentText(msg)
+                .setSmallIcon(R.drawable.ic_launcher);
         int mNotificationId = 001;
         NotificationManager mNotifyMgr =
                 (NotificationManager) getSystemService(NOTIFICATION_SERVICE);

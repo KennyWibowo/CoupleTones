@@ -23,6 +23,8 @@ public class GcmSendIntentService extends IntentService {
     public void onHandleIntent(Intent intent) {
         //TODO: copy GCM_UP's GcmSendIntentService.sendMessage
         // also figure out how to send regId in the Bundle
+
+        System.out.println("Intent - sending message");
         GoogleCloudMessaging gcm = GoogleCloudMessaging.getInstance(this);
         String mSenderId = intent.getStringExtra("Sender RegID");
         String locationName = intent.getStringExtra("Location Name");
@@ -37,7 +39,7 @@ public class GcmSendIntentService extends IntentService {
             msgId++;
             //Log.v("grokkingandroid", "sent message: " + msg);
         } catch (IOException e) {
-            //Log.e("grokkingandroid", "Error while sending a message", e);
+            System.out.println("uh oh");
         }
     }
 }
