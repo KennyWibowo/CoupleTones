@@ -1,8 +1,7 @@
-package com.helloworld.kenny.coupletones.Favorites;
+package com.helloworld.kenny.coupletones.favorites;
 
 import com.google.android.gms.maps.model.LatLng;
 
-import java.sql.Time;
 import java.sql.Timestamp;
 
 /**

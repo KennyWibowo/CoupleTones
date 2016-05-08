@@ -37,10 +37,10 @@ import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.helloworld.kenny.coupletones.Favorites.Exceptions.InvalidNameException;
-import com.helloworld.kenny.coupletones.Favorites.Exceptions.NameInUseException;
-import com.helloworld.kenny.coupletones.Favorites.FavoriteEntry;
-import com.helloworld.kenny.coupletones.Favorites.Favorites;
+import com.helloworld.kenny.coupletones.favorites.exceptions.InvalidNameException;
+import com.helloworld.kenny.coupletones.favorites.exceptions.NameInUseException;
+import com.helloworld.kenny.coupletones.favorites.FavoriteEntry;
+import com.helloworld.kenny.coupletones.favorites.Favorites;
 import com.helloworld.kenny.coupletones.partner.exceptions.PartnerAlreadyRegisteredException;
 import com.helloworld.kenny.coupletones.partner.PartnerInformation;
 

@@ -1,4 +1,4 @@
-package com.helloworld.kenny.coupletones.Favorites;
+package com.helloworld.kenny.coupletones.favorites;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;

@@ -1,16 +1,10 @@
-package com.helloworld.kenny.coupletones.Favorites;
-
-import android.support.v7.app.AppCompatActivity;
+package com.helloworld.kenny.coupletones.favorites;
 
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.StreetViewPanoramaCamera;
-import com.helloworld.kenny.coupletones.Favorites.Exceptions.InvalidNameException;
-import com.helloworld.kenny.coupletones.Favorites.Exceptions.NameInUseException;
+import com.helloworld.kenny.coupletones.favorites.exceptions.InvalidNameException;
+import com.helloworld.kenny.coupletones.favorites.exceptions.NameInUseException;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.NoSuchElementException;
 
 /**
  * Created by Kenny on 5/3/2016.
