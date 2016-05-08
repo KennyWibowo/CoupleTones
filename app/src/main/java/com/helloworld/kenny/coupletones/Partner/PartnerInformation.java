@@ -31,8 +31,8 @@ public class PartnerInformation {
      *
      *  This should auto-register both apps to each other!
      * */
-    public static final String REG_ID_1 = "APA91bFAWoA4o0HM_WPVSlTWJwSlXHHvEvccSxi5gH12p7_cU4ebSKLBwWlylfwyg8gwzW8yNm3hdj3JvO1MtXLNJPfxoqqfCOS8uDkKzPVEMGzPFbebygQqdU3vIjQylHwffz8O7_uoHnouW6UtnRv2JGKtV1FmsQ";
-    public static final String REG_ID_2 = "APA91bEkDEW1eTorFjabIRsjustxw_Zs2VNObxhbOn2kVwfkV1F6D_Edt_Vg37fdUobhwuiA1WzLFIXtEyWI65icQEMRUHHiKP_xzbzL3Lam-AkgP7fOYTAKzARZXCuONauCBKBCZrelZXAD_iAWU9lEHVjce8WGsw";
+    public static final String REG_ID_1 = "INSERT_ID_HERE";
+    public static final String REG_ID_2 = "INSERT_ID_HERE";
 
     private static final String EMAIL_1 = "dummy1@dummymail.com";
     private static final String EMAIL_2 = "dummy2@dummymail.com";
@@ -75,11 +75,11 @@ public class PartnerInformation {
         this.email = email;
     }
 
-    public static String getOwnRegId() {
+    public String getOwnRegId() {
         return myRegId;
     }
 
-    public static String getRegId() {
+    public String getRegId() {
         return partnerRegId;
     }
 

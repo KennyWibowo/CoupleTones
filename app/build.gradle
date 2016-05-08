@@ -24,7 +24,7 @@ dependencies {
     testCompile 'junit:junit:4.12'
 
     // For AndroidSwipeLayout: https://github.com/daimajia/AndroidSwipeLayout
-    compile 'com.android.support:appcompat-v7:23.0.0-alpha2'
+    compile 'com.android.support:appcompat-v7:24.0.0-alpha2'
     compile 'com.google.android.gms:play-services-maps:8.4.0'
     compile 'com.google.android.gms:play-services-location:8.4.0'
     compile 'com.google.android.gms:play-services-auth:8.4.0'
@@ -32,7 +32,7 @@ dependencies {
     compile 'com.google.android.gms:play-services-identity:8.4.0'
     compile 'com.google.android.gms:play-services-base:8.4.0'
     compile 'com.google.android.gms:play-services-appindexing:8.4.0'
-    compile 'com.android.support:recyclerview-v7:23.0.0-alpha2'
-    compile 'com.android.support:support-v4:23.0.0-alpha2'
+    compile 'com.android.support:recyclerview-v7:24.0.0-alpha2'
+    compile 'com.android.support:support-v4:24.0.0-alpha2'
     compile 'com.daimajia.swipelayout:library:1.2.0@aar'
 }
