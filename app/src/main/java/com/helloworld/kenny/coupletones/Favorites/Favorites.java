@@ -12,7 +12,6 @@ import java.util.ArrayList;
 public class Favorites {
 
     private ArrayList<FavoriteEntry> favorites;
-    private ArrayList<String> favoriteNames;
 
     public Favorites() {
         favorites = new ArrayList<FavoriteEntry>();
