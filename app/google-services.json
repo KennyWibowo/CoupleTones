@@ -1,0 +1,35 @@
+{
+  "project_info": {
+    "project_number": "689537542360",
+    "project_id": "couple-tones-476af"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:689537542360:android:dcd2bef6ec26aaf9",
+        "android_client_info": {
+          "package_name": "com.helloworld.kenny.coupletones"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDuA96roqd4YRHfX1dqWZA4fnevPV7GXV0"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
