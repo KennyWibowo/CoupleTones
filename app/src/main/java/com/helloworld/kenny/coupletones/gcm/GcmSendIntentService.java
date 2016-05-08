@@ -32,8 +32,9 @@ public class GcmSendIntentService extends IntentService {
             String partnerId = intent.getStringExtra("Partner RegId");
             Bundle data = new Bundle();
             data.putString("action", "com.helloworld.kenny.coupletones.MESSAGE");
-            data.putString("message", "Your partner reached: "+ locationName);
-            data.putString("Partner ID", partnerId);
+            data.putString("title", "Partner reached favorite location!");
+            data.putString("content", "Your partner reached: "+ locationName);
+            data.putString("toRegId", partnerId);
             //String id = Integer.toString(getNextMsgId());
             gcm.send(mSenderId + "@gcm.googleapis.com",""+msgId, data);
             msgId++;

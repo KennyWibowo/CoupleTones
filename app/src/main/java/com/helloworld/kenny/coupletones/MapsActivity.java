@@ -431,7 +431,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     public void onReachedFavoriteLocation(FavoriteEntry entry) {
-        //TODO: copy GcmDemoFragment.sendMessage
+        //TODO: move this to the intent?
         // Message: Partner has reached location "(blah blah)"
 
         System.out.println("Sending a message to: " + partnerInformation.getRegId());
@@ -439,19 +439,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         try {
             String partnerId = partnerInformation.getRegId();
             Bundle data = new Bundle();
-            data.putString("action", "com.helloworld.kenny.coupletones.ECHO");
-            data.putString("message", "Your partner reached: "+ entry.getName());
-            data.putString("Partner ID", partnerId);
+            data.putString("action", "com.helloworld.kenny.coupletones.MESSAGE");
+            data.putString("toRegId", partnerInformation.getRegId());
+            data.putString("title", "Partner reached favorite location!");
+            data.putString("content", "Your partner reached: " + entry.getName());
             //String id = Integer.toString(getNextMsgId());
-            gcm.send(PROJECT_NUMBER + "@gcm.googleapis.com",""+getNextMessageId(), data);
+            gcm.send(PROJECT_NUMBER + "@gcm.googleapis.com","" + getNextMessageId(), data);
             //msgId++;
             //Log.v("grokkingandroid", "sent message: " + msg);
         } catch (IOException e) {
             System.out.println("uh oh");
         }
     }
-
-    private int id;
 
     private int getNextMessageId() {
         SharedPreferences prefs = getPrefs();

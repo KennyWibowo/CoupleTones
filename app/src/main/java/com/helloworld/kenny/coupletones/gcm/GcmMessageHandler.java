@@ -1,14 +1,12 @@
 package com.helloworld.kenny.coupletones.gcm;
 
 import android.app.IntentService;
-import android.app.Notification;
 import android.app.NotificationManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.google.android.gms.gcm.GcmReceiver;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
@@ -19,7 +17,6 @@ import com.helloworld.kenny.coupletones.R;
  */
 public class GcmMessageHandler extends IntentService {
 
-    String mes;
     private Handler handler;
 
     public GcmMessageHandler(){
@@ -42,22 +39,23 @@ public class GcmMessageHandler extends IntentService {
 
         String messageType = gcm.getMessageType(intent);
 
-        mes = extras.getString("message");
-        showMessage(mes);
+        String title = extras.getString("title");
+        String content = extras.getString("content");
+        showMessage(title, content);
 
         Log.i("GCM", "Received: (" + messageType + ") " + extras.getString("title"));
 
         GcmReceiver.completeWakefulIntent(intent);
     }
 
-    public void showMessage(String msg) {
+    public void showMessage(String title, String content) {
         // TODO: refactor this into an actual notification
         // Helpful : http://developer.android.com/training/notify-user/build-notification.html
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)
                 //.setSmallIcon(R.drawable.);
-                .setContentTitle("Partner reached favorite location!")
-                .setContentText(msg)
+                .setContentTitle(title)
+                .setContentText(content)
                 .setSmallIcon(R.drawable.ic_launcher);
         int mNotificationId = 001;
         NotificationManager mNotifyMgr =

@@ -1,0 +1,9 @@
+apply plugin: 'java'
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile 'jivesoftware:smack:3.1.0'
+    compile 'jivesoftware:smackx:3.1.0'
+    compile 'com.googlecode.json-simple:json-simple:1.1'
+    compile 'com.fasterxml.jackson.core:jackson-databind:2.6.0'
+}
