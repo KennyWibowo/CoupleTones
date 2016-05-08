@@ -49,7 +49,10 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONObject;
+
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -109,6 +112,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
 
+
     }
 
 
@@ -166,6 +170,29 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             public void onLocationChanged(Location location) {
                 mMap.clear();
                 mMap.addMarker(new MarkerOptions().position(new LatLng(location.getLatitude(), location.getLongitude())).title("update location"));
+                double lat =  location.getLatitude();
+                double lng = location.getLongitude();
+                double alt = location.getAltitude();
+                boolean inRange = false;
+
+                ArrayList<FavoriteEntry> favs = favorites.getAllEntries();
+                for (int i = 0; i < favorites.size(); i++){
+                    LatLng ref = favs.get(i).getLocation();
+                    double refLat = ref.latitude;
+                    double refLng = ref.longitude;
+                    double refAlt = alt;
+                    inRange = compDistance(lat, refLat, lng, refLng, alt, refAlt);
+                    if(inRange) break;
+                }
+
+                if(inRange){
+
+                }
+
+
+
+
+
 
             }
 
@@ -459,5 +486,23 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         );
         AppIndex.AppIndexApi.end(client, viewAction);
         client.disconnect();
+    }
+
+    public boolean compDistance(double lat1, double lat2, double lon1, double lon2, double el1,
+                            double el2){
+        final int R = 6371;
+
+        double latDistance = Math.toRadians(lat1 - lat2);
+        double longDistance = Math.toRadians(lon1-lon2);
+        double a = Math.sin(latDistance/2)*Math.sin(latDistance/2)
+                   + Math.cos(Math.toRadians(lat1))*Math.cos(Math.toRadians(lat2))
+                   * Math.sin(longDistance/2) * Math.sin(longDistance/2);
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+        double distance = R*c*1000;
+        double height = el1 - el2;
+        distance = Math.pow(distance, 2) + Math.pow(height, 2);
+        distance = Math.sqrt(distance);
+
+        return (distance/1609.344 < 0.1);
     }
 }
