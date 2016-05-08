@@ -85,6 +85,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private String PROJECT_NUMBER = "366742322722";
     private boolean autoRegistered = false;
+    private boolean reached = false;
     //private TextView mTxtMsg;
 
     /**
@@ -199,9 +200,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     }
                 }
 
-                if(inRange && favEntry != null){
+                if((reached==false)&&inRange && favEntry != null){
                     System.out.print("In Range!!!\n");
                     onReachedFavoriteLocation(favEntry);
+                    //inRange = false;
+                    reached = true;
+                }
+                if(inRange == false)
+                {
+                    System.out.print("Out of Range!!!\n");
+                    reached  = false;
                 }
 
 
