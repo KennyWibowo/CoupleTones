@@ -286,7 +286,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             display.show();
         }
 
-        onReachedFavoriteLocation(new FavoriteEntry("Sixth College", new LatLng(0,0)));
+        //onReachedFavoriteLocation(new FavoriteEntry("Sixth College", new LatLng(0,0)));
     }
 
     public void buttonAddPartner(View view) {
