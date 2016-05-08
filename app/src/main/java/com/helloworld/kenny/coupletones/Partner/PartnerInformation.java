@@ -31,8 +31,8 @@ public class PartnerInformation {
      *
      *  This should auto-register both apps to each other!
      * */
-    public static final String REG_ID_1 = "INSERT_ID_HERE";
-    public static final String REG_ID_2 = "INSERT_ID_HERE";
+    public static final String REG_ID_1 = "APA91bHutDAPW-Q8OnvtLC4bNivOcqjfckNHxgeR02FKFf4uG41YrqJVOtZcaOZXLTDt4VlauGvtF9VMYpnsO8Z413vnMuQQSDxPW-A2J3KIPC5Dv7ykksNGhvhFHJBn55SBdzzFI5kCE2ROfo1KWSm-cIhqVh_pKw";
+    public static final String REG_ID_2 = "APA91bGaD60xCw-n6zDCnVcVP5CvMh_uIGdlWDOqmC8syMpuHpFmMmkt9IL6pB6dwEtoYJWzX2P-rw2W040sg5R4pWATSfS0QthygIBGrAPB4NCc-ItbdlHnFNYKFkCQremkSQwTSgO1HqbPq121bmfzKYP1C7x-0g";
 
     private static final String EMAIL_1 = "dummy1@dummymail.com";
     private static final String EMAIL_2 = "dummy2@dummymail.com";
