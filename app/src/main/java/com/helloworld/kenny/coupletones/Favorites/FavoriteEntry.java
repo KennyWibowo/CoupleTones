@@ -27,7 +27,7 @@ public class FavoriteEntry extends Entry {
     }
 
     public void visit() {
-        getTimestamp().setTime(System.currentTimeMillis());
+        setTimestamp(System.currentTimeMillis());
     }
 
 
