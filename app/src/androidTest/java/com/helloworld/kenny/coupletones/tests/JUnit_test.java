@@ -99,7 +99,7 @@ public class JUnit_test extends ActivityInstrumentationTestCase2<MapsActivity> {
      * @throws Exception
      */
     public void test_partnerInfo() throws Exception {
-        private final PartnerInformation partnerInformation = new PartnerInformation();
+        PartnerInformation partnerInformation = new PartnerInformation();
         String id = "someID";
         String partnerId = "somePartner";
         String email = "someemail@email.com";
