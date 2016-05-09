@@ -4,9 +4,11 @@ https://design.google.com/icons/
 
 https://github.com/daimajia/AndroidSwipeLayout
 
-http://developer.android.com/training/notify-user/build-notification.html
+http://developer.android.com/
 
 Labs
+
+https://github.com/writtmeyer/gcm_server
 
 Piazza Page for CSE 110: https://piazza.com/class/ikftkctn7ey23a?cid=192#
 
