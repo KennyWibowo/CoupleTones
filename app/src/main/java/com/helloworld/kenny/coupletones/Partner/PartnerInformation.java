@@ -10,7 +10,7 @@ public class PartnerInformation {
     // TODO: some sort of string verification on the email/id?
     public static String partnerRegId;
     public static String myRegId;
-    private String email;
+    private static String email;
     private boolean registered;
 
     /**
@@ -75,15 +75,15 @@ public class PartnerInformation {
         this.email = email;
     }
 
-    public String getOwnRegId() {
+    public static String getOwnRegId() {
         return myRegId;
     }
 
-    public String getRegId() {
+    public static String getRegId() {
         return partnerRegId;
     }
 
-    public String getEmail() {
+    public static String getEmail() {
         return email;
     }
 
