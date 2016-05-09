@@ -201,14 +201,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 }
 
                 if((reached==false)&&inRange && favEntry != null){
-                    System.out.print("In Range!!!\n");
+                    //System.out.print("In Range!!!\n");
                     onReachedFavoriteLocation(favEntry);
                     //inRange = false;
                     reached = true;
                 }
                 if(inRange == false)
                 {
-                    System.out.print("Out of Range!!!\n");
+                    //System.out.print("Out of Range!!!\n");
                     reached  = false;
                 }
 
