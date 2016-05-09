@@ -25,6 +25,7 @@ public class JUnit_test extends ActivityInstrumentationTestCase2<MapsActivity> {
      * Tests add functionality of Favorites data structure
      * @throws Exception
      */
+
     public void test_add() throws Exception
     {
         Favorites favorites = new Favorites();
