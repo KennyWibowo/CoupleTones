@@ -95,7 +95,7 @@ public class JUnit_test extends ActivityInstrumentationTestCase2<MapsActivity> {
     }
 
     /**
-     * Tests existence method of Favorites data structure
+     * Tests existence method of PartnerInformation data structure
      * @throws Exception
      */
     public void test_partnerInfo() throws Exception {
