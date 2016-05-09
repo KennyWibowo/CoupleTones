@@ -8,6 +8,7 @@ import com.helloworld.kenny.coupletones.favorites.FavoriteEntry;
 import com.helloworld.kenny.coupletones.favorites.Favorites;
 import com.helloworld.kenny.coupletones.favorites.exceptions.InvalidNameException;
 import com.helloworld.kenny.coupletones.favorites.exceptions.NameInUseException;
+import com.helloworld.kenny.coupletones.partner.PartnerInformation;
 
 /**
  * Created by Karen on 5/8/2016.
@@ -92,5 +93,25 @@ public class JUnit_test extends ActivityInstrumentationTestCase2<MapsActivity> {
         favorites.addEntry("Taco Bell", new LatLng(68, 68));
         assertEquals(list.toString(), favorites.getEntry(0).toString());
     }
+
+    /**
+     * Tests existence method of Favorites data structure
+     * @throws Exception
+     */
+    public void test_partnerInfo() throws Exception {
+        private final PartnerInformation partnerInformation = new PartnerInformation();
+        String id = "someID";
+        String partnerId = "somePartner";
+        String email = "someemail@email.com";
+
+        partnerInformation.registerOwnRegId(id);
+        partnerInformation.registerPartner(partnerId, email);
+
+        assertEquals(PartnerInformation.getOwnRegId(), id);
+        assertEquals(PartnerInformation.getRegId(), partnerId);
+        assertEquals(PartnerInformation.getEmail(), email);
+    }
+
+
 
 }
