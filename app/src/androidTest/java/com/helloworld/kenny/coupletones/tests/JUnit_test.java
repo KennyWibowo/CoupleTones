@@ -41,7 +41,7 @@ public class JUnit_test extends ActivityInstrumentationTestCase2<MapsActivity> {
         {
             check = false;
         }
-        assertTrue(false);
+        assertTrue(check);
     }
 
     /**
