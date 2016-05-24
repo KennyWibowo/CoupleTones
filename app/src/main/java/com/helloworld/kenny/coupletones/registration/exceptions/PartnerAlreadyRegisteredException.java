@@ -1,4 +1,4 @@
-package com.helloworld.kenny.coupletones.partner.exceptions;
+package com.helloworld.kenny.coupletones.registration.exceptions;
 
 /**
  * Created by Kenny on 5/6/2016.
