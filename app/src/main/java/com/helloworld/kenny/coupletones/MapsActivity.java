@@ -2,10 +2,8 @@ package com.helloworld.kenny.coupletones;
 
 import android.Manifest;
 import android.app.AlertDialog;
-import android.app.Notification;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Address;
@@ -20,7 +18,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
-import android.text.TextUtils;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -42,14 +39,12 @@ import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.helloworld.kenny.coupletones.favorites.Entry;
+import com.helloworld.kenny.coupletones.favorites.FavoritesList;
 import com.helloworld.kenny.coupletones.favorites.exceptions.InvalidNameException;
 import com.helloworld.kenny.coupletones.favorites.exceptions.NameInUseException;
-import com.helloworld.kenny.coupletones.favorites.FavoriteEntry;
-import com.helloworld.kenny.coupletones.favorites.Favorites;
-import com.helloworld.kenny.coupletones.gcm.GcmSendIntentService;
-import com.helloworld.kenny.coupletones.partner.exceptions.PartnerAlreadyRegisteredException;
-import com.helloworld.kenny.coupletones.partner.PartnerInformation;
+import com.helloworld.kenny.coupletones.favorites.self.SelfFavoriteEntry;
+import com.helloworld.kenny.coupletones.registration.exceptions.PartnerAlreadyRegisteredException;
+import com.helloworld.kenny.coupletones.registration.PartnerInformation;
 
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -80,8 +75,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private Button buttonRemovePartner;
     private Button buttonAddPartner;
 
-    private Favorites favorites;
-    private FavoriteSwipeAdapter<FavoriteEntry> favoriteSwipeAdapter;
+    private FavoritesList selfFavoritesList;
+    private FavoriteSwipeAdapter<SelfFavoriteEntry> favoriteSwipeAdapter;
 
     private String PROJECT_NUMBER = "366742322722";
     private boolean autoRegistered = false;
@@ -107,8 +102,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         buttonRemovePartner = (Button) findViewById(R.id.remove_partner);
 
         // setup data structures and variables
-        favorites = new Favorites();
-        favoriteSwipeAdapter = new FavoriteSwipeAdapter<FavoriteEntry>(me, R.layout.listview_item, R.id.listview_item_text, favorites.getAllEntries());
+        FavoritesList<SelfFavoriteEntry> selfFavoritesList = new FavoritesList<SelfFavoriteEntry>();
+        favoriteSwipeAdapter = new FavoriteSwipeAdapter<SelfFavoriteEntry>(me, R.layout.listview_item, R.id.listview_item_text, selfFavoritesList);
         rightDrawer.setAdapter(favoriteSwipeAdapter);
 
         //SETUPS
@@ -186,16 +181,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 double lng = location.getLongitude();
                 double alt = location.getAltitude();
                 boolean inRange = false;
-                FavoriteEntry favEntry = null;
-                ArrayList<FavoriteEntry> favs = favorites.getAllEntries();
-                for (int i = 0; i < favorites.size(); i++){
-                    LatLng ref = favs.get(i).getLocation();
+                SelfFavoriteEntry favEntry = null;
+                for (int i = 0; i < selfFavoritesList.size(); i++){
+                    LatLng ref = selfFavoritesList.getEntry(i).getLocation();
                     double refLat = ref.latitude;
                     double refLng = ref.longitude;
                     double refAlt = alt;
                     inRange = compDistance(lat, refLat, lng, refLng, alt, refAlt);
                     if(inRange){
-                        favEntry = favs.get(i);
+                        favEntry = (SelfFavoriteEntry) selfFavoritesList.getEntry(i);
                         break;
                     }
                 }
@@ -306,7 +300,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             display.show();
         }
 
-        //onReachedFavoriteLocation(new FavoriteEntry("Sixth College", new LatLng(0,0)));
+        //onReachedFavoriteLocation(new SelfFavoriteEntry("Sixth College", new LatLng(0,0)));
     }
 
     /**
@@ -383,18 +377,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SwipeLayout swipeLayout = (SwipeLayout) view.getParent().getParent();
         TextView nameView = (TextView) swipeLayout.findViewById(R.id.listview_item_text);
         String name = nameView.getText().toString();
-        int pos = favorites.lookupPosition(name);
+        int pos = selfFavoritesList.lookupPosition(name);
 
         // Delete the marker from the map, then the actual entry
-        favorites.getEntry(pos).getMarker().remove();
-        favorites.deleteEntry(pos);
+        ((SelfFavoriteEntry) selfFavoritesList.getEntry(pos)).getMarker().remove();
+        selfFavoritesList.deleteEntry(pos);
 
         // Notify the swipeAdapter and close everything
         favoriteSwipeAdapter.notifyDataSetChanged();
         favoriteSwipeAdapter.closeAllItems();
         Toast.makeText(me, "Favorite deleted successfully", Toast.LENGTH_SHORT).show();
 
-        System.out.println(favorites.toString());
+        System.out.println(selfFavoritesList.toString());
     }
 
     /**
@@ -446,13 +440,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         try {
-                            favorites.addEntry(et.getText().toString(), pointFinal);
+                            selfFavoritesList.addEntry(et.getText().toString(), pointFinal);
                             favoriteSwipeAdapter.notifyDataSetChanged();
                             Marker marker = mMap.addMarker(new MarkerOptions().position(point).title(et.getText().toString()));
-                            favorites.getEntry(favorites.size() - 1).setMarker(marker);
+                            ((SelfFavoriteEntry) selfFavoritesList.getEntry(selfFavoritesList.size() - 1)).setMarker(marker);
                             Toast.makeText(me, "Favorite location added successfully", Toast.LENGTH_SHORT).show();
 
-                            System.out.println(favorites.toString());
+                            System.out.println(selfFavoritesList.toString());
                         } catch (NameInUseException e) {
                             Toast.makeText(me, "Name already in use", Toast.LENGTH_SHORT).show();
                         } catch (InvalidNameException e) {
@@ -474,7 +468,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      * Handling event where user reaches a favorite location
      * @param entry
      */
-    public void onReachedFavoriteLocation(FavoriteEntry entry) {
+    public void onReachedFavoriteLocation(SelfFavoriteEntry entry) {
         //TODO: move this to the intent?
         // Message: Partner has reached location "(blah blah)"
 
