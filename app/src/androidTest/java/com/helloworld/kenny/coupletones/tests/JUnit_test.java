@@ -4,8 +4,8 @@ import android.test.ActivityInstrumentationTestCase2;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.helloworld.kenny.coupletones.MapsActivity;
-import com.helloworld.kenny.coupletones.favorites.FavoritesList;
-import com.helloworld.kenny.coupletones.favorites.self.SelfFavoriteEntry;
+import com.helloworld.kenny.coupletones.favorites.FavoriteEntry;
+import com.helloworld.kenny.coupletones.favorites.Favorites;
 import com.helloworld.kenny.coupletones.favorites.exceptions.NameInUseException;
 import com.helloworld.kenny.coupletones.registration.PartnerInformation;
 
@@ -21,24 +21,24 @@ public class JUnit_test extends ActivityInstrumentationTestCase2<MapsActivity> {
     }
 
     /**
-     * Tests add functionality of FavoritesList data structure
+     * Tests add functionality of Favorites data structure
      * @throws Exception
      */
 
     public void test_add() throws Exception
     {
-        FavoritesList favoritesList = new FavoritesList();
+        Favorites favorites = new Favorites();
         boolean check = false;
-        favoritesList.addEntry("Library", new LatLng(45, 45));
+        favorites.addEntry("Library", new LatLng(45, 45));
         try {
 
-            favoritesList.addEntry("Library", new LatLng(45, 45));
+            favorites.addEntry("Library", new LatLng(45, 45));
         } catch (NameInUseException ex) {
             check = true;
             assertTrue(check);
         }
 
-        if(favoritesList.size() != 1)
+        if(favorites.size() != 1)
         {
             check = false;
         }
@@ -46,52 +46,52 @@ public class JUnit_test extends ActivityInstrumentationTestCase2<MapsActivity> {
     }
 
     /**
-     * Tests size functionality of FavoritesList data structure
+     * Tests size functionality of Favorites data structure
      * @throws Exception
      */
     public void test_size() throws Exception
     {
-        FavoritesList favoritesList = new FavoritesList();
-        favoritesList.addEntry("Library", new LatLng(45, 45));
-        favoritesList.addEntry("Church", new LatLng(25, 65));
-        favoritesList.addEntry("Supermarket", new LatLng(83, 29));
-        favoritesList.addEntry("Class", new LatLng(32, 24));
-        favoritesList.addEntry("Home", new LatLng(335, 554));
-        favoritesList.addEntry("Restaurant", new LatLng(934, 753));
-        favoritesList.addEntry("Fair", new LatLng(675, 875));
-        assertEquals(7, favoritesList.size());
+        Favorites favorites = new Favorites();
+        favorites.addEntry("Library", new LatLng(45, 45));
+        favorites.addEntry("Church", new LatLng(25, 65));
+        favorites.addEntry("Supermarket", new LatLng(83, 29));
+        favorites.addEntry("Class", new LatLng(32, 24));
+        favorites.addEntry("Home", new LatLng(335, 554));
+        favorites.addEntry("Restaurant", new LatLng(934, 753));
+        favorites.addEntry("Fair", new LatLng(675, 875));
+        assertEquals(7, favorites.size());
     }
 
 
     /**
-     * Tests deleteEntry functionality of FavoritesList data structure
+     * Tests deleteEntry functionality of Favorites data structure
      * @throws Exception
      */
     public void test_entry() throws Exception
     {
-        FavoritesList favoritesList = new FavoritesList();
-        favoritesList.addEntry("Library", new LatLng(45, 45));
-        favoritesList.addEntry("Church", new LatLng(25, 65));
-        favoritesList.addEntry("Supermarket", new LatLng(83, 29));
-        favoritesList.addEntry("Class", new LatLng(32, 24));
-        favoritesList.addEntry("Home", new LatLng(335, 554));
-        favoritesList.addEntry("Restaurant", new LatLng(934, 753));
-        favoritesList.addEntry("Fair", new LatLng(675, 875));
-        favoritesList.deleteEntry(0);
-        assertEquals("Church", favoritesList.getEntry(0).getName());
+        Favorites favorites = new Favorites();
+        favorites.addEntry("Library", new LatLng(45, 45));
+        favorites.addEntry("Church", new LatLng(25, 65));
+        favorites.addEntry("Supermarket", new LatLng(83, 29));
+        favorites.addEntry("Class", new LatLng(32, 24));
+        favorites.addEntry("Home", new LatLng(335, 554));
+        favorites.addEntry("Restaurant", new LatLng(934, 753));
+        favorites.addEntry("Fair", new LatLng(675, 875));
+        favorites.deleteEntry(0);
+        assertEquals("Church", favorites.getEntry(0).getName());
     }
 
 
     /**
-     * Tests existence method of FavoritesList data structure
+     * Tests existence method of Favorites data structure
      * @throws Exception
      */
     public void test_exist() throws Exception
     {
-        FavoritesList favoritesList = new FavoritesList();
-        SelfFavoriteEntry list = new SelfFavoriteEntry("Taco Bell", new LatLng(68, 68));
-        favoritesList.addEntry("Taco Bell", new LatLng(68, 68));
-        assertEquals(list.toString(), favoritesList.getEntry(0).toString());
+        Favorites favorites = new Favorites();
+        FavoriteEntry list = new FavoriteEntry("Taco Bell", new LatLng(68, 68));
+        favorites.addEntry("Taco Bell", new LatLng(68, 68));
+        assertEquals(list.toString(), favorites.getEntry(0).toString());
     }
 
     /**

@@ -1,17 +1,16 @@
-package com.helloworld.kenny.coupletones.favorites.self;
+package com.helloworld.kenny.coupletones.favorites;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
-import com.helloworld.kenny.coupletones.favorites.Entry;
 
 /**
  * Created by Kenny on 5/3/2016.
  */
-public class SelfFavoriteEntry extends Entry {
+public class FavoriteEntry extends Entry {
 
     private Marker marker;
 
-    public SelfFavoriteEntry(String name, LatLng location) {
+    public FavoriteEntry(String name, LatLng location) {
         super(name, location);
     }
 

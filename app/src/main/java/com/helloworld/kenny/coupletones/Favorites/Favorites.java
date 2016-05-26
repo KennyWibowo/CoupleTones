@@ -3,19 +3,18 @@ package com.helloworld.kenny.coupletones.favorites;
 import com.google.android.gms.maps.model.LatLng;
 import com.helloworld.kenny.coupletones.favorites.exceptions.InvalidNameException;
 import com.helloworld.kenny.coupletones.favorites.exceptions.NameInUseException;
-import com.helloworld.kenny.coupletones.favorites.self.SelfFavoriteEntry;
 
 import java.util.ArrayList;
 
 /**
  * Created by Kenny on 5/3/2016.
  */
+public class Favorites {
 
-//TODO: refactor to extend ArrayList
-public class FavoritesList<E> extends ArrayList<E>{
+    private ArrayList<FavoriteEntry> favorites;
 
-    public FavoritesList() {
-        super();
+    public Favorites() {
+        favorites = new ArrayList<FavoriteEntry>();
     }
 
     public void addEntry(String name, LatLng location) throws InvalidNameException, NameInUseException {
@@ -24,41 +23,44 @@ public class FavoritesList<E> extends ArrayList<E>{
         if(name.equals(""))
             throw new InvalidNameException("Invalid name");
 
-        SelfFavoriteEntry newFav = new SelfFavoriteEntry(name, location);
-
-        this.add((E) newFav);
+        FavoriteEntry newFav = new FavoriteEntry(name, location);
+        favorites.add(newFav);
     }
 
     public void deleteEntry(int position) {
-        this.remove(position);
+        favorites.remove(position);
     }
 
     public int lookupPosition(String name) {
-        for(int i = 0; i <this.size(); i++) {
-            if(this.get(i).toString().equals(name))
+        for(int i = 0; i <favorites.size(); i++) {
+            if(favorites.get(i).toString().equals(name))
                 return i;
         }
         return -1;
     }
 
     public int size() {
-        return super.size();
+        return favorites.size();
     }
 
-    public Entry getEntry(int position) {
-        E temp = this.get(position);
-        return (Entry) temp;
+    public FavoriteEntry getEntry(int position) {
+        FavoriteEntry temp = favorites.get(position);
+        return temp;
+    }
+
+    public ArrayList<FavoriteEntry> getAllEntries() {
+        return favorites;
     }
 
     public String toString() {
         StringBuilder sb = new StringBuilder("Entries: ");
 
-        for(int i = 0; i < this.size()-1; i++) {
-            sb.append(this.get(i).toString() + ", ");
+        for(int i = 0; i < favorites.size()-1; i++) {
+            sb.append(favorites.get(i).toString() + ", ");
         }
 
-        if(this.size()>0) {
-            sb.append(this.get(this.size()-1));
+        if(favorites.size()>0) {
+            sb.append(favorites.get(favorites.size()-1));
         } else {
             sb.append("(empty)");
         }
