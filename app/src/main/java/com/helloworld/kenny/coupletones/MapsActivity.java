@@ -48,8 +48,8 @@ import com.helloworld.kenny.coupletones.favorites.exceptions.NameInUseException;
 import com.helloworld.kenny.coupletones.favorites.FavoriteEntry;
 import com.helloworld.kenny.coupletones.favorites.Favorites;
 import com.helloworld.kenny.coupletones.gcm.GcmSendIntentService;
-import com.helloworld.kenny.coupletones.partner.exceptions.PartnerAlreadyRegisteredException;
-import com.helloworld.kenny.coupletones.partner.PartnerInformation;
+import com.helloworld.kenny.coupletones.registration.exceptions.PartnerAlreadyRegisteredException;
+import com.helloworld.kenny.coupletones.registration.PartnerInformation;
 
 import android.widget.LinearLayout;
 import android.widget.ListView;
