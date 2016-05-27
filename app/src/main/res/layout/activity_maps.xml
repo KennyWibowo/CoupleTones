@@ -119,7 +119,22 @@
                 android:backgroundTint="@color/colorSecondary"
                 android:onClick="buttonFavorites"/>
             </RelativeLayout>
+        </LinearLayout>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="end"
+        android:background="@drawable/white">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
             <Button
+
                 android:id="@+id/change_email"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -129,17 +144,14 @@
                 android:backgroundTint="@color/colorSecondary"
                 android:onClick="buttonChangeEmail"
                 android:nestedScrollingEnabled="true" />
+
+            <ListView
+                android:id="@+id/right_drawer"
+                android:layout_width="240dp"
+                android:layout_height="match_parent"
+                android:background="#FFF">
+            </ListView>
         </LinearLayout>
     </RelativeLayout>
-
-    <ListView
-        android:id="@+id/right_drawer"
-        android:layout_width="240dp"
-        android:layout_height="match_parent"
-        android:layout_gravity="end"
-        android:background="#FFF">
-
-
-    </ListView>
 </android.support.v4.widget.DrawerLayout>
 
