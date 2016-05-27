@@ -120,14 +120,15 @@
                 android:onClick="buttonFavorites"/>
             </RelativeLayout>
             <Button
-                android:id="@+id/get_id"
+                android:id="@+id/change_email"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="left"
                 android:layout_marginRight="5dp"
-                android:text="Get Device ID"
+                android:text="Change Email"
                 android:backgroundTint="@color/colorSecondary"
-                android:onClick="buttonGetDeviceId"/>
+                android:onClick="buttonChangeEmail"
+                android:nestedScrollingEnabled="true" />
         </LinearLayout>
     </RelativeLayout>
 

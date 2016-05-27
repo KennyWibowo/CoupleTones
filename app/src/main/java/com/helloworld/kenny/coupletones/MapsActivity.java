@@ -334,33 +334,33 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }*/
 
     /**
-     * Button Method for retrieving i.d.
+     * Button Method for changing user's email
      * @param view
      */
-    /*public void buttonGetDeviceId(View view) {
-        String regId = partnerInformation.getOwnRegId();
+    public void buttonChangeEmail(View view) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(MapsActivity.this);
+        LayoutInflater inflater = this.getLayoutInflater();
+        final View dialogView = inflater.inflate(R.layout.email_registration, null);
+        builder.setView(dialogView);
 
-        if(regId == null || regId.equals(""))
-            setupDeviceId();
+        final EditText et = (EditText) dialogView.findViewById(R.id.email);
 
-        AlertDialog.Builder show = new AlertDialog.Builder(me);
+        builder.setTitle("Email Registration");
+        builder.setMessage("Please enter a valid email address for registration: ");
+        builder.setNeutralButton("Submit",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int something) {
 
-        synchronized (partnerInformation) {
-            // Dialog settings
-            show.setCancelable(true)
-                    .setMessage("Reg Id: " + partnerInformation.getOwnRegId())
-                    .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
+                        String emailAddress = et.getText().toString();
+                        registrationInformation.changeEmail(emailAddress);
+                        dialog.dismiss();
+                    }
+                });
 
-                        }
-                    });
-
-            AlertDialog display = show.create();
-            display.show();
-        }
-
+        AlertDialog emailRegistration = builder.create();
+        emailRegistration.show();
         //onReachedFavoriteLocation(new FavoriteEntry("Sixth College", new LatLng(0,0)));
-    }*/
+    }
 
     /**
      * Button for adding partner

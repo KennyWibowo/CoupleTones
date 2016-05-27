@@ -72,6 +72,14 @@ public class RegistrationInformation {
         this.selfRegistered = true;
     }
 
+    public void changeEmail(String email) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("email", email);
+        editor.apply();
+
+        this.email = email;
+    }
+
     public String getEmail() {
         return email;
     }
