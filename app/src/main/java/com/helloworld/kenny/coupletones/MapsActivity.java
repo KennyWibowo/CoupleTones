@@ -535,7 +535,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 }
             }
         });
-        
+
         builder.setTitle("Settings");
         builder.setCancelable(true);
 

@@ -8,7 +8,7 @@
         android:id="@+id/tone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center"
+        android:layout_marginLeft="130dp"
         android:text="Play Tone"
         android:checked="true"
         android:enabled="true" />
@@ -17,6 +17,7 @@
         android:id="@+id/vibration"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="130dp"
         android:gravity="center"
         android:text="Play Vibration"
         android:checked="true"
