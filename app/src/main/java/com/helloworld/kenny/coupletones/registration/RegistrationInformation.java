@@ -4,7 +4,12 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
+import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
+import com.firebase.client.ValueEventListener;
+import com.google.android.gms.maps.model.LatLng;
+import com.helloworld.kenny.coupletones.favorites.Entry;
 import com.helloworld.kenny.coupletones.favorites.FavoriteEntry;
 import com.helloworld.kenny.coupletones.favorites.partner.PartnerFavoriteEntry;
 import com.helloworld.kenny.coupletones.registration.exceptions.PartnerAlreadyRegisteredException;
@@ -27,10 +32,12 @@ public class RegistrationInformation {
     private boolean selfRegistered;
     private boolean partnerRegistered;
 
+    private final PartnerFavoriteEntry lastVisitedLocation;
+
     private ArrayList<PartnerFavoriteEntry> partnerFavorites;
     private ArrayList<PartnerFavoriteEntry> partnerHistory;
     private SharedPreferences sharedPreferences;
-    private Firebase firebase;
+    private Firebase root;
 
     private static final String HISTORY_RESET_TIME = "03:00:00"; // 3AM
     public static final String endpoint = "https://coupletonesteam6.firebaseio.com/";
@@ -43,10 +50,12 @@ public class RegistrationInformation {
         this.partnerRegistered = false;
         this.sharedPreferences = context.getSharedPreferences("user_info", Context.MODE_PRIVATE);
 
+        lastVisitedLocation = new PartnerFavoriteEntry(null, null);
+
         partnerHistory = new ArrayList<PartnerFavoriteEntry>();
         partnerFavorites = new ArrayList<PartnerFavoriteEntry>();
 
-        firebase = new Firebase(endpoint);
+        root = new Firebase(endpoint);
 
     }
 
@@ -67,6 +76,22 @@ public class RegistrationInformation {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString("email", email);
         editor.apply();
+
+        root.child(email).child("last_visited").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                JSONEntry entry = snapshot.getValue(JSONEntry.class);
+
+                if(entry != null) {
+                    lastVisitedLocation.setName(entry.getName());
+                    lastVisitedLocation.setLocation(new LatLng(entry.getLatitude(), entry.getLongitude()));
+                    lastVisitedLocation.setTimestamp(entry.getTimestamp());
+                } else {
+                    System.out.println("last_visited is null!");
+                }
+            }
+            @Override public void onCancelled(FirebaseError error) { /*Handle error?*/ }
+        });
 
         this.email = email;
         this.selfRegistered = true;
@@ -89,8 +114,13 @@ public class RegistrationInformation {
             throw new SelfNotRegisteredException("Self not yet registered");
         }
 
-        //TODO: Append FavoriteEntry details to history.
-        firebase.child(email);
+        if(lastVisitedLocation.getName() == null || !lastVisitedLocation.getName().equals(entry.getName())) {
+            Firebase lastVisitedRef = root.child(email).child("last_visited");
+            Firebase historyEntryRef = root.child(email).child("history").push();
+
+            lastVisitedRef.setValue(new JSONEntry(entry));
+            historyEntryRef.setValue(new JSONEntry(entry));
+        }
     }
 
     public ArrayList<PartnerFavoriteEntry> getPartnerHistory() {
@@ -126,5 +156,37 @@ public class RegistrationInformation {
     public void clearSelf() {
         this.email = null;
         this.selfRegistered = false;
+    }
+}
+
+class JSONEntry {
+    private String name;
+    private long timestamp;
+    private double latitude;
+    private double longitude;
+
+    public JSONEntry() {}
+
+    public JSONEntry(Entry entry) {
+        this.name = entry.getName();
+        this.timestamp = entry.getTimestamp().getTime();
+        this.latitude = entry.getLocation().latitude;
+        this.longitude = entry.getLocation().longitude;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public long getTimestamp() {
+        return timestamp;
+    }
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
     }
 }

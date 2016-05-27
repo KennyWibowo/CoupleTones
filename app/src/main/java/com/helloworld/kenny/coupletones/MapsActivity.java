@@ -46,6 +46,7 @@ import com.helloworld.kenny.coupletones.favorites.Favorites;
 import com.helloworld.kenny.coupletones.registration.RegistrationInformation;
 import com.helloworld.kenny.coupletones.registration.exceptions.PartnerAlreadyRegisteredException;
 import com.helloworld.kenny.coupletones.registration.exceptions.SelfAlreadyRegisteredException;
+import com.helloworld.kenny.coupletones.registration.exceptions.SelfNotRegisteredException;
 import com.helloworld.kenny.coupletones.settings.Settings;
 
 import android.widget.LinearLayout;
@@ -625,6 +626,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         // Message: Partner has reached location "(blah blah)"
 
         entry.visit();
+
+        System.out.println("Reached: " + entry.getName());
+
+        try {
+            registrationInformation.visitLocation(entry);
+        } catch (SelfNotRegisteredException e ) {
+            e.printStackTrace();
+            // not supposed to happen
+        }
 
         /*System.out.println("Sending a message to: " + partnerInformation.getRegId());
 
