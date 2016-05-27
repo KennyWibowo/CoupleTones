@@ -135,6 +135,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             builder.setTitle("Email Registration");
             builder.setMessage("Please enter a valid email address for registration: ");
+            builder.setCancelable(false);
             builder.setNeutralButton("Submit",
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int something) {
@@ -142,6 +143,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                             try {
                                 registrationInformation.registerSelf(emailAddress);
+                                Toast.makeText(me, "Email successfully registered", Toast.LENGTH_SHORT).show();
                             } catch (SelfAlreadyRegisteredException e) {
                                 e.printStackTrace();
                             }
@@ -347,12 +349,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         builder.setTitle("Email Registration");
         builder.setMessage("Please enter a valid email address for registration: ");
+        builder.setCancelable(true);
         builder.setNeutralButton("Submit",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int something) {
 
                         String emailAddress = et.getText().toString();
                         registrationInformation.changeEmail(emailAddress);
+                        Toast.makeText(me, "Partner successfully changed", Toast.LENGTH_SHORT).show();
                         dialog.dismiss();
                     }
                 });
