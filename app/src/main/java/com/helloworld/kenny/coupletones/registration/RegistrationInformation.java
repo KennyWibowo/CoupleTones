@@ -36,11 +36,12 @@ public class RegistrationInformation {
     public static final String endpoint = "https://coupletonesteam6.firebaseio.com/";
 
 
-    public RegistrationInformation() {
+    public RegistrationInformation(Context context) {
         this.email = null;
         this.partnerEmail = null;
         this.selfRegistered = false;
         this.partnerRegistered = false;
+        this.sharedPreferences = context.getSharedPreferences("user_info", Context.MODE_PRIVATE);
 
         partnerHistory = new ArrayList<PartnerFavoriteEntry>();
         partnerFavorites = new ArrayList<PartnerFavoriteEntry>();

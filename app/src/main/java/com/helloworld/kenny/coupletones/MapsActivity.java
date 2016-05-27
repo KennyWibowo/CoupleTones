@@ -69,7 +69,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private ListView rightDrawer;
     private UiSettings myUiSetting;
     private DrawerLayout drawer;
-    private final RegistrationInformation registrationInformation = new RegistrationInformation();
+    private final RegistrationInformation registrationInformation = new RegistrationInformation(this);
 
     private Button buttonRemovePartner;
     private Button buttonAddPartner;
@@ -152,7 +152,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             AlertDialog emailRegistration = builder.create();
             emailRegistration.show();
-            
         }
     }
 
