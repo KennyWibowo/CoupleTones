@@ -8,9 +8,9 @@ import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.google.android.gms.maps.model.LatLng;
-import com.helloworld.kenny.coupletones.favorites.Entry;
 import com.helloworld.kenny.coupletones.favorites.FavoriteEntry;
-import com.helloworld.kenny.coupletones.favorites.partner.PartnerFavoriteEntry;
+import com.helloworld.kenny.coupletones.favorites.JSONEntry;
+import com.helloworld.kenny.coupletones.favorites.PartnerFavoriteEntry;
 import com.helloworld.kenny.coupletones.firebase.registration.exceptions.PartnerAlreadyRegisteredException;
 import com.helloworld.kenny.coupletones.firebase.registration.exceptions.SelfAlreadyRegisteredException;
 import com.helloworld.kenny.coupletones.firebase.registration.exceptions.SelfNotRegisteredException;
@@ -185,34 +185,3 @@ public class RegistrationInformation {
     }
 }
 
-class JSONEntry {
-    private String name;
-    private long timestamp;
-    private double latitude;
-    private double longitude;
-
-    public JSONEntry() {}
-
-    public JSONEntry(Entry entry) {
-        this.name = entry.getName();
-        this.timestamp = entry.getTimestamp().getTime();
-        this.latitude = entry.getLocation().latitude;
-        this.longitude = entry.getLocation().longitude;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public long getTimestamp() {
-        return timestamp;
-    }
-
-    public double getLatitude() {
-        return latitude;
-    }
-
-    public double getLongitude() {
-        return longitude;
-    }
-}

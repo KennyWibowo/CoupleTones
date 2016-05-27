@@ -43,7 +43,7 @@ import com.helloworld.kenny.coupletones.favorites.exceptions.InvalidNameExceptio
 import com.helloworld.kenny.coupletones.favorites.exceptions.NameInUseException;
 import com.helloworld.kenny.coupletones.favorites.FavoriteEntry;
 import com.helloworld.kenny.coupletones.favorites.Favorites;
-import com.helloworld.kenny.coupletones.favorites.partner.PartnerFavoriteEntry;
+import com.helloworld.kenny.coupletones.favorites.PartnerFavoriteEntry;
 import com.helloworld.kenny.coupletones.firebase.registration.RegistrationInformation;
 import com.helloworld.kenny.coupletones.firebase.registration.exceptions.PartnerAlreadyRegisteredException;
 import com.helloworld.kenny.coupletones.firebase.registration.exceptions.SelfAlreadyRegisteredException;
