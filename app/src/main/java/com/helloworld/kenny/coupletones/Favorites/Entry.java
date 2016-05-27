@@ -1,7 +1,6 @@
 package com.helloworld.kenny.coupletones.favorites;
 
 import com.google.android.gms.maps.model.LatLng;
-
 import java.sql.Timestamp;
 
 /**
@@ -18,16 +17,24 @@ public abstract class Entry {
         this.location = location;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setLocation(LatLng location) {
+        this.location = location;
+    }
+
+    public void setTimestamp(long millis) {
+        this.timestamp = new Timestamp(millis);
+    }
+
     public String getName() {
         return this.name;
     }
 
     public LatLng getLocation() {
         return this.location;
-    }
-
-    public void setTimestamp(long millis) {
-        this.timestamp = new Timestamp(millis);
     }
 
     public Timestamp getTimestamp() {
