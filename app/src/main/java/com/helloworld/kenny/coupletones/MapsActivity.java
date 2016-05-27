@@ -113,7 +113,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         buttonGetFavorites = (Button)findViewById(R.id.get_favorites);
         buttonGetHistory = (Button)findViewById(R.id.get_history);
         buttonRegisterEmail = (Button)findViewById(R.id.register_email);
-        buttonUnregisterEmail = (Button)findViewById(R.id.unregister_email)
+        buttonUnregisterEmail = (Button)findViewById(R.id.unregister_email);
         listFavorite = (ListView)findViewById(R.id.left_listFavorite);
         listHistory = (ListView)findViewById(R.id.left_listHistory);
 
