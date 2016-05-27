@@ -22,6 +22,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.view.LayoutInflater;
 
@@ -509,22 +510,32 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         CheckBox tones = (CheckBox) dialogView.findViewById(R.id.tone);
         CheckBox vibration = (CheckBox) dialogView.findViewById(R.id.vibration);
 
-        if(tones.isChecked()) {
-            settings.enableTones();
-            Toast.makeText(me, "Tones enabled", Toast.LENGTH_SHORT).show();
-        } else {
-            settings.disableTones();
-            Toast.makeText(me, "Tones disabled", Toast.LENGTH_SHORT).show();
-        }
+        tones.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                if(isChecked) {
+                    settings.enableTones();
+                    Toast.makeText(me, "Tones enabled", Toast.LENGTH_SHORT).show();
+                } else {
+                    settings.disableTones();
+                    Toast.makeText(me, "Tones disabled", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
 
-        if(vibration.isChecked()) {
-            settings.enableVibrations();
-            Toast.makeText(me, "Vibrations enabled", Toast.LENGTH_SHORT).show();
-        } else {
-            settings.disableVibrations();
-            Toast.makeText(me, "Vibrations disabled", Toast.LENGTH_SHORT).show();
-        }
-
+        vibration.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                if(isChecked) {
+                    settings.enableVibrations();
+                    Toast.makeText(me, "Vibrations enabled", Toast.LENGTH_SHORT).show();
+                } else {
+                    settings.disableVibrations();
+                    Toast.makeText(me, "Vibrations disabled", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+        
         builder.setTitle("Settings");
         builder.setCancelable(true);
 
