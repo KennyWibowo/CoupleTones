@@ -125,17 +125,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
 
-        if(!registrationInformation.isSelfRegistered()) {
-            AlertDialog.Builder emailRegistration = new AlertDialog.Builder(MapsActivity.this);
+        if(registrationInformation.isSelfRegistered() == false) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(MapsActivity.this);
             LayoutInflater inflater = this.getLayoutInflater();
             final View dialogView = inflater.inflate(R.layout.email_registration, null);
-            emailRegistration.setView(dialogView);
+            builder.setView(dialogView);
 
             final EditText et = (EditText) dialogView.findViewById(R.id.email);
 
-            emailRegistration.setTitle("Email Registration");
-            emailRegistration.setMessage("Please enter a valid email address for registration: ");
-            emailRegistration.setNeutralButton("Submit",
+            builder.setTitle("Email Registration");
+            builder.setMessage("Please enter a valid email address for registration: ");
+            builder.setNeutralButton("Submit",
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int something) {
                             String emailAddress = et.getText().toString();
@@ -149,6 +149,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             dialog.dismiss();
                         }
                     });
+
+            AlertDialog emailRegistration = builder.create();
+            emailRegistration.show();
+            
         }
     }
 
