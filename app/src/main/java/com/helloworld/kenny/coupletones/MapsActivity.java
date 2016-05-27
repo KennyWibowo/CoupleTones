@@ -43,6 +43,7 @@ import com.helloworld.kenny.coupletones.favorites.FavoriteEntry;
 import com.helloworld.kenny.coupletones.favorites.Favorites;
 import com.helloworld.kenny.coupletones.registration.RegistrationInformation;
 import com.helloworld.kenny.coupletones.registration.exceptions.PartnerAlreadyRegisteredException;
+import com.helloworld.kenny.coupletones.registration.exceptions.SelfAlreadyRegisteredException;
 
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -185,6 +186,34 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         drawer.addDrawerListener(drawerListener);
 
+        if(!registrationInformation.isSelfRegistered()) {
+            AlertDialog.Builder emailRegistration = new AlertDialog.Builder(MapsActivity.this);
+            LayoutInflater inflater = this.getLayoutInflater();
+            final View dialogView = inflater.inflate(R.layout.email_registration, null);
+            emailRegistration.setView(dialogView);
+
+            final EditText et = (EditText) dialogView.findViewById(R.id.email);
+
+            emailRegistration.setTitle("Email Registration");
+            emailRegistration.setMessage("Please enter a vlid email adress for registration: ");
+            emailRegistration.setNeutralButton("Submit",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int something) {
+                            String emailAddress = et.getText().toString();
+
+                            try {
+                                registrationInformation.registerSelf(emailAddress);
+                                //TODO
+                                // use sharedprreferences and manage isselfregistered
+                                // store email in shared preferences
+                            } catch (SelfAlreadyRegisteredException e) {
+
+                            }
+
+                            dialog.dismiss();
+                        }
+                    });
+        }
     }
 
     /**
