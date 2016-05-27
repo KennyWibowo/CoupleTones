@@ -69,7 +69,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private ListView rightDrawer;
     private UiSettings myUiSetting;
     private DrawerLayout drawer;
-    private final RegistrationInformation registrationInformation = new RegistrationInformation(this);
+    private RegistrationInformation registrationInformation;
 
     private Button buttonRemovePartner;
     private Button buttonAddPartner;
@@ -107,12 +107,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         buttonGetHistory = (Button)findViewById(R.id.get_history);
         listFavorite = (ListView)findViewById(R.id.left_listFavorite);
         listHistory = (ListView)findViewById(R.id.left_listHistory);
+
         listHistory.setVisibility(View.GONE);
         buttonGetFavorites.setVisibility(View.GONE);
 
 
         // setup data structures and variables
         favorites = new Favorites();
+        registrationInformation = new RegistrationInformation(this);
         favoriteSwipeAdapter = new FavoriteSwipeAdapter<FavoriteEntry>(me, R.layout.listview_item, R.id.listview_item_text, favorites.getAllEntries());
         rightDrawer.setAdapter(favoriteSwipeAdapter);
 
