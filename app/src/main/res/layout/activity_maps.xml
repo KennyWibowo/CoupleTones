@@ -133,27 +133,33 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <Button
-                android:id="@+id/change_email"
+            <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="left"
-                android:layout_marginRight="5dp"
-                android:text="Change Email"
-                android:backgroundTint="@color/colorSecondary"
-                android:onClick="buttonChangeEmail"
-                android:nestedScrollingEnabled="true" />
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
 
-            <Button
-                android:id="@+id/settings"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="left"
-                android:layout_marginRight="5dp"
-                android:text="Settings"
-                android:backgroundTint="@color/colorSecondary"
-                android:onClick="buttonSettings"
-                android:nestedScrollingEnabled="true" />
+                <Button
+                    android:id="@+id/change_email"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left"
+                    android:layout_marginRight="5dp"
+                    android:text="Change Email"
+                    android:backgroundTint="@color/colorSecondary"
+                    android:onClick="buttonChangeEmail"
+                    android:nestedScrollingEnabled="true" />
+
+                <Button
+                    android:id="@+id/settings"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left"
+                    android:layout_marginRight="5dp"
+                    android:text="Settings"
+                    android:backgroundTint="@color/colorSecondary"
+                    android:onClick="buttonSettings"
+                    android:nestedScrollingEnabled="true" />
+            </LinearLayout>>
 
             <ListView
                 android:id="@+id/right_drawer"
