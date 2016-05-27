@@ -72,6 +72,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private Button buttonRemovePartner;
     private Button buttonAddPartner;
+    private Button buttonGetFavorites;
+    private Button buttonGetHistory;
+    private ListView listFavorite;
+    private ListView listHistory;
 
     private Favorites favorites;
     private FavoriteSwipeAdapter<FavoriteEntry> favoriteSwipeAdapter;
@@ -98,6 +102,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         buttonAddPartner = (Button) findViewById(R.id.add_partner);
         buttonRemovePartner = (Button) findViewById(R.id.remove_partner);
+        buttonGetFavorites = (Button)findViewById(R.id.get_favorites);
+        buttonGetHistory = (Button)findViewById(R.id.get_history);
+        listFavorite = (ListView)findViewById(R.id.left_listFavorite);
+        listHistory = (ListView)findViewById(R.id.left_listHistory);
+        listHistory.setVisibility(View.GONE);
+        buttonGetFavorites.setVisibility(View.GONE);
+
 
         // setup data structures and variables
         favorites = new Favorites();
@@ -107,6 +118,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         //SETUPS
         //setupDeviceId();
         setupRightDrawer();
+        setupLeftDrawer();
         setupLocationListener();
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -114,6 +126,26 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
     }
+
+    public void setupLeftDrawer()
+    {
+        TextView title = new TextView(me);
+        title.setText("Partner Favorites");
+        title.setTextSize(TypedValue.COMPLEX_UNIT_SP, 25);
+        title.setTextColor(getResources().getColor(R.color.colorBlack));
+        title.setHeight(120);
+        title.setGravity(Gravity.CENTER);
+        listFavorite.addHeaderView(title);
+        TextView otherTitle = new TextView(me);
+        otherTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 25);
+        otherTitle.setTextColor(getResources().getColor(R.color.colorBlack));
+        otherTitle.setHeight(120);
+        otherTitle.setGravity(Gravity.CENTER);
+        otherTitle.setText("History");
+        listHistory.addHeaderView(otherTitle);
+    }
+
+
 
     /**
      * Sets up the right drawer for the list of favorite locations
@@ -389,6 +421,22 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         Toast.makeText(me, "Favorite deleted successfully", Toast.LENGTH_SHORT).show();
 
         System.out.println(favorites.toString());
+    }
+
+    public void buttonHistory(View view)
+    {
+        listHistory.setVisibility(View.VISIBLE);
+        listFavorite.setVisibility(View.GONE);
+        buttonGetFavorites.setVisibility(View.VISIBLE);
+        buttonGetHistory.setVisibility(View.GONE);
+    }
+
+    public void buttonFavorites(View view)
+    {
+        listHistory.setVisibility(View.GONE);
+        listFavorite.setVisibility(View.VISIBLE);
+        buttonGetFavorites.setVisibility(View.GONE);
+        buttonGetHistory.setVisibility(View.VISIBLE);
     }
 
     /**
