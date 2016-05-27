@@ -356,7 +356,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                         String emailAddress = et.getText().toString();
                         registrationInformation.changeEmail(emailAddress);
-                        Toast.makeText(me, "Partner successfully changed", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(me, "Email successfully changed", Toast.LENGTH_SHORT).show();
                         dialog.dismiss();
                     }
                 });
