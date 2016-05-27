@@ -63,6 +63,8 @@ public class RegistrationInformation {
             throw new PartnerAlreadyRegisteredException("Partner already registered");
         }
 
+        //TODO: add listener to clear partner's history at 3 AM
+
         this.partnerEmail = partnerEmail;
         this.partnerRegistered = true;
     }
