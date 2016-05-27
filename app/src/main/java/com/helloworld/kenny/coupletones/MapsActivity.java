@@ -21,6 +21,7 @@ import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.view.LayoutInflater;
 
@@ -44,6 +45,7 @@ import com.helloworld.kenny.coupletones.favorites.Favorites;
 import com.helloworld.kenny.coupletones.registration.RegistrationInformation;
 import com.helloworld.kenny.coupletones.registration.exceptions.PartnerAlreadyRegisteredException;
 import com.helloworld.kenny.coupletones.registration.exceptions.SelfAlreadyRegisteredException;
+import com.helloworld.kenny.coupletones.settings.Settings;
 
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -69,7 +71,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private ListView rightDrawer;
     private UiSettings myUiSetting;
     private DrawerLayout drawer;
-    private RegistrationInformation registrationInformation;
 
     private Button buttonRemovePartner;
     private Button buttonAddPartner;
@@ -80,6 +81,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private Favorites favorites;
     private FavoriteSwipeAdapter<FavoriteEntry> favoriteSwipeAdapter;
+    private RegistrationInformation registrationInformation;
+    private Settings settings;
 
     private String PROJECT_NUMBER = "366742322722";
     private boolean autoRegistered = false;
@@ -117,6 +120,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         registrationInformation = new RegistrationInformation(this);
         favoriteSwipeAdapter = new FavoriteSwipeAdapter<FavoriteEntry>(me, R.layout.listview_item, R.id.listview_item_text, favorites.getAllEntries());
         rightDrawer.setAdapter(favoriteSwipeAdapter);
+        settings = new Settings();
 
         //SETUPS
         //setupDeviceId();
@@ -378,8 +382,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     }
                 });
 
-        AlertDialog emailRegistration = builder.create();
-        emailRegistration.show();
+        AlertDialog changeEmail = builder.create();
+        changeEmail.show();
     }
 
     /**
@@ -493,40 +497,40 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     /**
-     * Button Method for changing user's email
+     * Button Method for changing settings
      * @param view
      */
-    /*public void buttonSettings(View view) {
+    public void buttonSettings(View view) {
         AlertDialog.Builder builder = new AlertDialog.Builder(MapsActivity.this);
         LayoutInflater inflater = this.getLayoutInflater();
-        final View dialogView = inflater.inflate(R.layout.email_registration, null);
+        final View dialogView = inflater.inflate(R.layout.settings, null);
         builder.setView(dialogView);
 
-        final EditText et = (EditText) dialogView.findViewById(R.id.email);
+        CheckBox tones = (CheckBox) dialogView.findViewById(R.id.tone);
+        CheckBox vibration = (CheckBox) dialogView.findViewById(R.id.vibration);
 
-        builder.setTitle("Email Registration");
-        builder.setMessage("Please enter a valid email address for registration: ");
+        if(tones.isChecked()) {
+            settings.enableTones();
+            Toast.makeText(me, "Tones enabled", Toast.LENGTH_SHORT).show();
+        } else {
+            settings.disableTones();
+            Toast.makeText(me, "Tones disabled", Toast.LENGTH_SHORT).show();
+        }
+
+        if(vibration.isChecked()) {
+            settings.enableVibrations();
+            Toast.makeText(me, "Vibrations enabled", Toast.LENGTH_SHORT).show();
+        } else {
+            settings.disableVibrations();
+            Toast.makeText(me, "Vibrations disabled", Toast.LENGTH_SHORT).show();
+        }
+
+        builder.setTitle("Settings");
         builder.setCancelable(true);
-        builder.setNeutralButton("Submit",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int something) {
-                        String emailAddress = et.getText().toString();
 
-                        if(emailAddress != null && !emailAddress.isEmpty()) {
-
-                            registrationInformation.changeEmail(emailAddress);
-                            Toast.makeText(me, "Email successfully changed", Toast.LENGTH_SHORT).show();
-                            dialog.dismiss();
-                        } else {
-                            Toast.makeText(me, "Invalid email. Please retry.", Toast.LENGTH_SHORT).show();
-                            et.setText("");
-                        }
-                    }
-                });
-
-        AlertDialog emailRegistration = builder.create();
-        emailRegistration.show();
-    }*/
+        AlertDialog settings = builder.create();
+        settings.show();
+    }
 
     /**
      * Button for searching locations
