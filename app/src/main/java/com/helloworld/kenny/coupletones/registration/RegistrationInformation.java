@@ -29,6 +29,7 @@ public class RegistrationInformation {
 
     private ArrayList<PartnerFavoriteEntry> partnerFavorites;
     private ArrayList<PartnerFavoriteEntry> partnerHistory;
+    private SharedPreferences sharedPreferences;
     private Firebase firebase;
 
     private static final String HISTORY_RESET_TIME = "03:00:00"; // 3AM
@@ -61,6 +62,10 @@ public class RegistrationInformation {
         if(selfRegistered) {
             throw new SelfAlreadyRegisteredException("Self already registered");
         }
+
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("email", email);
+        editor.apply();
 
         this.email = email;
         this.selfRegistered = true;

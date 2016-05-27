@@ -203,11 +203,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                             try {
                                 registrationInformation.registerSelf(emailAddress);
-                                //TODO
-                                // use sharedprreferences and manage isselfregistered
-                                // store email in shared preferences
                             } catch (SelfAlreadyRegisteredException e) {
-
+                                e.printStackTrace();
                             }
 
                             dialog.dismiss();
