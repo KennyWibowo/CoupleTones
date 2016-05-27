@@ -63,6 +63,8 @@ public class RegistrationInformation {
             throw new PartnerAlreadyRegisteredException("Partner already registered");
         }
 
+        //TODO: add listener to clear partner's history at 3 AM
+
         this.partnerEmail = partnerEmail;
         this.partnerRegistered = true;
     }
@@ -99,7 +101,7 @@ public class RegistrationInformation {
         }
 
         if(lastVisitedLocation.getName() == null || !lastVisitedLocation.getName().equals(entry.getName())) {
-            Firebase historyEntryRef = root.child(email).child("history").push();
+            Firebase historyEntryRef = root.child( "" + email.hashCode()).child("history").push();
 
             lastVisitedLocation = new JSONEntry(entry);
             historyEntryRef.setValue(new JSONEntry(entry));
