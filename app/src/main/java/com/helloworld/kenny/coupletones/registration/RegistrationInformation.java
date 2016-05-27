@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
+import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
@@ -35,12 +36,46 @@ public class RegistrationInformation {
     private JSONEntry lastVisitedLocation;
     private ArrayList<PartnerFavoriteEntry> partnerFavorites;
     private ArrayList<PartnerFavoriteEntry> partnerHistory;
+
     private SharedPreferences sharedPreferences;
     private Firebase root;
 
     private static final String HISTORY_RESET_TIME = "03:00:00"; // 3AM
     public static final String endpoint = "https://coupletonesteam6.firebaseio.com/";
 
+    private ChildEventListener historyListener = new ChildEventListener() {
+        @Override
+        public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+            JSONEntry child = dataSnapshot.getValue(JSONEntry.class);
+            PartnerFavoriteEntry historyEntry = new PartnerFavoriteEntry(child.getName(), new LatLng(child.getLatitude(), child.getLongitude()));
+            historyEntry.setTimestamp(child.getTimestamp());
+            partnerHistory.add(historyEntry);
+
+            System.out.println("Partner visited: " + historyEntry.getName());
+
+            System.out.println(partnerHistory.toString());
+        }
+
+        @Override
+        public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+        }
+
+        @Override
+        public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+        }
+
+        @Override
+        public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+        }
+
+        @Override
+        public void onCancelled(FirebaseError firebaseError) {
+
+        }
+    };
 
     public RegistrationInformation(Context context) {
         this.email = null;
@@ -63,8 +98,10 @@ public class RegistrationInformation {
             throw new PartnerAlreadyRegisteredException("Partner already registered");
         }
 
+        Firebase partnerRef = root.child("" + partnerEmail.hashCode());
         //TODO: add listener to clear partner's history at 3 AM
 
+        partnerRef.child("history").addChildEventListener(historyListener);
         this.partnerEmail = partnerEmail;
         this.partnerRegistered = true;
     }
@@ -109,7 +146,7 @@ public class RegistrationInformation {
     }
 
     public ArrayList<PartnerFavoriteEntry> getPartnerHistory() {
-        updatePartnerHistory();
+        //updatePartnerHistory();
 
         return partnerHistory;
     }
@@ -138,6 +175,8 @@ public class RegistrationInformation {
     }
 
     public void clearPartner() {
+        root.child("" + partnerEmail.hashCode()).child("history").removeEventListener(historyListener);
+
         this.partnerEmail = null;
         this.partnerRegistered = false;
     }

@@ -43,6 +43,7 @@ import com.helloworld.kenny.coupletones.favorites.exceptions.InvalidNameExceptio
 import com.helloworld.kenny.coupletones.favorites.exceptions.NameInUseException;
 import com.helloworld.kenny.coupletones.favorites.FavoriteEntry;
 import com.helloworld.kenny.coupletones.favorites.Favorites;
+import com.helloworld.kenny.coupletones.favorites.partner.PartnerFavoriteEntry;
 import com.helloworld.kenny.coupletones.registration.RegistrationInformation;
 import com.helloworld.kenny.coupletones.registration.exceptions.PartnerAlreadyRegisteredException;
 import com.helloworld.kenny.coupletones.registration.exceptions.SelfAlreadyRegisteredException;
@@ -85,6 +86,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private Favorites favorites;
     private FavoriteSwipeAdapter<FavoriteEntry> favoriteSwipeAdapter;
+    private FavoriteSwipeAdapter<PartnerFavoriteEntry> partnerSwipeAdapter;
+    private FavoriteSwipeAdapter<PartnerFavoriteEntry> partnerHistorySwipeAdapter;
+
     private RegistrationInformation registrationInformation;
     private Settings settings;
 
@@ -125,6 +129,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         favorites = new Favorites();
         registrationInformation = new RegistrationInformation(this);
         favoriteSwipeAdapter = new FavoriteSwipeAdapter<FavoriteEntry>(me, R.layout.listview_item, R.id.listview_item_text, favorites.getAllEntries());
+        partnerHistorySwipeAdapter = new FavoriteSwipeAdapter<>(me, R.layout.listview_item, R.id.listview_item_text, registrationInformation.getPartnerHistory());
         rightDrawer.setAdapter(favoriteSwipeAdapter);
         settings = new Settings();
 
