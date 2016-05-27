@@ -98,7 +98,7 @@ public class JUnit_test extends ActivityInstrumentationTestCase2<MapsActivity> {
      * Tests existence method of RegistrationInformation data structure
      * @throws Exception
      */
-    public void test_partnerInfo() throws Exception {
+    /*public void test_partnerInfo() throws Exception {
         RegistrationInformation registrationInformation = new RegistrationInformation();
         String id = "someID";
         String partnerId = "somePartner";
@@ -110,7 +110,7 @@ public class JUnit_test extends ActivityInstrumentationTestCase2<MapsActivity> {
         assertEquals(RegistrationInformation.getOwnRegId(), id);
         assertEquals(RegistrationInformation.getRegId(), partnerId);
         assertEquals(RegistrationInformation.getEmail(), email);
-    }
+    }*/
 
 
 
