@@ -1,7 +1,12 @@
 package com.helloworld.kenny.coupletones.registration;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
+
 import com.helloworld.kenny.coupletones.favorites.partner.PartnerFavoriteEntry;
 import com.helloworld.kenny.coupletones.registration.exceptions.PartnerAlreadyRegisteredException;
+import com.helloworld.kenny.coupletones.registration.exceptions.SelfAlreadyRegisteredException;
 
 import java.util.Date;
 import java.sql.Timestamp;
@@ -14,57 +19,48 @@ import java.util.ArrayList;
 public class RegistrationInformation {
 
     // TODO: some sort of string verification on the email/id?
-    private static String email;
-    private static String partnerEmail;
-    private boolean registered;
-
+    private String email;
+    private String partnerEmail;
+    private boolean selfRegistered;
+    private boolean partnerRegistered;
 
     private ArrayList<PartnerFavoriteEntry> partnerFavorites;
     private ArrayList<PartnerFavoriteEntry> partnerHistory;
 
-    /**
-     *  DEBUG - AUTO REGISTRATION
-     *
-     *  Replace both IDs to auto-register on startup!
-     *  It does not matter which order you have the IDs.
-     *  Don't have to replace emails, they're just there for dummy purposes.
-     *
-     *  Having trouble deploying two emulators at the same time?
-     *  Check this out:
-     *      http://stackoverflow.com/questions/18592296/deploy-on-several-emulators-in-android-studio
-     *
-     *  Full steps:
-     *      1. Run app on two emulators
-     *      2. Copy and paste the two regIds from Android Monitor (console) onto here
-     *      3. Re-run the two apps
-     *
-     *  This should auto-register both apps to each other!
-     * */
-
     private static final String HISTORY_RESET_TIME = "03:00:00"; // 3AM
-
     public static final String endpoint = "https://coupletonesteam6.firebaseio.com/";
 
 
     public RegistrationInformation() {
         this.email = null;
-        this.registered = false;
+        this.partnerEmail = null;
+        this.selfRegistered = false;
+        this.partnerRegistered = false;
 
         partnerHistory = new ArrayList<PartnerFavoriteEntry>();
         partnerFavorites = new ArrayList<PartnerFavoriteEntry>();
+
     }
 
-
     public void registerPartner(String partnerEmail) throws PartnerAlreadyRegisteredException {
-        if(registered) {
+        if(partnerRegistered) {
             throw new PartnerAlreadyRegisteredException("Partner already registered");
         }
 
         this.partnerEmail = partnerEmail;
-        this.registered = true;
+        this.partnerRegistered = true;
     }
 
-    public static String getEmail() {
+    public void registerSelf(String email) throws SelfAlreadyRegisteredException {
+        if(selfRegistered) {
+            throw new SelfAlreadyRegisteredException("Self already registered");
+        }
+
+        this.email = email;
+        this.selfRegistered = true;
+    }
+
+    public String getEmail() {
         return email;
     }
 
@@ -74,7 +70,7 @@ public class RegistrationInformation {
         return partnerHistory;
     }
 
-    public void updatePartnerHistory() {
+    private void updatePartnerHistory() {
         Timestamp tsDeletePoint = Timestamp.valueOf(
                         new SimpleDateFormat("yyyy-MM-dd ")
                         .format(new Date())
@@ -89,8 +85,13 @@ public class RegistrationInformation {
         }
     }
 
-    public void clear() {
+    public void clearPartner() {
         this.partnerEmail = null;
-        this.registered = false;
+        this.partnerRegistered = false;
+    }
+
+    public void clearSelf() {
+        this.email = null;
+        this.selfRegistered = false;
     }
 }

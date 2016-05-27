@@ -353,7 +353,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         remove.setMessage("Are you sure you want to remove your partner?");
         remove.setPositiveButton("Yes!", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-                registrationInformation.clear();
+                registrationInformation.clearPartner();
                 buttonAddPartner.setVisibility(View.VISIBLE);
                 buttonRemovePartner.setVisibility(View.GONE);
                 Toast.makeText(me, "Partner successfully removed", Toast.LENGTH_SHORT).show();
@@ -492,14 +492,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }*/
     }
 
-    private int getNextMessageId() {
+    /*private int getNextMessageId() {
         SharedPreferences prefs = getPrefs();
         int id = prefs.getInt("keyMsgId", 0);
         SharedPreferences.Editor editor = prefs.edit();
         editor.putInt("keyMsgId", ++id);
         editor.commit();
         return id;
-    }
+    }*/
 
     private SharedPreferences getPrefs() {
         return PreferenceManager.getDefaultSharedPreferences(this);
