@@ -352,8 +352,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         register.setPositiveButton("Submit", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 EditText email = (EditText) store.findViewById(R.id.partner_email);
-                EditText partner_id = (EditText) store.findViewById(R.id.partner_id);
-
                 try {
                     registrationInformation.registerPartner(email.getText().toString());
                     buttonAddPartner.setVisibility(View.GONE);
