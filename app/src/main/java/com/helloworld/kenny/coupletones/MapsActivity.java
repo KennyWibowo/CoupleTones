@@ -144,8 +144,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             String emailAddress = et.getText().toString();
 
                             try {
-                                registrationInformation.registerSelf(emailAddress);
-                                Toast.makeText(me, "Email successfully registered", Toast.LENGTH_SHORT).show();
+                                if(emailAddress != null && !emailAddress.isEmpty()) {
+                                    registrationInformation.registerSelf(emailAddress);
+                                    Toast.makeText(me, "Email successfully registered", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    Toast.makeText(me, "Invalid email. Please retry.", Toast.LENGTH_SHORT).show();
+                                    et.setText("");
+                                }
                             } catch (SelfAlreadyRegisteredException e) {
                                 e.printStackTrace();
                             }
@@ -355,17 +360,22 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         builder.setNeutralButton("Submit",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int something) {
-
                         String emailAddress = et.getText().toString();
-                        registrationInformation.changeEmail(emailAddress);
-                        Toast.makeText(me, "Email successfully changed", Toast.LENGTH_SHORT).show();
-                        dialog.dismiss();
+
+                        if(emailAddress != null && !emailAddress.isEmpty()) {
+
+                            registrationInformation.changeEmail(emailAddress);
+                            Toast.makeText(me, "Email successfully changed", Toast.LENGTH_SHORT).show();
+                            dialog.dismiss();
+                        } else {
+                            Toast.makeText(me, "Invalid email. Please retry.", Toast.LENGTH_SHORT).show();
+                            et.setText("");
+                        }
                     }
                 });
 
         AlertDialog emailRegistration = builder.create();
         emailRegistration.show();
-        //onReachedFavoriteLocation(new FavoriteEntry("Sixth College", new LatLng(0,0)));
     }
 
     /**
