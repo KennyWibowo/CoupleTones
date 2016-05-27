@@ -138,6 +138,7 @@ public class RegistrationInformation {
     public void clearSelf() {
         this.email = null;
         this.selfRegistered = false;
+        this.lastVisitedLocation = new JSONEntry();
     }
 }
 
