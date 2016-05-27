@@ -11,14 +11,16 @@ import java.util.ArrayList;
 /**
  * Created by Kenny on 5/5/2016.
  */
-public class PartnerInformation {
+public class RegistrationInformation {
 
     // TODO: some sort of string verification on the email/id?
-    public static String partnerRegId;
-    public static String myRegId;
     private static String email;
     private static String partnerEmail;
     private boolean registered;
+
+
+    private ArrayList<PartnerFavoriteEntry> partnerFavorites;
+    private ArrayList<PartnerFavoriteEntry> partnerHistory;
 
     /**
      *  DEBUG - AUTO REGISTRATION
@@ -38,37 +40,18 @@ public class PartnerInformation {
      *
      *  This should auto-register both apps to each other!
      * */
-    public static final String REG_ID_1 = "INSERT_REG_ID";
-    public static final String REG_ID_2 = "INSERT_REG_ID";
 
     private static final String HISTORY_RESET_TIME = "03:00:00"; // 3AM
 
-    private static final String EMAIL_1 = "dummy1@dummymail.com";
-    private static final String EMAIL_2 = "dummy2@dummymail.com";
-
     public static final String endpoint = "https://coupletonesteam6.firebaseio.com/";
 
-    private ArrayList<PartnerFavoriteEntry> partnerFavorites;
 
-    private ArrayList<PartnerFavoriteEntry> partnerHistory;
-
-    public PartnerInformation() {
-        this.partnerRegId = null;
-        this.myRegId = null;
+    public RegistrationInformation() {
         this.email = null;
         this.registered = false;
 
         partnerHistory = new ArrayList<PartnerFavoriteEntry>();
         partnerFavorites = new ArrayList<PartnerFavoriteEntry>();
-    }
-
-    // DEPRECATED
-    public void registerPartner(String partnerRegId, String email) throws PartnerAlreadyRegisteredException {
-        if(registered)
-            throw new PartnerAlreadyRegisteredException("Partner already registered");
-
-        this.partnerRegId = partnerRegId;
-        this.email = email;
     }
 
 
@@ -107,8 +90,7 @@ public class PartnerInformation {
     }
 
     public void clear() {
-        this.partnerRegId = null;
-        this.email = null;
+        this.partnerEmail = null;
         this.registered = false;
     }
 }

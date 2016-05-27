@@ -2,10 +2,8 @@ package com.helloworld.kenny.coupletones;
 
 import android.Manifest;
 import android.app.AlertDialog;
-import android.app.Notification;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Address;
@@ -14,14 +12,11 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.location.LocationListener;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
-import android.text.TextUtils;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
@@ -42,14 +37,12 @@ import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.helloworld.kenny.coupletones.favorites.Entry;
 import com.helloworld.kenny.coupletones.favorites.exceptions.InvalidNameException;
 import com.helloworld.kenny.coupletones.favorites.exceptions.NameInUseException;
 import com.helloworld.kenny.coupletones.favorites.FavoriteEntry;
 import com.helloworld.kenny.coupletones.favorites.Favorites;
-import com.helloworld.kenny.coupletones.gcm.GcmSendIntentService;
+import com.helloworld.kenny.coupletones.registration.RegistrationInformation;
 import com.helloworld.kenny.coupletones.registration.exceptions.PartnerAlreadyRegisteredException;
-import com.helloworld.kenny.coupletones.registration.PartnerInformation;
 
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -75,7 +68,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private ListView rightDrawer;
     private UiSettings myUiSetting;
     private DrawerLayout drawer;
-    private final PartnerInformation partnerInformation = new PartnerInformation();
+    private final RegistrationInformation registrationInformation = new RegistrationInformation();
 
     private Button buttonRemovePartner;
     private Button buttonAddPartner;
@@ -330,7 +323,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 EditText partner_id = (EditText) store.findViewById(R.id.partner_id);
 
                 try {
-                    partnerInformation.registerPartner(partner_id.getText().toString(), email.getText().toString());
+                    registrationInformation.registerPartner(email.getText().toString());
                     buttonAddPartner.setVisibility(View.GONE);
                     buttonRemovePartner.setVisibility(View.VISIBLE);
                     Toast.makeText(me, "Partner successfully registered", Toast.LENGTH_SHORT).show();
@@ -360,7 +353,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         remove.setMessage("Are you sure you want to remove your partner?");
         remove.setPositiveButton("Yes!", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-                partnerInformation.clear();
+                registrationInformation.clear();
                 buttonAddPartner.setVisibility(View.VISIBLE);
                 buttonRemovePartner.setVisibility(View.GONE);
                 Toast.makeText(me, "Partner successfully removed", Toast.LENGTH_SHORT).show();

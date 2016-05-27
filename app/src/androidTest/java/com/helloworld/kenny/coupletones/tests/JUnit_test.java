@@ -7,7 +7,7 @@ import com.helloworld.kenny.coupletones.MapsActivity;
 import com.helloworld.kenny.coupletones.favorites.FavoriteEntry;
 import com.helloworld.kenny.coupletones.favorites.Favorites;
 import com.helloworld.kenny.coupletones.favorites.exceptions.NameInUseException;
-import com.helloworld.kenny.coupletones.registration.PartnerInformation;
+import com.helloworld.kenny.coupletones.registration.RegistrationInformation;
 
 /**
  * Created by Karen on 5/8/2016.
@@ -95,21 +95,21 @@ public class JUnit_test extends ActivityInstrumentationTestCase2<MapsActivity> {
     }
 
     /**
-     * Tests existence method of PartnerInformation data structure
+     * Tests existence method of RegistrationInformation data structure
      * @throws Exception
      */
     public void test_partnerInfo() throws Exception {
-        PartnerInformation partnerInformation = new PartnerInformation();
+        RegistrationInformation registrationInformation = new RegistrationInformation();
         String id = "someID";
         String partnerId = "somePartner";
         String email = "someemail@email.com";
 
-        partnerInformation.registerOwnRegId(id);
-        partnerInformation.registerPartner(partnerId, email);
+        registrationInformation.registerOwnRegId(id);
+        registrationInformation.registerPartner(partnerId, email);
 
-        assertEquals(PartnerInformation.getOwnRegId(), id);
-        assertEquals(PartnerInformation.getRegId(), partnerId);
-        assertEquals(PartnerInformation.getEmail(), email);
+        assertEquals(RegistrationInformation.getOwnRegId(), id);
+        assertEquals(RegistrationInformation.getRegId(), partnerId);
+        assertEquals(RegistrationInformation.getEmail(), email);
     }
 
 
