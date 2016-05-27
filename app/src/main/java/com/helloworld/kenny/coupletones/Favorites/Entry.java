@@ -41,4 +41,8 @@ public abstract class Entry {
         return this.timestamp;
     }
 
+    public String toString() {
+        return this.getName();
+    }
+
 }

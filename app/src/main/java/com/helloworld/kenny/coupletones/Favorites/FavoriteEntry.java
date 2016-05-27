@@ -14,9 +14,6 @@ public class FavoriteEntry extends Entry {
         super(name, location);
     }
 
-    public String toString() {
-        return this.getName();
-    }
 
     public void setMarker(Marker marker) {
         this.marker = marker;
