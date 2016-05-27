@@ -1,6 +1,12 @@
 package com.helloworld.kenny.coupletones.registration;
 
+import com.helloworld.kenny.coupletones.favorites.partner.PartnerFavoriteEntry;
 import com.helloworld.kenny.coupletones.registration.exceptions.PartnerAlreadyRegisteredException;
+
+import java.util.Date;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 
 /**
  * Created by Kenny on 5/5/2016.
@@ -11,6 +17,7 @@ public class PartnerInformation {
     public static String partnerRegId;
     public static String myRegId;
     private static String email;
+    private static String partnerEmail;
     private boolean registered;
 
     /**
@@ -34,39 +41,28 @@ public class PartnerInformation {
     public static final String REG_ID_1 = "INSERT_REG_ID";
     public static final String REG_ID_2 = "INSERT_REG_ID";
 
+    private static final String HISTORY_RESET_TIME = "03:00:00"; // 3AM
+
     private static final String EMAIL_1 = "dummy1@dummymail.com";
     private static final String EMAIL_2 = "dummy2@dummymail.com";
+
+    public static final String endpoint = "https://coupletonesteam6.firebaseio.com/";
+
+    private ArrayList<PartnerFavoriteEntry> partnerFavorites;
+
+    private ArrayList<PartnerFavoriteEntry> partnerHistory;
 
     public PartnerInformation() {
         this.partnerRegId = null;
         this.myRegId = null;
         this.email = null;
         this.registered = false;
+
+        partnerHistory = new ArrayList<PartnerFavoriteEntry>();
+        partnerFavorites = new ArrayList<PartnerFavoriteEntry>();
     }
 
-    public boolean registerOwnRegId(String myRegId) {
-        boolean autoRegistered = false;
-
-        try {
-            if (myRegId.equals(REG_ID_1)) {
-                registerPartner(REG_ID_2, EMAIL_2);
-                System.out.println("Partner auto-registered!");
-                autoRegistered = true;
-            } else if (myRegId.equals(REG_ID_2)) {
-                registerPartner(REG_ID_1, EMAIL_1);
-                System.out.println("Partner auto-registered!");
-                autoRegistered = true;
-            }
-        } catch (PartnerAlreadyRegisteredException e) {
-            System.out.println("Oops!");
-        } finally {
-            this.myRegId = myRegId;
-        }
-
-        return autoRegistered;
-
-    }
-
+    // DEPRECATED
     public void registerPartner(String partnerRegId, String email) throws PartnerAlreadyRegisteredException {
         if(registered)
             throw new PartnerAlreadyRegisteredException("Partner already registered");
@@ -75,16 +71,39 @@ public class PartnerInformation {
         this.email = email;
     }
 
-    public static String getOwnRegId() {
-        return myRegId;
-    }
 
-    public static String getRegId() {
-        return partnerRegId;
+    public void registerPartner(String partnerEmail) throws PartnerAlreadyRegisteredException {
+        if(registered) {
+            throw new PartnerAlreadyRegisteredException("Partner already registered");
+        }
+
+        this.partnerEmail = partnerEmail;
+        this.registered = true;
     }
 
     public static String getEmail() {
         return email;
+    }
+
+    public ArrayList<PartnerFavoriteEntry> getPartnerHistory() {
+        updatePartnerHistory();
+
+        return partnerHistory;
+    }
+
+    public void updatePartnerHistory() {
+        Timestamp tsDeletePoint = Timestamp.valueOf(
+                        new SimpleDateFormat("yyyy-MM-dd ")
+                        .format(new Date())
+                        .concat(HISTORY_RESET_TIME));
+
+        for( int i = 0; i < partnerHistory.size(); i++ ) {
+            if(partnerHistory.get(i).getTimestamp().after(tsDeletePoint)) {
+                partnerHistory.remove(i--);
+
+                //TODO: Update Firebase after deletion.
+            }
+        }
     }
 
     public void clear() {

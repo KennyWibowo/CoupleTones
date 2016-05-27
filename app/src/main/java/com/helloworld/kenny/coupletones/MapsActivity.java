@@ -112,7 +112,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         rightDrawer.setAdapter(favoriteSwipeAdapter);
 
         //SETUPS
-        setupDeviceId();
+        //setupDeviceId();
         setupRightDrawer();
         setupLocationListener();
         // ATTENTION: This was auto-generated to implement the App Indexing API.
@@ -237,8 +237,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     /**
      * Sets up api services for retrieving device i.d.
+     * DEPRECATED
      */
-    public void setupDeviceId() {
+    /*public void setupDeviceId() {
         synchronized (partnerInformation) {
 
             new AsyncTask<Void, Void, Boolean>() {
@@ -278,13 +279,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 }
             }.execute(null, null, null);
         }
-    }
+    }*/
 
     /**
      * Button Method for retrieving i.d.
      * @param view
      */
-    public void buttonGetDeviceId(View view) {
+    /*public void buttonGetDeviceId(View view) {
         String regId = partnerInformation.getOwnRegId();
 
         if(regId == null || regId.equals(""))
@@ -307,7 +308,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
 
         //onReachedFavoriteLocation(new FavoriteEntry("Sixth College", new LatLng(0,0)));
-    }
+    }*/
 
     /**
      * Button for adding partner
@@ -480,7 +481,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         entry.visit();
 
-        System.out.println("Sending a message to: " + partnerInformation.getRegId());
+        /*System.out.println("Sending a message to: " + partnerInformation.getRegId());
 
         try {
             String partnerId = partnerInformation.getRegId();
@@ -495,7 +496,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             //Log.v("grokkingandroid", "sent message: " + msg);
         } catch (IOException e) {
             System.out.println("uh oh");
-        }
+        }*/
     }
 
     private int getNextMessageId() {
