@@ -35,4 +35,5 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:24.0.0-alpha2'
     compile 'com.android.support:support-v4:24.0.0-alpha2'
     compile 'com.daimajia.swipelayout:library:1.2.0@aar'
+    compile 'com.firebase:firebase-client-android:2.5.0+'
 }

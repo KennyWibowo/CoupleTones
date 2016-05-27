@@ -585,13 +585,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     /**
      * Calculates the distance between two points via the distance formula
-     * @param lat1
-     * @param lat2
-     * @param lon1
-     * @param lon2
-     * @param el1
-     * @param el2
-     * @return
      */
     public boolean compDistance(double lat1, double lat2, double lon1, double lon2, double el1,
                             double el2){
