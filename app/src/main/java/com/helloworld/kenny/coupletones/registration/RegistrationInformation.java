@@ -31,9 +31,7 @@ public class RegistrationInformation {
     private String partnerEmail;
     private boolean selfRegistered;
     private boolean partnerRegistered;
-
-    private final PartnerFavoriteEntry lastVisitedLocation;
-
+    private JSONEntry lastVisitedLocation;
     private ArrayList<PartnerFavoriteEntry> partnerFavorites;
     private ArrayList<PartnerFavoriteEntry> partnerHistory;
     private SharedPreferences sharedPreferences;
@@ -50,7 +48,7 @@ public class RegistrationInformation {
         this.partnerRegistered = false;
         this.sharedPreferences = context.getSharedPreferences("user_info", Context.MODE_PRIVATE);
 
-        lastVisitedLocation = new PartnerFavoriteEntry(null, null);
+        lastVisitedLocation = new JSONEntry();
 
         partnerHistory = new ArrayList<PartnerFavoriteEntry>();
         partnerFavorites = new ArrayList<PartnerFavoriteEntry>();
@@ -77,21 +75,6 @@ public class RegistrationInformation {
         editor.putString("email", email);
         editor.apply();
 
-        root.child(email).child("last_visited").addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot snapshot) {
-                JSONEntry entry = snapshot.getValue(JSONEntry.class);
-
-                if(entry != null) {
-                    lastVisitedLocation.setName(entry.getName());
-                    lastVisitedLocation.setLocation(new LatLng(entry.getLatitude(), entry.getLongitude()));
-                    lastVisitedLocation.setTimestamp(entry.getTimestamp());
-                } else {
-                    System.out.println("last_visited is null!");
-                }
-            }
-            @Override public void onCancelled(FirebaseError error) { /*Handle error?*/ }
-        });
 
         this.email = email;
         this.selfRegistered = true;
@@ -115,10 +98,9 @@ public class RegistrationInformation {
         }
 
         if(lastVisitedLocation.getName() == null || !lastVisitedLocation.getName().equals(entry.getName())) {
-            Firebase lastVisitedRef = root.child(email).child("last_visited");
             Firebase historyEntryRef = root.child(email).child("history").push();
 
-            lastVisitedRef.setValue(new JSONEntry(entry));
+            lastVisitedLocation = new JSONEntry(entry);
             historyEntryRef.setValue(new JSONEntry(entry));
         }
     }
