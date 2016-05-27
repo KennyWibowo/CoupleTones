@@ -100,6 +100,10 @@ public class RegistrationInformation {
         }
     }
 
+    public boolean isSelfRegistered() {
+        return selfRegistered;
+    }
+
     public void clearPartner() {
         this.partnerEmail = null;
         this.partnerRegistered = false;
