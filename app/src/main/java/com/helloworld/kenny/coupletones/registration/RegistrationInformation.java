@@ -16,6 +16,7 @@ import com.helloworld.kenny.coupletones.registration.exceptions.PartnerAlreadyRe
 import com.helloworld.kenny.coupletones.registration.exceptions.SelfAlreadyRegisteredException;
 import com.helloworld.kenny.coupletones.registration.exceptions.SelfNotRegisteredException;
 
+import java.sql.Time;
 import java.util.Date;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
@@ -117,13 +118,17 @@ public class RegistrationInformation {
                         .format(new Date())
                         .concat(HISTORY_RESET_TIME));
 
+        Timestamp currentTime = new Timestamp(System.currentTimeMillis());
+
         for( int i = 0; i < partnerHistory.size(); i++ ) {
-            if(partnerHistory.get(i).getTimestamp().after(tsDeletePoint)) {
+            if(partnerHistory.get(i).getTimestamp().before(tsDeletePoint) && currentTime.after(tsDeletePoint)) {
                 partnerHistory.remove(i--);
 
                 //TODO: Update Firebase after deletion.
             }
         }
+
+
     }
 
     public boolean isSelfRegistered() {
