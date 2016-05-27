@@ -139,14 +139,25 @@
                 android:orientation="horizontal">
 
                 <Button
-                    android:id="@+id/change_email"
+                    android:id="@+id/register_email"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="left"
                     android:layout_marginRight="5dp"
-                    android:text="Change Email"
+                    android:text="Register Email"
                     android:backgroundTint="@color/colorSecondary"
-                    android:onClick="buttonChangeEmail"
+                    android:onClick="buttonRegisterEmail"
+                    android:nestedScrollingEnabled="true" />
+
+                <Button
+                    android:id="@+id/unregister_email"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left"
+                    android:layout_marginRight="5dp"
+                    android:text="Unregister Email"
+                    android:backgroundTint="@color/colorSecondary"
+                    android:onClick="buttonUnregisterEmail"
                     android:nestedScrollingEnabled="true" />
 
                 <Button

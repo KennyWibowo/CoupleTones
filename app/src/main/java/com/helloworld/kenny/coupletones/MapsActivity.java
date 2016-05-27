@@ -78,6 +78,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private Button buttonAddPartner;
     private Button buttonGetFavorites;
     private Button buttonGetHistory;
+    private Button buttonRegisterEmail;
+    private Button buttonUnregisterEmail;
     private ListView listFavorite;
     private ListView listHistory;
 
@@ -110,6 +112,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         buttonRemovePartner = (Button) findViewById(R.id.remove_partner);
         buttonGetFavorites = (Button)findViewById(R.id.get_favorites);
         buttonGetHistory = (Button)findViewById(R.id.get_history);
+        buttonRegisterEmail = (Button)findViewById(R.id.register_email);
+        buttonUnregisterEmail = (Button)findViewById(R.id.unregister_email)
         listFavorite = (ListView)findViewById(R.id.left_listFavorite);
         listHistory = (ListView)findViewById(R.id.left_listHistory);
 
@@ -156,6 +160,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             try {
                                 if(emailAddress != null && !emailAddress.isEmpty()) {
                                     registrationInformation.registerSelf(emailAddress);
+                                    buttonUnregisterEmail.setVisibility(View.VISIBLE);
+                                    buttonRegisterEmail.setVisibility(View.GONE);
                                     Toast.makeText(me, "Email successfully registered", Toast.LENGTH_SHORT).show();
                                 } else {
                                     Toast.makeText(me, "Invalid email. Please retry.", Toast.LENGTH_SHORT).show();
@@ -353,10 +359,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }*/
 
     /**
-     * Button Method for changing user's email
+     * Button Method for register user's email
      * @param view
      */
-    public void buttonChangeEmail(View view) {
+    public void buttonRegisterEmail(View view) {
         AlertDialog.Builder builder = new AlertDialog.Builder(MapsActivity.this);
         LayoutInflater inflater = this.getLayoutInflater();
         final View dialogView = inflater.inflate(R.layout.email_registration, null);
@@ -373,8 +379,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         String emailAddress = et.getText().toString();
 
                         if(emailAddress != null && !emailAddress.isEmpty()) {
-
                             registrationInformation.changeEmail(emailAddress);
+                            buttonUnregisterEmail.setVisibility(View.VISIBLE);
+                            buttonRegisterEmail.setVisibility(View.GONE);
                             Toast.makeText(me, "Email successfully changed", Toast.LENGTH_SHORT).show();
                             dialog.dismiss();
                         } else {
@@ -384,8 +391,19 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     }
                 });
 
-        AlertDialog changeEmail = builder.create();
-        changeEmail.show();
+        AlertDialog registerEmail = builder.create();
+        registerEmail.show();
+    }
+
+    /**
+     * Button Method for unregister user's email
+     * @param view
+     */
+    public void buttonUnregisterEmail(View view) {
+        registrationInformation.clearSelf();
+        buttonUnregisterEmail.setVisibility(View.GONE);
+        buttonRegisterEmail.setVisibility(View.VISIBLE);
+        Toast.makeText(me, "Successfully unregistered email.", Toast.LENGTH_SHORT).show();
     }
 
     /**
