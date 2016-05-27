@@ -44,10 +44,10 @@ import com.helloworld.kenny.coupletones.favorites.exceptions.NameInUseException;
 import com.helloworld.kenny.coupletones.favorites.FavoriteEntry;
 import com.helloworld.kenny.coupletones.favorites.Favorites;
 import com.helloworld.kenny.coupletones.favorites.partner.PartnerFavoriteEntry;
-import com.helloworld.kenny.coupletones.registration.RegistrationInformation;
-import com.helloworld.kenny.coupletones.registration.exceptions.PartnerAlreadyRegisteredException;
-import com.helloworld.kenny.coupletones.registration.exceptions.SelfAlreadyRegisteredException;
-import com.helloworld.kenny.coupletones.registration.exceptions.SelfNotRegisteredException;
+import com.helloworld.kenny.coupletones.firebase.registration.RegistrationInformation;
+import com.helloworld.kenny.coupletones.firebase.registration.exceptions.PartnerAlreadyRegisteredException;
+import com.helloworld.kenny.coupletones.firebase.registration.exceptions.SelfAlreadyRegisteredException;
+import com.helloworld.kenny.coupletones.firebase.registration.exceptions.SelfNotRegisteredException;
 import com.helloworld.kenny.coupletones.settings.Settings;
 
 import android.widget.LinearLayout;

@@ -1,4 +1,4 @@
-package com.helloworld.kenny.coupletones.registration.exceptions;
+package com.helloworld.kenny.coupletones.firebase.registration.exceptions;
 
 /**
  * Created by Kenny on 5/6/2016.

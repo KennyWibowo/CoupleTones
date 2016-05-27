@@ -1,23 +1,20 @@
-package com.helloworld.kenny.coupletones.registration;
+package com.helloworld.kenny.coupletones.firebase.registration;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 
 import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
-import com.firebase.client.ValueEventListener;
 import com.google.android.gms.maps.model.LatLng;
 import com.helloworld.kenny.coupletones.favorites.Entry;
 import com.helloworld.kenny.coupletones.favorites.FavoriteEntry;
 import com.helloworld.kenny.coupletones.favorites.partner.PartnerFavoriteEntry;
-import com.helloworld.kenny.coupletones.registration.exceptions.PartnerAlreadyRegisteredException;
-import com.helloworld.kenny.coupletones.registration.exceptions.SelfAlreadyRegisteredException;
-import com.helloworld.kenny.coupletones.registration.exceptions.SelfNotRegisteredException;
+import com.helloworld.kenny.coupletones.firebase.registration.exceptions.PartnerAlreadyRegisteredException;
+import com.helloworld.kenny.coupletones.firebase.registration.exceptions.SelfAlreadyRegisteredException;
+import com.helloworld.kenny.coupletones.firebase.registration.exceptions.SelfNotRegisteredException;
 
-import java.sql.Time;
 import java.util.Date;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;

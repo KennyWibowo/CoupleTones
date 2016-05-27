@@ -1,4 +1,4 @@
-package com.helloworld.kenny.coupletones.registration;
+package com.helloworld.kenny.coupletones.firebase.registration;
 
 import android.app.Application;
 

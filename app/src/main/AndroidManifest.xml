@@ -26,7 +26,7 @@
     <service android:name=".GcmIntentService" />
 
     <application
-        android:name=".registration.FirebaseStarterApplication"
+        android:name=".firebase.registration.FirebaseStarterApplication"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
