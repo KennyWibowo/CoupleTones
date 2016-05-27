@@ -4,9 +4,12 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
+import com.firebase.client.Firebase;
+import com.helloworld.kenny.coupletones.favorites.FavoriteEntry;
 import com.helloworld.kenny.coupletones.favorites.partner.PartnerFavoriteEntry;
 import com.helloworld.kenny.coupletones.registration.exceptions.PartnerAlreadyRegisteredException;
 import com.helloworld.kenny.coupletones.registration.exceptions.SelfAlreadyRegisteredException;
+import com.helloworld.kenny.coupletones.registration.exceptions.SelfNotRegisteredException;
 
 import java.util.Date;
 import java.sql.Timestamp;
@@ -26,6 +29,7 @@ public class RegistrationInformation {
 
     private ArrayList<PartnerFavoriteEntry> partnerFavorites;
     private ArrayList<PartnerFavoriteEntry> partnerHistory;
+    private Firebase firebase;
 
     private static final String HISTORY_RESET_TIME = "03:00:00"; // 3AM
     public static final String endpoint = "https://coupletonesteam6.firebaseio.com/";
@@ -39,6 +43,8 @@ public class RegistrationInformation {
 
         partnerHistory = new ArrayList<PartnerFavoriteEntry>();
         partnerFavorites = new ArrayList<PartnerFavoriteEntry>();
+
+        firebase = new Firebase(endpoint);
 
     }
 
@@ -62,6 +68,15 @@ public class RegistrationInformation {
 
     public String getEmail() {
         return email;
+    }
+
+    public void visitLocation(FavoriteEntry entry) throws SelfNotRegisteredException {
+        if(!selfRegistered) {
+            throw new SelfNotRegisteredException("Self not yet registered");
+        }
+
+        //TODO: Append FavoriteEntry details to history.
+        firebase.child(email);
     }
 
     public ArrayList<PartnerFavoriteEntry> getPartnerHistory() {
