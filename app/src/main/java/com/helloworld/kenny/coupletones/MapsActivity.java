@@ -123,10 +123,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         setupRightDrawer();
         setupLeftDrawer();
         setupLocationListener();
+        setupEmailRegistration();
+
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
+    }
 
+    public void setupEmailRegistration() {
         if(registrationInformation.isSelfRegistered() == false) {
             AlertDialog.Builder builder = new AlertDialog.Builder(MapsActivity.this);
             LayoutInflater inflater = this.getLayoutInflater();
@@ -464,6 +468,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         System.out.println(favorites.toString());
     }
 
+    /**
+     * Button Method for changing partner's history
+     * @param view
+     */
     public void buttonHistory(View view)
     {
         listHistory.setVisibility(View.VISIBLE);
@@ -472,6 +480,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         buttonGetHistory.setVisibility(View.GONE);
     }
 
+    /**
+     * Button Method to show partner's favorites.
+     * @param view
+     */
     public void buttonFavorites(View view)
     {
         listHistory.setVisibility(View.GONE);
@@ -479,6 +491,42 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         buttonGetFavorites.setVisibility(View.GONE);
         buttonGetHistory.setVisibility(View.VISIBLE);
     }
+
+    /**
+     * Button Method for changing user's email
+     * @param view
+     */
+    /*public void buttonSettings(View view) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(MapsActivity.this);
+        LayoutInflater inflater = this.getLayoutInflater();
+        final View dialogView = inflater.inflate(R.layout.email_registration, null);
+        builder.setView(dialogView);
+
+        final EditText et = (EditText) dialogView.findViewById(R.id.email);
+
+        builder.setTitle("Email Registration");
+        builder.setMessage("Please enter a valid email address for registration: ");
+        builder.setCancelable(true);
+        builder.setNeutralButton("Submit",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int something) {
+                        String emailAddress = et.getText().toString();
+
+                        if(emailAddress != null && !emailAddress.isEmpty()) {
+
+                            registrationInformation.changeEmail(emailAddress);
+                            Toast.makeText(me, "Email successfully changed", Toast.LENGTH_SHORT).show();
+                            dialog.dismiss();
+                        } else {
+                            Toast.makeText(me, "Invalid email. Please retry.", Toast.LENGTH_SHORT).show();
+                            et.setText("");
+                        }
+                    }
+                });
+
+        AlertDialog emailRegistration = builder.create();
+        emailRegistration.show();
+    }*/
 
     /**
      * Button for searching locations
