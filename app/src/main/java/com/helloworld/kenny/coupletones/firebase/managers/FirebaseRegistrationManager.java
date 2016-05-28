@@ -95,12 +95,12 @@ public class FirebaseRegistrationManager extends FirebaseManager {
         return selfRegistered;
     }
 
-    public void onUserRegistered() {
-
+    public void onUserRegistered(String userKey) {
+        Firebase userRef = root.child(userKey);
     }
 
-    public void onPartnerRegistered() {
-
+    public void onPartnerRegistered(String partnerKey) {
+        Firebase partnerRef = root.child(partnerKey);
     }
 
     public void onUserCleared() {

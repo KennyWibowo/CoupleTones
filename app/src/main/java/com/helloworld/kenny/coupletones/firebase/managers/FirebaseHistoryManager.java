@@ -120,15 +120,15 @@ public class FirebaseHistoryManager extends FirebaseManager {
 
     }
 
-    public void onUserRegistered() {
+    public void onUserRegistered(String userKey) {
+        Firebase userRef = root.child(userKey);
 
     }
 
-    public void onPartnerRegistered() {
+    public void onPartnerRegistered(String partnerKey) {
         //TODO: add listener to clear partner's history at 3 AM (clear both Firebase and local)
         //TODO: partnerRef.child("history").addChildEventListener(historyListener);
 
-        String partnerKey = firebaseRegistrationManager.getPartnerKey();
         Firebase partnerRef = root.child(partnerKey);
         partnerRef.child("history").addChildEventListener(historyListener);
     }

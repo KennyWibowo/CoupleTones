@@ -15,9 +15,9 @@ public abstract class FirebaseManager {
 
     public abstract void onPartnerCleared();
 
-    public abstract void onUserRegistered();
+    public abstract void onUserRegistered(String userKey);
 
-    public abstract void onPartnerRegistered();
+    public abstract void onPartnerRegistered(String partnerKey);
 
     public abstract void onLocationVisited(FavoriteEntry entry);
 }

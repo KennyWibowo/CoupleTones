@@ -44,7 +44,7 @@ public class FirebaseService {
             registrationManager.registerUser(email);
 
             for (int i = 0; i < extraManagers.size(); i++) {
-                extraManagers.get(i).onUserRegistered();
+                extraManagers.get(i).onUserRegistered(registrationManager.getUserKey());
             }
 
             return true;
@@ -58,7 +58,7 @@ public class FirebaseService {
             registrationManager.registerPartner(email);
 
             for (int i = 0; i < extraManagers.size(); i++) {
-                extraManagers.get(i).onPartnerRegistered();
+                extraManagers.get(i).onPartnerRegistered(registrationManager.getPartnerKey());
             }
 
             return true;
