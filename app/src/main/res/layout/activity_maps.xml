@@ -170,12 +170,12 @@
                     android:backgroundTint="@color/colorSecondary"
                     android:onClick="buttonSettings"
                     android:nestedScrollingEnabled="true" />
-            </LinearLayout>>
+            </LinearLayout>
 
             <ListView
                 android:id="@+id/right_drawer"
                 android:layout_width="240dp"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:background="#FFF">
             </ListView>
         </LinearLayout>
