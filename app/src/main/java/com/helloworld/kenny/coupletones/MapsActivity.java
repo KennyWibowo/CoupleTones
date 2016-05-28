@@ -44,10 +44,10 @@ import com.helloworld.kenny.coupletones.favorites.exceptions.NameInUseException;
 import com.helloworld.kenny.coupletones.favorites.FavoriteEntry;
 import com.helloworld.kenny.coupletones.favorites.Favorites;
 import com.helloworld.kenny.coupletones.favorites.PartnerFavoriteEntry;
-import com.helloworld.kenny.coupletones.firebase.registration.FirebaseRegistrationInformation;
-import com.helloworld.kenny.coupletones.firebase.registration.exceptions.PartnerAlreadyRegisteredException;
-import com.helloworld.kenny.coupletones.firebase.registration.exceptions.SelfAlreadyRegisteredException;
-import com.helloworld.kenny.coupletones.firebase.registration.exceptions.SelfNotRegisteredException;
+import com.helloworld.kenny.coupletones.firebase.FirebaseService;
+import com.helloworld.kenny.coupletones.firebase.managers.FirebaseRegistrationManager;
+import com.helloworld.kenny.coupletones.firebase.exceptions.PartnerAlreadyRegisteredException;
+import com.helloworld.kenny.coupletones.firebase.exceptions.UserAlreadyRegisteredException;
 import com.helloworld.kenny.coupletones.settings.Settings;
 
 import android.widget.LinearLayout;
@@ -89,7 +89,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private FavoriteSwipeAdapter<PartnerFavoriteEntry> partnerSwipeAdapter;
     private FavoriteSwipeAdapter<PartnerFavoriteEntry> partnerHistorySwipeAdapter;
 
-    private FirebaseRegistrationInformation firebaseRegistrationInformation;
+    private FirebaseService firebaseService;
+    private FirebaseRegistrationManager firebaseRegistrationManager;
     private Settings settings;
 
     private String PROJECT_NUMBER = "366742322722";
@@ -124,12 +125,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         listHistory.setVisibility(View.GONE);
         buttonGetFavorites.setVisibility(View.GONE);
 
-
         // setup data structures and variables
         favorites = new Favorites();
-        firebaseRegistrationInformation = new FirebaseRegistrationInformation(this);
+        firebaseService = new FirebaseService(this);
+        firebaseRegistrationManager = firebaseService.getRegistrationManager();
         favoriteSwipeAdapter = new FavoriteSwipeAdapter<FavoriteEntry>(me, R.layout.listview_item, R.id.listview_item_text, favorites.getAllEntries());
-        //TODO: partnerHistorySwipeAdapter = new FavoriteSwipeAdapter<>(me, R.layout.listview_item, R.id.listview_item_text, firebaseRegistrationInformation.getPartnerHistory());
+        //TODO: partnerHistorySwipeAdapter = new FavoriteSwipeAdapter<>(me, R.layout.listview_item, R.id.listview_item_text, firebaseService.getPartnerHistory());
         rightDrawer.setAdapter(favoriteSwipeAdapter);
         settings = new Settings();
 
@@ -146,7 +147,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     public void setupEmailRegistration() {
-        if(firebaseRegistrationInformation.isSelfRegistered() == false) {
+        if(firebaseRegistrationManager.isUserRegistered() == false) {
             AlertDialog.Builder builder = new AlertDialog.Builder(MapsActivity.this);
             LayoutInflater inflater = this.getLayoutInflater();
             final View dialogView = inflater.inflate(R.layout.email_registration, null);
@@ -162,18 +163,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         public void onClick(DialogInterface dialog, int something) {
                             String emailAddress = et.getText().toString();
 
-                            try {
-                                if(emailAddress != null && !emailAddress.isEmpty()) {
-                                    firebaseRegistrationInformation.registerSelf(emailAddress);
-                                    buttonUnregisterEmail.setVisibility(View.VISIBLE);
-                                    buttonRegisterEmail.setVisibility(View.GONE);
-                                    Toast.makeText(me, "Email successfully registered", Toast.LENGTH_SHORT).show();
-                                } else {
-                                    Toast.makeText(me, "Invalid email. Please retry.", Toast.LENGTH_SHORT).show();
-                                    et.setText("");
-                                }
-                            } catch (SelfAlreadyRegisteredException e) {
-                                e.printStackTrace();
+                            if(emailAddress != null && !emailAddress.isEmpty()) {
+                                firebaseService.registerUser(emailAddress);
+                                buttonUnregisterEmail.setVisibility(View.VISIBLE);
+                                buttonRegisterEmail.setVisibility(View.GONE);
+                                Toast.makeText(me, "Email successfully registered", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(me, "Invalid email. Please retry.", Toast.LENGTH_SHORT).show();
+                                et.setText("");
                             }
 
                             dialog.dismiss();
@@ -384,7 +381,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         String emailAddress = et.getText().toString();
 
                         if(emailAddress != null && !emailAddress.isEmpty()) {
-                            firebaseRegistrationInformation.changeEmail(emailAddress);
+                            firebaseService.registerUser(emailAddress);
                             buttonUnregisterEmail.setVisibility(View.VISIBLE);
                             buttonRegisterEmail.setVisibility(View.GONE);
                             Toast.makeText(me, "Email successfully changed", Toast.LENGTH_SHORT).show();
@@ -405,7 +402,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      * @param view
      */
     public void buttonUnregisterEmail(View view) {
-        firebaseRegistrationInformation.clearSelf();
+        firebaseService.clearUser();
         buttonUnregisterEmail.setVisibility(View.GONE);
         buttonRegisterEmail.setVisibility(View.VISIBLE);
         Toast.makeText(me, "Successfully unregistered email.", Toast.LENGTH_SHORT).show();
@@ -428,14 +425,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         register.setPositiveButton("Submit", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 EditText email = (EditText) store.findViewById(R.id.partner_email);
-                try {
-                    firebaseRegistrationInformation.registerPartner(email.getText().toString());
+
+                if(firebaseService.registerPartner(email.getText().toString())) {
                     buttonAddPartner.setVisibility(View.GONE);
                     buttonRemovePartner.setVisibility(View.VISIBLE);
                     Toast.makeText(me, "Partner successfully registered", Toast.LENGTH_SHORT).show();
-                } catch (PartnerAlreadyRegisteredException e) {
+                } else {
+                    buttonAddPartner.setVisibility(View.VISIBLE);
+                    buttonRemovePartner.setVisibility(View.GONE);
                     Toast.makeText(me, "Oops! Partner already registered", Toast.LENGTH_SHORT).show();
                 }
+
             }
         });
         register.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -459,7 +459,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         remove.setMessage("Are you sure you want to remove your partner?");
         remove.setPositiveButton("Yes!", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-                firebaseRegistrationInformation.clearPartner();
+                firebaseService.clearPartner();
                 buttonAddPartner.setVisibility(View.VISIBLE);
                 buttonRemovePartner.setVisibility(View.GONE);
                 Toast.makeText(me, "Partner successfully removed", Toast.LENGTH_SHORT).show();
@@ -645,16 +645,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      * @param entry
      */
     public void onReachedFavoriteLocation(FavoriteEntry entry) {
-        //TODO: move this to the intent?
         // Message: Partner has reached location "(blah blah)"
 
         entry.visit();
 
         System.out.println("Reached: " + entry.getName());
+        firebaseService.visitLocation(entry);
 
         /*try {
-            TODO: firebaseRegistrationInformation.visitLocation(entry);
-        } catch (SelfNotRegisteredException e ) {
+            TODO:
+        } catch (UserNotRegisteredException e ) {
             e.printStackTrace();
             // not supposed to happen
         }*/

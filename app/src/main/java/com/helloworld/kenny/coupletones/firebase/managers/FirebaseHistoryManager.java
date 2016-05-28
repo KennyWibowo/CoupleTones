@@ -5,13 +5,12 @@ import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.google.android.gms.maps.model.LatLng;
-import com.helloworld.kenny.coupletones.favorites.Entry;
 import com.helloworld.kenny.coupletones.favorites.FavoriteEntry;
 import com.helloworld.kenny.coupletones.favorites.JSONEntry;
 import com.helloworld.kenny.coupletones.favorites.PartnerFavoriteEntry;
-import com.helloworld.kenny.coupletones.firebase.FirebaseFactoryService;
-import com.helloworld.kenny.coupletones.firebase.registration.FirebaseRegistrationInformation;
-import com.helloworld.kenny.coupletones.firebase.registration.exceptions.SelfNotRegisteredException;
+import com.helloworld.kenny.coupletones.firebase.FirebaseService;
+import com.helloworld.kenny.coupletones.firebase.exceptions.PartnerNotRegisteredException;
+import com.helloworld.kenny.coupletones.firebase.exceptions.UserNotRegisteredException;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
@@ -21,7 +20,7 @@ import java.util.Date;
 /**
  * Created by Kenny on 5/27/2016.
  */
-public class FirebaseHistoryManager {
+public class FirebaseHistoryManager extends FirebaseManager {
 
     private ChildEventListener historyListener = new ChildEventListener() {
         @Override
@@ -56,51 +55,74 @@ public class FirebaseHistoryManager {
 
         }
     };
-    private FirebaseRegistrationInformation firebaseRegistrationInformation;
+    private FirebaseRegistrationManager firebaseRegistrationManager;
     private ArrayList<PartnerFavoriteEntry> partnerHistory;
     private JSONEntry lastVisitedLocation;
 
     private Firebase root;
 
-    public FirebaseHistoryManager(FirebaseRegistrationInformation firebaseRegistrationInformation) {
-        this.firebaseRegistrationInformation = firebaseRegistrationInformation;
+    public FirebaseHistoryManager(FirebaseRegistrationManager firebaseRegistrationManager) {
+        this.root = new Firebase(FirebaseService.ENDPOINT);
+        this.firebaseRegistrationManager = firebaseRegistrationManager;
         lastVisitedLocation = new JSONEntry();
-
     }
 
+    public void onLocationVisited(FavoriteEntry entry) {
 
-    public void visitLocation(FavoriteEntry entry) throws SelfNotRegisteredException {
-        String email = firebaseRegistrationInformation.getEmail();
+        try {
+            String email = firebaseRegistrationManager.getEmail();
 
-        if(lastVisitedLocation.getName() == null || !lastVisitedLocation.getName().equals(entry.getName())) {
-            Firebase historyEntryRef = root.child( "" + email.hashCode()).child("history").push();
+            if(lastVisitedLocation.getName() == null || !lastVisitedLocation.getName().equals(entry.getName())) {
+                Firebase historyEntryRef = root.child( "" + email.hashCode()).child("history").push();
 
-            lastVisitedLocation = new JSONEntry(entry);
-            historyEntryRef.setValue(new JSONEntry(entry));
+                lastVisitedLocation = new JSONEntry(entry);
+                historyEntryRef.setValue(new JSONEntry(entry));
+            }
+        } catch(UserNotRegisteredException e) {
+            //do nothing
         }
+
     }
 
     public ArrayList<PartnerFavoriteEntry> getPartnerHistory() {
-        //updatePartnerHistory();
-
         return partnerHistory;
     }
 
+    // TODO: deprecate this, only use this as reference?
     private void updatePartnerHistory() {
         Timestamp tsDeletePoint = Timestamp.valueOf(
                 new SimpleDateFormat("yyyy-MM-dd ")
                         .format(new Date())
-                        .concat(FirebaseFactoryService.HISTORY_RESET_TIME));
+                        .concat(FirebaseService.HISTORY_RESET_TIME));
 
         Timestamp currentTime = new Timestamp(System.currentTimeMillis());
 
         for( int i = 0; i < partnerHistory.size(); i++ ) {
             if(partnerHistory.get(i).getTimestamp().before(tsDeletePoint) && currentTime.after(tsDeletePoint)) {
                 partnerHistory.remove(i--);
-
-                //TODO: Update Firebase after deletion.
             }
         }
 
+    }
+
+    public void onUserRegistered() {
+
+    }
+
+    public void onPartnerRegistered() {
+        //TODO: add listener to clear partner's history at 3 AM (clear both Firebase and local)
+        //TODO: partnerRef.child("history").addChildEventListener(historyListener);
+    }
+
+    public void onUserCleared() {
+        this.lastVisitedLocation = new JSONEntry();
+    }
+
+    public void onPartnerCleared() {
+        try {
+            root.child("" + firebaseRegistrationManager.getPartnerEmail().hashCode()).child("history").removeEventListener(historyListener);
+        } catch (PartnerNotRegisteredException e ) {
+            //TODO: handle this
+        }
     }
 }
