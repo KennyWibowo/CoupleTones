@@ -36,7 +36,7 @@ public class FirebaseRegistrationManager extends FirebaseManager {
     }
 
     public void registerUser(String email) throws UserAlreadyRegisteredException {
-        if(selfRegistered) {
+        if (selfRegistered) {
             throw new UserAlreadyRegisteredException("Self already registered");
         }
 
@@ -49,7 +49,7 @@ public class FirebaseRegistrationManager extends FirebaseManager {
     }
 
     public void registerPartner(String partnerEmail) throws PartnerAlreadyRegisteredException {
-        if(partnerRegistered) {
+        if (partnerRegistered) {
             throw new PartnerAlreadyRegisteredException("Partner already registered");
         }
 
@@ -70,7 +70,7 @@ public class FirebaseRegistrationManager extends FirebaseManager {
     }
 
     public String getEmail() throws UserNotRegisteredException {
-        if(!selfRegistered) {
+        if (!selfRegistered) {
             throw new UserNotRegisteredException("Self not yet registered");
         }
 
@@ -78,7 +78,7 @@ public class FirebaseRegistrationManager extends FirebaseManager {
     }
 
     public String getPartnerEmail() throws PartnerNotRegisteredException {
-        if(!partnerRegistered) {
+        if (!partnerRegistered) {
             throw new PartnerNotRegisteredException("Partner not yet registered");
         }
 

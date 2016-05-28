@@ -43,7 +43,7 @@ public class FirebaseService {
         try {
             registrationManager.registerUser(email);
 
-            for(int i = 0; i < extraManagers.size(); i++ ) {
+            for (int i = 0; i < extraManagers.size(); i++) {
                 extraManagers.get(i).onUserRegistered();
             }
 
@@ -57,7 +57,7 @@ public class FirebaseService {
         try {
             registrationManager.registerPartner(email);
 
-            for(int i = 0; i < extraManagers.size(); i++ ) {
+            for (int i = 0; i < extraManagers.size(); i++) {
                 extraManagers.get(i).onPartnerRegistered();
             }
 
@@ -66,20 +66,21 @@ public class FirebaseService {
             return false;
         }
     }
+
     public void clearUser() {
-        for( int i = 0; i < extraManagers.size(); i++ ){
+        for (int i = 0; i < extraManagers.size(); i++) {
             extraManagers.get(i).onUserCleared();
         }
     }
 
     public void clearPartner() {
-        for( int i = 0; i < extraManagers.size(); i++ ){
+        for (int i = 0; i < extraManagers.size(); i++) {
             extraManagers.get(i).onPartnerCleared();
         }
     }
 
     public void visitLocation(FavoriteEntry entry) {
-        for( int i = 0; i < extraManagers.size(); i++ ) {
+        for (int i = 0; i < extraManagers.size(); i++) {
             extraManagers.get(i).onLocationVisited(entry);
         }
     }

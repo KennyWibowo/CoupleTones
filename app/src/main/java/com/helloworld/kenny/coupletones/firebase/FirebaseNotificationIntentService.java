@@ -19,7 +19,7 @@ public class FirebaseNotificationIntentService extends IntentService {
 
     private Handler handler;
 
-    public FirebaseNotificationIntentService(){
+    public FirebaseNotificationIntentService() {
         super("FirebaseNotificationIntentService");
     }
 
@@ -43,10 +43,10 @@ public class FirebaseNotificationIntentService extends IntentService {
         // Helpful : http://developer.android.com/training/notify-user/build-notification.html
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)
-                //.setSmallIcon(R.drawable.);
-                .setContentTitle(title)
-                .setContentText(content)
-                .setSmallIcon(R.drawable.ic_launcher);
+                        //.setSmallIcon(R.drawable.);
+                        .setContentTitle(title)
+                        .setContentText(content)
+                        .setSmallIcon(R.drawable.ic_launcher);
         int mNotificationId = 001;
         NotificationManager mNotifyMgr =
                 (NotificationManager) getSystemService(NOTIFICATION_SERVICE);

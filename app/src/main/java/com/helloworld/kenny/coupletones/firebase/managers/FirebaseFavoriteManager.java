@@ -10,7 +10,7 @@ import java.util.ArrayList;
 /**
  * Created by Kenny on 5/27/2016.
  */
-public class FirebaseFavoriteManager extends FirebaseManager{
+public class FirebaseFavoriteManager extends FirebaseManager {
 
     private ArrayList<PartnerFavoriteEntry> partnerFavorites;
     private Firebase root;

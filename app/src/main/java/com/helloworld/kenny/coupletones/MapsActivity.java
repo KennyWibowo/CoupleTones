@@ -30,7 +30,6 @@ import com.daimajia.swipe.SwipeLayout;
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -68,7 +67,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private GoogleApiClient client;
     private GoogleMap mMap;
-    private GoogleCloudMessaging gcm;
 
     private LinearLayout searchLayout;
     private EditText searchBar;
@@ -117,12 +115,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         buttonAddPartner = (Button) findViewById(R.id.add_partner);
         buttonRemovePartner = (Button) findViewById(R.id.remove_partner);
-        buttonGetFavorites = (Button)findViewById(R.id.get_favorites);
-        buttonGetHistory = (Button)findViewById(R.id.get_history);
-        buttonRegisterEmail = (Button)findViewById(R.id.register_email);
-        buttonUnregisterEmail = (Button)findViewById(R.id.unregister_email);
-        listFavorite = (ListView)findViewById(R.id.left_listFavorite);
-        listHistory = (ListView)findViewById(R.id.left_listHistory);
+        buttonGetFavorites = (Button) findViewById(R.id.get_favorites);
+        buttonGetHistory = (Button) findViewById(R.id.get_history);
+        buttonRegisterEmail = (Button) findViewById(R.id.register_email);
+        buttonUnregisterEmail = (Button) findViewById(R.id.unregister_email);
+        listFavorite = (ListView) findViewById(R.id.left_listFavorite);
+        listHistory = (ListView) findViewById(R.id.left_listHistory);
 
         listHistory.setVisibility(View.GONE);
         buttonGetFavorites.setVisibility(View.GONE);
@@ -155,7 +153,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     public void setupEmailRegistration() {
-        if(firebaseRegistrationManager.isUserRegistered() == false) {
+        if (firebaseRegistrationManager.isUserRegistered() == false) {
             AlertDialog.Builder builder = new AlertDialog.Builder(MapsActivity.this);
             LayoutInflater inflater = this.getLayoutInflater();
             final View dialogView = inflater.inflate(R.layout.email_registration, null);
@@ -171,7 +169,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         public void onClick(DialogInterface dialog, int something) {
                             String emailAddress = et.getText().toString();
 
-                            if(emailAddress != null && !emailAddress.isEmpty()) {
+                            if (emailAddress != null && !emailAddress.isEmpty()) {
                                 firebaseService.registerUser(emailAddress);
                                 buttonUnregisterEmail.setVisibility(View.VISIBLE);
                                 buttonRegisterEmail.setVisibility(View.GONE);
@@ -190,8 +188,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
-    public void setupLeftDrawer()
-    {
+    public void setupLeftDrawer() {
         TextView title = new TextView(me);
         title.setText("Partner Favorites");
         title.setTextSize(TypedValue.COMPLEX_UNIT_SP, 25);
@@ -207,7 +204,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         otherTitle.setText("History");
         listHistory.addHeaderView(otherTitle);
     }
-
 
 
     /**
@@ -269,37 +265,34 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             public void onLocationChanged(Location location) {
                 //mMap.clear();
                 //mMap.addMarker(new MarkerOptions().position(new LatLng(location.getLatitude(), location.getLongitude())).title("update location"));
-                double lat =  location.getLatitude();
+                double lat = location.getLatitude();
                 double lng = location.getLongitude();
                 double alt = location.getAltitude();
                 boolean inRange = false;
                 FavoriteEntry favEntry = null;
                 ArrayList<FavoriteEntry> favs = favorites.getAllEntries();
-                for (int i = 0; i < favorites.size(); i++){
+                for (int i = 0; i < favorites.size(); i++) {
                     LatLng ref = favs.get(i).getLocation();
                     double refLat = ref.latitude;
                     double refLng = ref.longitude;
                     double refAlt = alt;
                     inRange = compDistance(lat, refLat, lng, refLng, alt, refAlt);
-                    if(inRange){
+                    if (inRange) {
                         favEntry = favs.get(i);
                         break;
                     }
                 }
 
-                if((reached==false)&&inRange && favEntry != null){
+                if ((reached == false) && inRange && favEntry != null) {
                     //System.out.print("In Range!!!\n");
                     onReachedFavoriteLocation(favEntry);
                     //inRange = false;
                     reached = true;
                 }
-                if(inRange == false)
-                {
+                if (inRange == false) {
                     //System.out.print("Out of Range!!!\n");
-                    reached  = false;
+                    reached = false;
                 }
-
-
             }
 
             @Override
@@ -318,58 +311,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         };
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
-
-
     }
 
     /**
-     * Sets up api services for retrieving device i.d.
-     * DEPRECATED
-     */
-    /*public void setupDeviceId() {
-        synchronized (partnerInformation) {
-
-            new AsyncTask<Void, Void, Boolean>() {
-
-                @Override
-                protected Boolean doInBackground(Void... params) {
-                    String msg = "";
-                    String regid = "";
-                    boolean autoRegistered = false;
-
-                    try {
-                        if (gcm == null) {
-                            gcm = GoogleCloudMessaging.getInstance(getApplicationContext());
-                        }
-
-                        regid = gcm.register(PROJECT_NUMBER);
-                        msg = "Device registered, registration ID=" + regid;
-                        Log.i("GCM", "!!!!! " + regid);
-
-                        autoRegistered = partnerInformation.registerOwnRegId(regid);
-
-                    } catch (IOException ex) {
-                        msg = "Error: " + ex.getMessage();
-                    }
-
-                    return autoRegistered;
-                }
-
-                @Override
-                protected void onPostExecute(Boolean autoRegistered) {
-                    me.autoRegistered = autoRegistered;
-
-                    if(autoRegistered) {
-                        buttonAddPartner.setVisibility(View.GONE);
-                        buttonRemovePartner.setVisibility(View.VISIBLE);
-                    }
-                }
-            }.execute(null, null, null);
-        }
-    }*/
-
-    /**
      * Button Method for register user's email
+     *
      * @param view
      */
     public void buttonRegisterEmail(View view) {
@@ -388,7 +334,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     public void onClick(DialogInterface dialog, int something) {
                         String emailAddress = et.getText().toString();
 
-                        if(emailAddress != null && !emailAddress.isEmpty()) {
+                        if (emailAddress != null && !emailAddress.isEmpty()) {
                             firebaseService.registerUser(emailAddress);
                             buttonUnregisterEmail.setVisibility(View.VISIBLE);
                             buttonRegisterEmail.setVisibility(View.GONE);
@@ -407,6 +353,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     /**
      * Button Method for unregister user's email
+     *
      * @param view
      */
     public void buttonUnregisterEmail(View view) {
@@ -418,6 +365,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     /**
      * Button for adding partner
+     *
      * @param view
      */
     public void buttonAddPartner(View view) {
@@ -434,7 +382,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             public void onClick(DialogInterface dialog, int id) {
                 EditText email = (EditText) store.findViewById(R.id.partner_email);
 
-                if(firebaseService.registerPartner(email.getText().toString())) {
+                if (firebaseService.registerPartner(email.getText().toString())) {
                     buttonAddPartner.setVisibility(View.GONE);
                     buttonRemovePartner.setVisibility(View.VISIBLE);
                     Toast.makeText(me, "Partner successfully registered", Toast.LENGTH_SHORT).show();
@@ -459,6 +407,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     /**
      * Button for removing partner
+     *
      * @param view
      */
     public void buttonRemovePartner(View view) {
@@ -485,6 +434,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     /**
      * Button for deleting favorites
+     *
      * @param view
      */
     public void buttonDeleteFavorite(View view) {
@@ -507,10 +457,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     /**
      * Button Method for changing partner's history
+     *
      * @param view
      */
-    public void buttonHistory(View view)
-    {
+    public void buttonHistory(View view) {
         listHistory.setVisibility(View.VISIBLE);
         listFavorite.setVisibility(View.GONE);
         buttonGetFavorites.setVisibility(View.VISIBLE);
@@ -519,10 +469,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     /**
      * Button Method to show partner's favorites.
+     *
      * @param view
      */
-    public void buttonFavorites(View view)
-    {
+    public void buttonFavorites(View view) {
         listHistory.setVisibility(View.GONE);
         listFavorite.setVisibility(View.VISIBLE);
         buttonGetFavorites.setVisibility(View.GONE);
@@ -531,6 +481,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     /**
      * Button Method for changing settings
+     *
      * @param view
      */
     public void buttonSettings(View view) {
@@ -545,7 +496,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         tones.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-                if(isChecked) {
+                if (isChecked) {
                     settings.enableTones();
                     Toast.makeText(me, "Tones enabled", Toast.LENGTH_SHORT).show();
                 } else {
@@ -558,7 +509,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         vibration.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-                if(isChecked) {
+                if (isChecked) {
                     settings.enableVibrations();
                     Toast.makeText(me, "Vibrations enabled", Toast.LENGTH_SHORT).show();
                 } else {
@@ -577,6 +528,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     /**
      * Button for searching locations
+     *
      * @param view
      */
     public void buttonSearch(View view) {
@@ -604,6 +556,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     /**
      * Handling event-driven case where user clicks a location on the Map
+     *
      * @param point
      */
     @Override
@@ -650,6 +603,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     /**
      * Handling event where user reaches a favorite location
+     *
      * @param entry
      */
     public void onReachedFavoriteLocation(FavoriteEntry entry) {
@@ -659,40 +613,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         System.out.println("Reached: " + entry.getName());
         firebaseService.visitLocation(entry);
-
-        /*try {
-            TODO:
-        } catch (UserNotRegisteredException e ) {
-            e.printStackTrace();
-            // not supposed to happen
-        }*/
-
-        /*System.out.println("Sending a message to: " + partnerInformation.getRegId());
-
-        try {
-            String partnerId = partnerInformation.getRegId();
-            Bundle data = new Bundle();
-            data.putString("action", "com.helloworld.kenny.coupletones.MESSAGE");
-            data.putString("toRegId", partnerInformation.getRegId());
-            data.putString("title", "Partner reached favorite location!");
-            data.putString("content", "Your partner reached: " + entry.getName());
-            //String id = Integer.toString(getNextMsgId());
-            gcm.send(PROJECT_NUMBER + "@gcm.googleapis.com","" + getNextMessageId(), data);
-            //msgId++;
-            //Log.v("grokkingandroid", "sent message: " + msg);
-        } catch (IOException e) {
-            System.out.println("uh oh");
-        }*/
     }
-
-    /*private int getNextMessageId() {
-        SharedPreferences prefs = getPrefs();
-        int id = prefs.getInt("keyMsgId", 0);
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putInt("keyMsgId", ++id);
-        editor.commit();
-        return id;
-    }*/
 
     private SharedPreferences getPrefs() {
         return PreferenceManager.getDefaultSharedPreferences(this);
@@ -774,20 +695,20 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      * Calculates the distance between two points via the distance formula
      */
     public boolean compDistance(double lat1, double lat2, double lon1, double lon2, double el1,
-                            double el2){
+                                double el2) {
         final int R = 6371;
 
         double latDistance = Math.toRadians(lat1 - lat2);
-        double longDistance = Math.toRadians(lon1-lon2);
-        double a = Math.sin(latDistance/2)*Math.sin(latDistance/2)
-                   + Math.cos(Math.toRadians(lat1))*Math.cos(Math.toRadians(lat2))
-                   * Math.sin(longDistance/2) * Math.sin(longDistance/2);
-        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-        double distance = R*c*1000;
+        double longDistance = Math.toRadians(lon1 - lon2);
+        double a = Math.sin(latDistance / 2) * Math.sin(latDistance / 2)
+                + Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2))
+                * Math.sin(longDistance / 2) * Math.sin(longDistance / 2);
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        double distance = R * c * 1000;
         double height = el1 - el2;
         distance = Math.pow(distance, 2) + Math.pow(height, 2);
         distance = Math.sqrt(distance);
 
-        return (distance/1609.344 < 0.1);
+        return (distance / 1609.344 < 0.1);
     }
 }

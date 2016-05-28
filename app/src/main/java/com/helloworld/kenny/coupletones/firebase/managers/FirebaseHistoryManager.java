@@ -74,13 +74,13 @@ public class FirebaseHistoryManager extends FirebaseManager {
         try {
             String email = firebaseRegistrationManager.getEmail();
 
-            if(lastVisitedLocation.getName() == null || !lastVisitedLocation.getName().equals(entry.getName())) {
-                Firebase historyEntryRef = root.child( "" + email.hashCode()).child("history").push();
+            if (lastVisitedLocation.getName() == null || !lastVisitedLocation.getName().equals(entry.getName())) {
+                Firebase historyEntryRef = root.child("" + email.hashCode()).child("history").push();
 
                 lastVisitedLocation = new JSONEntry(entry);
                 historyEntryRef.setValue(new JSONEntry(entry));
             }
-        } catch(UserNotRegisteredException e) {
+        } catch (UserNotRegisteredException e) {
             //do nothing
         }
 
@@ -99,8 +99,8 @@ public class FirebaseHistoryManager extends FirebaseManager {
 
         Timestamp currentTime = new Timestamp(System.currentTimeMillis());
 
-        for( int i = 0; i < partnerHistory.size(); i++ ) {
-            if(partnerHistory.get(i).getTimestamp().before(tsDeletePoint) && currentTime.after(tsDeletePoint)) {
+        for (int i = 0; i < partnerHistory.size(); i++) {
+            if (partnerHistory.get(i).getTimestamp().before(tsDeletePoint) && currentTime.after(tsDeletePoint)) {
                 partnerHistory.remove(i--);
             }
         }
@@ -123,7 +123,7 @@ public class FirebaseHistoryManager extends FirebaseManager {
     public void onPartnerCleared() {
         try {
             root.child("" + firebaseRegistrationManager.getPartnerEmail().hashCode()).child("history").removeEventListener(historyListener);
-        } catch (PartnerNotRegisteredException e ) {
+        } catch (PartnerNotRegisteredException e) {
             //TODO: handle this
         }
     }
