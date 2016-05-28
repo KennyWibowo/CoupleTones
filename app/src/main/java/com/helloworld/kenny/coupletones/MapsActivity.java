@@ -134,7 +134,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         firebaseHistoryManager = new FirebaseHistoryManager(firebaseRegistrationManager);
         firebaseService.addManager(firebaseHistoryManager);
 
-        // setup lef tand right drawer adapters
+        // setup left and right drawer adapters
         favoriteSwipeAdapter = new FavoriteSwipeAdapter<FavoriteEntry>(me, R.layout.listview_item, R.id.listview_item_text, favorites.getAllEntries());
         partnerHistorySwipeAdapter = new FavoriteSwipeAdapter<>(me, R.layout.listview_item, R.id.listview_item_text, firebaseHistoryManager.getPartnerHistory());
         rightDrawer.setAdapter(favoriteSwipeAdapter);
