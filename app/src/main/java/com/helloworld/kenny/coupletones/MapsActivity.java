@@ -44,7 +44,7 @@ import com.helloworld.kenny.coupletones.favorites.exceptions.NameInUseException;
 import com.helloworld.kenny.coupletones.favorites.FavoriteEntry;
 import com.helloworld.kenny.coupletones.favorites.Favorites;
 import com.helloworld.kenny.coupletones.favorites.PartnerFavoriteEntry;
-import com.helloworld.kenny.coupletones.firebase.registration.RegistrationInformation;
+import com.helloworld.kenny.coupletones.firebase.registration.FirebaseRegistrationInformation;
 import com.helloworld.kenny.coupletones.firebase.registration.exceptions.PartnerAlreadyRegisteredException;
 import com.helloworld.kenny.coupletones.firebase.registration.exceptions.SelfAlreadyRegisteredException;
 import com.helloworld.kenny.coupletones.firebase.registration.exceptions.SelfNotRegisteredException;
@@ -89,7 +89,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private FavoriteSwipeAdapter<PartnerFavoriteEntry> partnerSwipeAdapter;
     private FavoriteSwipeAdapter<PartnerFavoriteEntry> partnerHistorySwipeAdapter;
 
-    private RegistrationInformation registrationInformation;
+    private FirebaseRegistrationInformation firebaseRegistrationInformation;
     private Settings settings;
 
     private String PROJECT_NUMBER = "366742322722";
@@ -127,9 +127,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         // setup data structures and variables
         favorites = new Favorites();
-        registrationInformation = new RegistrationInformation(this);
+        firebaseRegistrationInformation = new FirebaseRegistrationInformation(this);
         favoriteSwipeAdapter = new FavoriteSwipeAdapter<FavoriteEntry>(me, R.layout.listview_item, R.id.listview_item_text, favorites.getAllEntries());
-        partnerHistorySwipeAdapter = new FavoriteSwipeAdapter<>(me, R.layout.listview_item, R.id.listview_item_text, registrationInformation.getPartnerHistory());
+        //TODO: partnerHistorySwipeAdapter = new FavoriteSwipeAdapter<>(me, R.layout.listview_item, R.id.listview_item_text, firebaseRegistrationInformation.getPartnerHistory());
         rightDrawer.setAdapter(favoriteSwipeAdapter);
         settings = new Settings();
 
@@ -146,7 +146,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     public void setupEmailRegistration() {
-        if(registrationInformation.isSelfRegistered() == false) {
+        if(firebaseRegistrationInformation.isSelfRegistered() == false) {
             AlertDialog.Builder builder = new AlertDialog.Builder(MapsActivity.this);
             LayoutInflater inflater = this.getLayoutInflater();
             final View dialogView = inflater.inflate(R.layout.email_registration, null);
@@ -164,7 +164,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                             try {
                                 if(emailAddress != null && !emailAddress.isEmpty()) {
-                                    registrationInformation.registerSelf(emailAddress);
+                                    firebaseRegistrationInformation.registerSelf(emailAddress);
                                     buttonUnregisterEmail.setVisibility(View.VISIBLE);
                                     buttonRegisterEmail.setVisibility(View.GONE);
                                     Toast.makeText(me, "Email successfully registered", Toast.LENGTH_SHORT).show();
@@ -384,7 +384,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         String emailAddress = et.getText().toString();
 
                         if(emailAddress != null && !emailAddress.isEmpty()) {
-                            registrationInformation.changeEmail(emailAddress);
+                            firebaseRegistrationInformation.changeEmail(emailAddress);
                             buttonUnregisterEmail.setVisibility(View.VISIBLE);
                             buttonRegisterEmail.setVisibility(View.GONE);
                             Toast.makeText(me, "Email successfully changed", Toast.LENGTH_SHORT).show();
@@ -405,7 +405,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      * @param view
      */
     public void buttonUnregisterEmail(View view) {
-        registrationInformation.clearSelf();
+        firebaseRegistrationInformation.clearSelf();
         buttonUnregisterEmail.setVisibility(View.GONE);
         buttonRegisterEmail.setVisibility(View.VISIBLE);
         Toast.makeText(me, "Successfully unregistered email.", Toast.LENGTH_SHORT).show();
@@ -429,7 +429,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             public void onClick(DialogInterface dialog, int id) {
                 EditText email = (EditText) store.findViewById(R.id.partner_email);
                 try {
-                    registrationInformation.registerPartner(email.getText().toString());
+                    firebaseRegistrationInformation.registerPartner(email.getText().toString());
                     buttonAddPartner.setVisibility(View.GONE);
                     buttonRemovePartner.setVisibility(View.VISIBLE);
                     Toast.makeText(me, "Partner successfully registered", Toast.LENGTH_SHORT).show();
@@ -459,7 +459,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         remove.setMessage("Are you sure you want to remove your partner?");
         remove.setPositiveButton("Yes!", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-                registrationInformation.clearPartner();
+                firebaseRegistrationInformation.clearPartner();
                 buttonAddPartner.setVisibility(View.VISIBLE);
                 buttonRemovePartner.setVisibility(View.GONE);
                 Toast.makeText(me, "Partner successfully removed", Toast.LENGTH_SHORT).show();
@@ -652,12 +652,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         System.out.println("Reached: " + entry.getName());
 
-        try {
-            registrationInformation.visitLocation(entry);
+        /*try {
+            TODO: firebaseRegistrationInformation.visitLocation(entry);
         } catch (SelfNotRegisteredException e ) {
             e.printStackTrace();
             // not supposed to happen
-        }
+        }*/
 
         /*System.out.println("Sending a message to: " + partnerInformation.getRegId());
 

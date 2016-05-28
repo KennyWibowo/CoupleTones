@@ -94,11 +94,11 @@ public class JUnit_test extends ActivityInstrumentationTestCase2<MapsActivity> {
     }
 
     /**
-     * Tests existence method of RegistrationInformation data structure
+     * Tests existence method of FirebaseRegistrationInformation data structure
      * @throws Exception
      */
     /*public void test_partnerInfo() throws Exception {
-        RegistrationInformation registrationInformation = new RegistrationInformation();
+        FirebaseRegistrationInformation registrationInformation = new FirebaseRegistrationInformation();
         String id = "someID";
         String partnerId = "somePartner";
         String email = "someemail@email.com";
@@ -106,9 +106,9 @@ public class JUnit_test extends ActivityInstrumentationTestCase2<MapsActivity> {
         registrationInformation.registerOwnRegId(id);
         registrationInformation.registerPartner(partnerId, email);
 
-        assertEquals(RegistrationInformation.getOwnRegId(), id);
-        assertEquals(RegistrationInformation.getRegId(), partnerId);
-        assertEquals(RegistrationInformation.getEmail(), email);
+        assertEquals(FirebaseRegistrationInformation.getOwnRegId(), id);
+        assertEquals(FirebaseRegistrationInformation.getRegId(), partnerId);
+        assertEquals(FirebaseRegistrationInformation.getEmail(), email);
     }*/
 
 
