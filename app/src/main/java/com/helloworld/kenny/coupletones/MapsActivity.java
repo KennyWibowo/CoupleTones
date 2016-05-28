@@ -45,6 +45,7 @@ import com.helloworld.kenny.coupletones.favorites.FavoriteEntry;
 import com.helloworld.kenny.coupletones.favorites.Favorites;
 import com.helloworld.kenny.coupletones.favorites.PartnerFavoriteEntry;
 import com.helloworld.kenny.coupletones.firebase.FirebaseService;
+import com.helloworld.kenny.coupletones.firebase.managers.FirebaseHistoryManager;
 import com.helloworld.kenny.coupletones.firebase.managers.FirebaseRegistrationManager;
 import com.helloworld.kenny.coupletones.firebase.exceptions.PartnerAlreadyRegisteredException;
 import com.helloworld.kenny.coupletones.firebase.exceptions.UserAlreadyRegisteredException;
@@ -91,6 +92,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private FirebaseService firebaseService;
     private FirebaseRegistrationManager firebaseRegistrationManager;
+    private FirebaseHistoryManager firebaseHistoryManager;
     private Settings settings;
 
     private String PROJECT_NUMBER = "366742322722";
@@ -129,9 +131,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         favorites = new Favorites();
         firebaseService = new FirebaseService(this);
         firebaseRegistrationManager = firebaseService.getRegistrationManager();
+        firebaseHistoryManager = new FirebaseHistoryManager(firebaseRegistrationManager);
+        firebaseService.addManager(firebaseHistoryManager);
+
+        // setup lef tand right drawer adapters
         favoriteSwipeAdapter = new FavoriteSwipeAdapter<FavoriteEntry>(me, R.layout.listview_item, R.id.listview_item_text, favorites.getAllEntries());
-        //TODO: partnerHistorySwipeAdapter = new FavoriteSwipeAdapter<>(me, R.layout.listview_item, R.id.listview_item_text, firebaseService.getPartnerHistory());
+        partnerHistorySwipeAdapter = new FavoriteSwipeAdapter<>(me, R.layout.listview_item, R.id.listview_item_text, firebaseHistoryManager.getPartnerHistory());
         rightDrawer.setAdapter(favoriteSwipeAdapter);
+        listHistory.setAdapter(partnerHistorySwipeAdapter);
+
         settings = new Settings();
 
         //SETUPS
