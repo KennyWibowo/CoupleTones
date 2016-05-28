@@ -26,6 +26,7 @@ public class FirebaseService {
     public FirebaseService(Context context) {
         root = new Firebase(ENDPOINT);
         registrationManager = new FirebaseRegistrationManager(context);
+        extraManagers = new ArrayList<>();
 
         addManager(registrationManager);
     }
