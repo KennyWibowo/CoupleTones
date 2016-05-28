@@ -1,5 +1,8 @@
 package com.helloworld.kenny.coupletones.firebase.managers;
 
+import android.content.Context;
+import android.content.Intent;
+
 import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
@@ -8,6 +11,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.helloworld.kenny.coupletones.favorites.FavoriteEntry;
 import com.helloworld.kenny.coupletones.favorites.JSONEntry;
 import com.helloworld.kenny.coupletones.favorites.PartnerFavoriteEntry;
+import com.helloworld.kenny.coupletones.firebase.FirebaseNotificationIntentService;
 import com.helloworld.kenny.coupletones.firebase.FirebaseService;
 import com.helloworld.kenny.coupletones.firebase.exceptions.PartnerNotRegisteredException;
 import com.helloworld.kenny.coupletones.firebase.exceptions.UserNotRegisteredException;
@@ -22,51 +26,60 @@ import java.util.Date;
  */
 public class FirebaseHistoryManager extends FirebaseManager {
 
-    private ChildEventListener historyListener = new ChildEventListener() {
-        @Override
-        public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-            JSONEntry child = dataSnapshot.getValue(JSONEntry.class);
-            PartnerFavoriteEntry historyEntry = new PartnerFavoriteEntry(child.getName(), new LatLng(child.getLatitude(), child.getLongitude()));
-            historyEntry.setTimestamp(child.getTimestamp());
-            partnerHistory.add(historyEntry);
-
-            System.out.println("Partner visited: " + historyEntry.getName());
-
-            System.out.println(partnerHistory.toString());
-        }
-
-        @Override
-        public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-        }
-
-        @Override
-        public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-        }
-
-        @Override
-        public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-        }
-
-        @Override
-        public void onCancelled(FirebaseError firebaseError) {
-
-        }
-    };
+    private ChildEventListener historyListener;
     private FirebaseRegistrationManager firebaseRegistrationManager;
     private ArrayList<PartnerFavoriteEntry> partnerHistory;
     private JSONEntry lastVisitedLocation;
 
     private Firebase root;
 
-    public FirebaseHistoryManager(FirebaseRegistrationManager firebaseRegistrationManager) {
+    public FirebaseHistoryManager(FirebaseRegistrationManager firebaseRegistrationManager, final Context context) {
         root = new Firebase(FirebaseService.ENDPOINT);
         partnerHistory = new ArrayList<>();
 
         this.firebaseRegistrationManager = firebaseRegistrationManager;
         lastVisitedLocation = new JSONEntry();
+
+        historyListener= new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                JSONEntry child = dataSnapshot.getValue(JSONEntry.class);
+                PartnerFavoriteEntry historyEntry = new PartnerFavoriteEntry(child.getName(), new LatLng(child.getLatitude(), child.getLongitude()));
+                historyEntry.setTimestamp(child.getTimestamp());
+                partnerHistory.add(historyEntry);
+
+                System.out.println("Partner visited: " + historyEntry.getName());
+
+                System.out.println(partnerHistory.toString());
+
+                Intent notifyUser = new Intent(context, FirebaseNotificationIntentService.class);
+                notifyUser.putExtra("title", "Partner reached a favorite location!");
+                notifyUser.putExtra("content", "Partner reached: " + historyEntry.getName());
+
+                context.startService(notifyUser);
+
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        };
     }
 
     public void onLocationVisited(FavoriteEntry entry) {
@@ -114,6 +127,10 @@ public class FirebaseHistoryManager extends FirebaseManager {
     public void onPartnerRegistered() {
         //TODO: add listener to clear partner's history at 3 AM (clear both Firebase and local)
         //TODO: partnerRef.child("history").addChildEventListener(historyListener);
+
+        String partnerKey = firebaseRegistrationManager.getPartnerKey();
+        Firebase partnerRef = root.child(partnerKey);
+        partnerRef.child("history").addChildEventListener(historyListener);
     }
 
     public void onUserCleared() {
@@ -121,10 +138,6 @@ public class FirebaseHistoryManager extends FirebaseManager {
     }
 
     public void onPartnerCleared() {
-        try {
-            root.child("" + firebaseRegistrationManager.getPartnerEmail().hashCode()).child("history").removeEventListener(historyListener);
-        } catch (PartnerNotRegisteredException e) {
-            //TODO: handle this
-        }
+        root.child("" + firebaseRegistrationManager.getPartnerKey()).child("history").removeEventListener(historyListener);
     }
 }

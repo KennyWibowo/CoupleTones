@@ -129,7 +129,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         favorites = new Favorites();
         firebaseService = new FirebaseService(this);
         firebaseRegistrationManager = firebaseService.getRegistrationManager();
-        firebaseHistoryManager = new FirebaseHistoryManager(firebaseRegistrationManager);
+        firebaseHistoryManager = new FirebaseHistoryManager(firebaseRegistrationManager, this);
         firebaseService.addManager(firebaseHistoryManager);
 
         // setup left and right drawer adapters
@@ -196,6 +196,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         title.setHeight(120);
         title.setGravity(Gravity.CENTER);
         listFavorite.addHeaderView(title);
+
         TextView otherTitle = new TextView(me);
         otherTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 25);
         otherTitle.setTextColor(getResources().getColor(R.color.colorBlack));

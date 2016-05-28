@@ -53,8 +53,6 @@ public class FirebaseRegistrationManager extends FirebaseManager {
             throw new PartnerAlreadyRegisteredException("Partner already registered");
         }
 
-        Firebase partnerRef = root.child("" + partnerEmail.hashCode());
-
         this.partnerEmail = partnerEmail;
         this.partnerRegistered = true;
     }
@@ -83,6 +81,14 @@ public class FirebaseRegistrationManager extends FirebaseManager {
         }
 
         return partnerEmail;
+    }
+
+    public String getUserKey() {
+        return email.hashCode() + "";
+    }
+
+    public String getPartnerKey() {
+        return partnerEmail.hashCode() + "";
     }
 
     public boolean isUserRegistered() {
