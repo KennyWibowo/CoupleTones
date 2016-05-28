@@ -62,7 +62,9 @@ public class FirebaseHistoryManager extends FirebaseManager {
     private Firebase root;
 
     public FirebaseHistoryManager(FirebaseRegistrationManager firebaseRegistrationManager) {
-        this.root = new Firebase(FirebaseService.ENDPOINT);
+        root = new Firebase(FirebaseService.ENDPOINT);
+        partnerHistory = new ArrayList<>();
+
         this.firebaseRegistrationManager = firebaseRegistrationManager;
         lastVisitedLocation = new JSONEntry();
     }
