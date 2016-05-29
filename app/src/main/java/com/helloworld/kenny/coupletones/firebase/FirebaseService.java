@@ -17,7 +17,7 @@ import java.util.ArrayList;
 public class FirebaseService {
 
     public static final String HISTORY_RESET_TIME = "03:00:00"; // 3AM
-    public static final String ENDPOINT = "https://coupletonesteam6.firebaseio.com/";
+    public static final String ENDPOINT = "https://team6coupletones.firebaseio.com/";
 
     private FirebaseRegistrationManager registrationManager;
     private ArrayList<FirebaseManager> extraManagers;
