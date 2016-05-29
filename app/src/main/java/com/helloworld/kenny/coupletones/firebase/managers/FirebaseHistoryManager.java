@@ -58,7 +58,11 @@ public class FirebaseHistoryManager extends FirebaseManager {
                 notifyUser.putExtra("title", "Partner reached a favorite location!");
                 notifyUser.putExtra("content", "Partner reached: " + historyEntry.getName());
 
-                context.startService(notifyUser);
+                Time timeRange = new Time(System.currentTimeMillis() - AlarmManager.INTERVAL_HALF_HOUR);
+
+                if(timeRange.before(historyEntry.getTimestamp())) { //TODO: fix this
+                    context.startService(notifyUser);
+                }
 
             }
 
