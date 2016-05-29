@@ -382,6 +382,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         register.setPositiveButton("Submit", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 EditText email = (EditText) store.findViewById(R.id.partner_email);
+                firebaseService.registerPartner(email.getText().toString());
                 buttonAddPartner.setVisibility(View.GONE);
                 buttonRemovePartner.setVisibility(View.VISIBLE);
                 Toast.makeText(me, "Partner successfully registered", Toast.LENGTH_SHORT).show();
