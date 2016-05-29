@@ -111,12 +111,12 @@ public class FirebaseRegistrationManager extends FirebaseManager {
         Firebase partnerRef = root.child(partnerKey);
     }
 
-    public void onUserCleared() {
+    public void onUserCleared(String userKey) {
         this.email = null;
         this.selfRegistered = false;
     }
 
-    public void onPartnerCleared() {
+    public void onPartnerCleared(String partnerKey) {
         this.partnerEmail = null;
         this.partnerRegistered = false;
     }

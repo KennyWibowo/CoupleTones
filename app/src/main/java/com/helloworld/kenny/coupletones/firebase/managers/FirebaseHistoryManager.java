@@ -1,5 +1,6 @@
 package com.helloworld.kenny.coupletones.firebase.managers;
 
+import android.app.AlarmManager;
 import android.content.Context;
 import android.content.Intent;
 import android.provider.ContactsContract;
@@ -18,6 +19,7 @@ import com.helloworld.kenny.coupletones.firebase.intents.FirebaseNotificationInt
 import com.helloworld.kenny.coupletones.firebase.FirebaseService;
 import com.helloworld.kenny.coupletones.firebase.exceptions.UserNotRegisteredException;
 
+import java.sql.Time;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -110,7 +112,7 @@ public class FirebaseHistoryManager extends FirebaseManager {
     }
 
     // TODO: deprecate this, only use this as reference?
-    private void updatePartnerHistory() {
+    /*private void updatePartnerHistory() {
         final Timestamp tsDeletePoint = Timestamp.valueOf(
                 new SimpleDateFormat("yyyy-MM-dd ")
                         .format(new Date())
@@ -151,7 +153,7 @@ public class FirebaseHistoryManager extends FirebaseManager {
         }
 
 
-    }
+    }*/
 
     public void onUserRegistered(String userKey) {
         Firebase userRef = root.child(userKey);
@@ -166,12 +168,13 @@ public class FirebaseHistoryManager extends FirebaseManager {
         partnerRef.child("history").addChildEventListener(historyListener);
     }
 
-    public void onUserCleared() {
+    public void onUserCleared(String userKey) {
         this.lastVisitedLocation = new JSONEntry();
     }
 
-    public void onPartnerCleared() {
+    public void onPartnerCleared(String partnerKey) {
         partnerHistory.clear();
-        //root.child("" + firebaseRegistrationManager.getPartnerKey()).child("history").removeEventListener(historyListener);
+        Firebase partnerRef = root.child("" + partnerKey);
+        partnerRef.child("history").removeEventListener(historyListener);
     }
 }

@@ -11,13 +11,13 @@ import com.helloworld.kenny.coupletones.firebase.exceptions.UserAlreadyRegistere
  */
 public abstract class FirebaseManager {
 
-    public abstract void onUserCleared();
-
-    public abstract void onPartnerCleared();
-
     public abstract void onUserRegistered(String userKey);
 
     public abstract void onPartnerRegistered(String partnerKey);
+
+    public abstract void onUserCleared(String userKey);
+
+    public abstract void onPartnerCleared(String partnerKey);
 
     public abstract void onLocationVisited(FavoriteEntry entry);
 }

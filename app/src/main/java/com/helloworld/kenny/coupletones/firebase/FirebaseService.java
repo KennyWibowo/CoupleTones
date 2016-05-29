@@ -41,7 +41,7 @@ public class FirebaseService {
         extraManagers.add(manager);
     }
 
-    public boolean registerUser(String email) {
+    public void registerUser(String email) {
         try {
             registrationManager.registerUser(email);
 
@@ -49,15 +49,14 @@ public class FirebaseService {
                 extraManagers.get(i).onUserRegistered(registrationManager.getUserKey());
             }
 
-            return true;
         } catch (UserAlreadyRegisteredException e) {
-            return false;
+            //TODO
         } catch (UserNotRegisteredException e) {
-            return false;
+            //TODO
         }
     }
 
-    public boolean registerPartner(String email) {
+    public void registerPartner(String email) {
         try {
 
             registrationManager.registerPartner(email);
@@ -66,23 +65,36 @@ public class FirebaseService {
                 extraManagers.get(i).onPartnerRegistered(registrationManager.getPartnerKey());
             }
 
-            return true;
         } catch (PartnerAlreadyRegisteredException e) {
-            return false;
+            //TODO
         } catch (PartnerNotRegisteredException e ) {
-            return false;
+            //TODO
         }
     }
 
     public void clearUser() {
-        for (int i = 0; i < extraManagers.size(); i++) {
-            extraManagers.get(i).onUserCleared();
+
+        try {
+            String userKey = registrationManager.getUserKey();
+
+            for (int i = 0; i < extraManagers.size(); i++) {
+                extraManagers.get(i).onUserCleared(userKey);
+            }
+        } catch (UserNotRegisteredException e) {
+            //TODO
         }
+
     }
 
     public void clearPartner() {
-        for (int i = 0; i < extraManagers.size(); i++) {
-            extraManagers.get(i).onPartnerCleared();
+        try {
+            String partnerKey = registrationManager.getPartnerKey();
+
+            for (int i = 0; i < extraManagers.size(); i++) {
+                extraManagers.get(i).onPartnerCleared(partnerKey);
+            }
+        } catch( PartnerNotRegisteredException e ) {
+            //TODO
         }
     }
 

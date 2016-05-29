@@ -27,11 +27,11 @@ public class FirebaseFavoriteManager extends FirebaseManager {
         Firebase partnerRef = root.child(partnerKey);
     }
 
-    public void onUserCleared() {
+    public void onUserCleared(String userKey) {
 
     }
 
-    public void onPartnerCleared() {
+    public void onPartnerCleared(String partnerKey) {
 
     }
 
