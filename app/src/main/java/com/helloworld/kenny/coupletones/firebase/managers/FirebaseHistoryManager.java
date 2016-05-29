@@ -13,9 +13,9 @@ import com.google.android.gms.maps.model.LatLng;
 import com.helloworld.kenny.coupletones.favorites.FavoriteEntry;
 import com.helloworld.kenny.coupletones.favorites.JSONEntry;
 import com.helloworld.kenny.coupletones.favorites.PartnerFavoriteEntry;
-import com.helloworld.kenny.coupletones.firebase.FirebaseNotificationIntentService;
-import com.helloworld.kenny.coupletones.firebase.FirebaseService;
 import com.helloworld.kenny.coupletones.firebase.exceptions.PartnerNotRegisteredException;
+import com.helloworld.kenny.coupletones.firebase.intents.FirebaseNotificationIntentService;
+import com.helloworld.kenny.coupletones.firebase.FirebaseService;
 import com.helloworld.kenny.coupletones.firebase.exceptions.UserNotRegisteredException;
 
 import java.sql.Timestamp;
