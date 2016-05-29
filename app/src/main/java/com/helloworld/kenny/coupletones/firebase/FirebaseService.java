@@ -5,7 +5,9 @@ import android.content.Context;
 import com.firebase.client.Firebase;
 import com.helloworld.kenny.coupletones.favorites.FavoriteEntry;
 import com.helloworld.kenny.coupletones.firebase.exceptions.PartnerAlreadyRegisteredException;
+import com.helloworld.kenny.coupletones.firebase.exceptions.PartnerNotRegisteredException;
 import com.helloworld.kenny.coupletones.firebase.exceptions.UserAlreadyRegisteredException;
+import com.helloworld.kenny.coupletones.firebase.exceptions.UserNotRegisteredException;
 import com.helloworld.kenny.coupletones.firebase.managers.FirebaseManager;
 import com.helloworld.kenny.coupletones.firebase.managers.FirebaseRegistrationManager;
 
@@ -50,11 +52,14 @@ public class FirebaseService {
             return true;
         } catch (UserAlreadyRegisteredException e) {
             return false;
+        } catch (UserNotRegisteredException e) {
+            return false;
         }
     }
 
     public boolean registerPartner(String email) {
         try {
+
             registrationManager.registerPartner(email);
 
             for (int i = 0; i < extraManagers.size(); i++) {
@@ -63,6 +68,8 @@ public class FirebaseService {
 
             return true;
         } catch (PartnerAlreadyRegisteredException e) {
+            return false;
+        } catch (PartnerNotRegisteredException e ) {
             return false;
         }
     }
