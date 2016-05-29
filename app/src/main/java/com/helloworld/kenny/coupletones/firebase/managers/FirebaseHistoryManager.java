@@ -11,6 +11,8 @@ import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 import com.google.android.gms.maps.model.LatLng;
+import com.helloworld.kenny.coupletones.FavoriteSwipeAdapter;
+import com.helloworld.kenny.coupletones.R;
 import com.helloworld.kenny.coupletones.favorites.FavoriteEntry;
 import com.helloworld.kenny.coupletones.favorites.JSONEntry;
 import com.helloworld.kenny.coupletones.favorites.PartnerFavoriteEntry;
@@ -35,6 +37,7 @@ public class FirebaseHistoryManager extends FirebaseManager {
     private ValueEventListener historyMultipleEventListner;
     private FirebaseRegistrationManager firebaseRegistrationManager;
     private final ArrayList<PartnerFavoriteEntry> partnerHistory;
+    private final FavoriteSwipeAdapter<PartnerFavoriteEntry> partnerHistoryAdapter;
     private JSONEntry lastVisitedLocation;
 
     private Firebase root;
@@ -44,7 +47,8 @@ public class FirebaseHistoryManager extends FirebaseManager {
         partnerHistory = new ArrayList<>();
 
         this.firebaseRegistrationManager = firebaseRegistrationManager;
-        lastVisitedLocation = new JSONEntry();
+        this.lastVisitedLocation = new JSONEntry();
+        this.partnerHistoryAdapter = new FavoriteSwipeAdapter<>(context, R.layout.listview_item, R.id.listview_item_text, partnerHistory);
 
         historyListener= new ChildEventListener() {
             @Override
@@ -94,15 +98,20 @@ public class FirebaseHistoryManager extends FirebaseManager {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 ArrayList<PartnerFavoriteEntry> copy = new ArrayList<PartnerFavoriteEntry>();
-                for(DataSnapshot temp: dataSnapshot.getChildren())
+                for(DataSnapshot childSnapshot: dataSnapshot.getChildren())
                 {
-                    JSONEntry child = dataSnapshot.getValue(JSONEntry.class);
+                    JSONEntry child = childSnapshot.getValue(JSONEntry.class);
                     PartnerFavoriteEntry historyEntry = new PartnerFavoriteEntry(child.getName(), new LatLng(child.getLatitude(), child.getLongitude()));
                     historyEntry.setTimestamp(child.getTimestamp());
                     copy.add(historyEntry);
                 }
                 partnerHistory.clear();
-                Collections.copy(partnerHistory, copy);
+
+                for(int i = 0; i < copy.size(); i++ ) {
+                    partnerHistory.add(copy.get(i));
+                }
+
+                partnerHistoryAdapter.notifyDataSetChanged();
             }
 
             @Override
@@ -127,6 +136,10 @@ public class FirebaseHistoryManager extends FirebaseManager {
             //do nothing
         }
 
+    }
+
+    public FavoriteSwipeAdapter<PartnerFavoriteEntry> getPartnerHistoryAdapter() {
+        return partnerHistoryAdapter;
     }
 
     public ArrayList<PartnerFavoriteEntry> getPartnerHistory() {
