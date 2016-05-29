@@ -23,6 +23,7 @@ import java.sql.Time;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 
 /**
@@ -31,8 +32,9 @@ import java.util.Date;
 public class FirebaseHistoryManager extends FirebaseManager {
 
     private ChildEventListener historyListener;
+    private ValueEventListener historyMultipleEventListner;
     private FirebaseRegistrationManager firebaseRegistrationManager;
-    private ArrayList<PartnerFavoriteEntry> partnerHistory;
+    private final ArrayList<PartnerFavoriteEntry> partnerHistory;
     private JSONEntry lastVisitedLocation;
 
     private Firebase root;
@@ -50,7 +52,6 @@ public class FirebaseHistoryManager extends FirebaseManager {
                 JSONEntry child = dataSnapshot.getValue(JSONEntry.class);
                 PartnerFavoriteEntry historyEntry = new PartnerFavoriteEntry(child.getName(), new LatLng(child.getLatitude(), child.getLongitude()));
                 historyEntry.setTimestamp(child.getTimestamp());
-                partnerHistory.add(historyEntry);
 
                 System.out.println("Partner visited: " + historyEntry.getName());
 
@@ -81,6 +82,27 @@ public class FirebaseHistoryManager extends FirebaseManager {
             @Override
             public void onChildMoved(DataSnapshot dataSnapshot, String s) {
 
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        };
+
+        historyMultipleEventListner = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                ArrayList<PartnerFavoriteEntry> copy = new ArrayList<PartnerFavoriteEntry>();
+                for(DataSnapshot temp: dataSnapshot.getChildren())
+                {
+                    JSONEntry child = dataSnapshot.getValue(JSONEntry.class);
+                    PartnerFavoriteEntry historyEntry = new PartnerFavoriteEntry(child.getName(), new LatLng(child.getLatitude(), child.getLongitude()));
+                    historyEntry.setTimestamp(child.getTimestamp());
+                    copy.add(historyEntry);
+                }
+                partnerHistory.clear();
+                Collections.copy(partnerHistory, copy);
             }
 
             @Override
@@ -164,8 +186,11 @@ public class FirebaseHistoryManager extends FirebaseManager {
         //TODO: add listener to clear partner's history at 3 AM (clear both Firebase and local)
         //TODO: partnerRef.child("history").addChildEventListener(historyListener);
 
-        Firebase partnerRef = root.child(partnerKey);
-        partnerRef.child("history").addChildEventListener(historyListener);
+        Firebase historyRef = root.child(partnerKey).child("history");
+        historyRef.addChildEventListener(historyListener);
+        historyRef.addValueEventListener(historyMultipleEventListner);
+
+
     }
 
     public void onUserCleared(String userKey) {
@@ -174,7 +199,8 @@ public class FirebaseHistoryManager extends FirebaseManager {
 
     public void onPartnerCleared(String partnerKey) {
         partnerHistory.clear();
-        Firebase partnerRef = root.child("" + partnerKey);
-        partnerRef.child("history").removeEventListener(historyListener);
+        Firebase historyRef = root.child(partnerKey).child("history");
+        historyRef.removeEventListener(historyListener);
+        historyRef.removeEventListener(historyMultipleEventListner);
     }
 }
