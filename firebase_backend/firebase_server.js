@@ -17,7 +17,6 @@ var job = new cronJob({
             history.ref().remove();
         });
 
-        console.log("all done!");
     });
 
     
