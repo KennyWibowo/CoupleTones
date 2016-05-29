@@ -2,11 +2,13 @@ package com.helloworld.kenny.coupletones.firebase.managers;
 
 import android.content.Context;
 import android.content.Intent;
+import android.provider.ContactsContract;
 
 import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
+import com.firebase.client.ValueEventListener;
 import com.google.android.gms.maps.model.LatLng;
 import com.helloworld.kenny.coupletones.favorites.FavoriteEntry;
 import com.helloworld.kenny.coupletones.favorites.JSONEntry;
@@ -105,18 +107,45 @@ public class FirebaseHistoryManager extends FirebaseManager {
 
     // TODO: deprecate this, only use this as reference?
     private void updatePartnerHistory() {
-        Timestamp tsDeletePoint = Timestamp.valueOf(
+        final Timestamp tsDeletePoint = Timestamp.valueOf(
                 new SimpleDateFormat("yyyy-MM-dd ")
                         .format(new Date())
                         .concat(FirebaseService.HISTORY_RESET_TIME));
 
         Timestamp currentTime = new Timestamp(System.currentTimeMillis());
 
+        if(currentTime.after(tsDeletePoint)) {
+
+            final Firebase sub = root.child(firebaseRegistrationManager.getPartnerKey()).child("history");
+
+            sub.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    for (DataSnapshot child : dataSnapshot.getChildren()) {
+                        JSONEntry subexample = dataSnapshot.getValue(JSONEntry.class);
+                        Timestamp subTime = new Timestamp(subexample.getTimestamp());
+                        Firebase subsub = sub.child(child.toString());
+                        if(subTime.after(tsDeletePoint))
+                        {
+                            subsub.removeValue();
+                        }
+
+                    }
+                }
+
+                @Override
+                public void onCancelled(FirebaseError firebaseError) {
+
+                }
+            });
+        }
+
         for (int i = 0; i < partnerHistory.size(); i++) {
             if (partnerHistory.get(i).getTimestamp().before(tsDeletePoint) && currentTime.after(tsDeletePoint)) {
                 partnerHistory.remove(i--);
             }
         }
+
 
     }
 
