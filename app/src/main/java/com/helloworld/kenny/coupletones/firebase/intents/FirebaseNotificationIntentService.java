@@ -44,7 +44,7 @@ public class FirebaseNotificationIntentService extends IntentService {
                         .setContentTitle(title)
                         .setContentText(content)
                         .setSmallIcon(R.drawable.ic_launcher);
-        int mNotificationId = 001;
+        int mNotificationId = 001; //TODO: handle notification id
         NotificationManager mNotifyMgr =
                 (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         mNotifyMgr.notify(mNotificationId, mBuilder.build());
