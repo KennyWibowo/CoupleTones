@@ -167,6 +167,7 @@ public class FirebaseHistoryManager extends FirebaseManager {
     }
 
     public void onPartnerCleared() {
-        root.child("" + firebaseRegistrationManager.getPartnerKey()).child("history").removeEventListener(historyListener);
+        partnerHistory.clear();
+        //root.child("" + firebaseRegistrationManager.getPartnerKey()).child("history").removeEventListener(historyListener);
     }
 }
