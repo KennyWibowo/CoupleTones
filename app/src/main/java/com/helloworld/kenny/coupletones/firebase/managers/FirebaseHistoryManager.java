@@ -1,24 +1,31 @@
 package com.helloworld.kenny.coupletones.firebase.managers;
 
+import android.app.AlarmManager;
 import android.content.Context;
 import android.content.Intent;
+import android.provider.ContactsContract;
 
 import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
+import com.firebase.client.ValueEventListener;
 import com.google.android.gms.maps.model.LatLng;
+import com.helloworld.kenny.coupletones.FavoriteSwipeAdapter;
+import com.helloworld.kenny.coupletones.R;
 import com.helloworld.kenny.coupletones.favorites.FavoriteEntry;
 import com.helloworld.kenny.coupletones.favorites.JSONEntry;
 import com.helloworld.kenny.coupletones.favorites.PartnerFavoriteEntry;
-import com.helloworld.kenny.coupletones.firebase.FirebaseNotificationIntentService;
-import com.helloworld.kenny.coupletones.firebase.FirebaseService;
 import com.helloworld.kenny.coupletones.firebase.exceptions.PartnerNotRegisteredException;
+import com.helloworld.kenny.coupletones.firebase.intents.FirebaseNotificationIntentService;
+import com.helloworld.kenny.coupletones.firebase.FirebaseService;
 import com.helloworld.kenny.coupletones.firebase.exceptions.UserNotRegisteredException;
 
+import java.sql.Time;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 
 /**
@@ -27,8 +34,10 @@ import java.util.Date;
 public class FirebaseHistoryManager extends FirebaseManager {
 
     private ChildEventListener historyListener;
+    private ValueEventListener historyMultipleEventListner;
     private FirebaseRegistrationManager firebaseRegistrationManager;
-    private ArrayList<PartnerFavoriteEntry> partnerHistory;
+    private final ArrayList<PartnerFavoriteEntry> partnerHistory;
+    private final FavoriteSwipeAdapter<PartnerFavoriteEntry> partnerHistoryAdapter;
     private JSONEntry lastVisitedLocation;
 
     private Firebase root;
@@ -38,7 +47,8 @@ public class FirebaseHistoryManager extends FirebaseManager {
         partnerHistory = new ArrayList<>();
 
         this.firebaseRegistrationManager = firebaseRegistrationManager;
-        lastVisitedLocation = new JSONEntry();
+        this.lastVisitedLocation = new JSONEntry();
+        this.partnerHistoryAdapter = new FavoriteSwipeAdapter<>(context, R.layout.listview_item, R.id.listview_item_text, partnerHistory);
 
         historyListener= new ChildEventListener() {
             @Override
@@ -46,7 +56,6 @@ public class FirebaseHistoryManager extends FirebaseManager {
                 JSONEntry child = dataSnapshot.getValue(JSONEntry.class);
                 PartnerFavoriteEntry historyEntry = new PartnerFavoriteEntry(child.getName(), new LatLng(child.getLatitude(), child.getLongitude()));
                 historyEntry.setTimestamp(child.getTimestamp());
-                partnerHistory.add(historyEntry);
 
                 System.out.println("Partner visited: " + historyEntry.getName());
 
@@ -56,7 +65,11 @@ public class FirebaseHistoryManager extends FirebaseManager {
                 notifyUser.putExtra("title", "Partner reached a favorite location!");
                 notifyUser.putExtra("content", "Partner reached: " + historyEntry.getName());
 
-                context.startService(notifyUser);
+                Time timeRange = new Time(System.currentTimeMillis() - AlarmManager.INTERVAL_HALF_HOUR);
+
+                if(timeRange.before(historyEntry.getTimestamp())) { //TODO: fix this
+                    context.startService(notifyUser);
+                }
 
             }
 
@@ -73,6 +86,32 @@ public class FirebaseHistoryManager extends FirebaseManager {
             @Override
             public void onChildMoved(DataSnapshot dataSnapshot, String s) {
 
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        };
+
+        historyMultipleEventListner = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                ArrayList<PartnerFavoriteEntry> copy = new ArrayList<PartnerFavoriteEntry>();
+                for(DataSnapshot childSnapshot: dataSnapshot.getChildren())
+                {
+                    JSONEntry child = childSnapshot.getValue(JSONEntry.class);
+                    PartnerFavoriteEntry historyEntry = new PartnerFavoriteEntry(child.getName(), new LatLng(child.getLatitude(), child.getLongitude()));
+                    historyEntry.setTimestamp(child.getTimestamp());
+                    copy.add(historyEntry);
+                }
+                partnerHistory.clear();
+
+                for(int i = 0; i < copy.size(); i++ ) {
+                    partnerHistory.add(copy.get(i));
+                }
+
+                partnerHistoryAdapter.notifyDataSetChanged();
             }
 
             @Override
@@ -99,18 +138,48 @@ public class FirebaseHistoryManager extends FirebaseManager {
 
     }
 
+    public FavoriteSwipeAdapter<PartnerFavoriteEntry> getPartnerHistoryAdapter() {
+        return partnerHistoryAdapter;
+    }
+
     public ArrayList<PartnerFavoriteEntry> getPartnerHistory() {
         return partnerHistory;
     }
 
     // TODO: deprecate this, only use this as reference?
-    private void updatePartnerHistory() {
-        Timestamp tsDeletePoint = Timestamp.valueOf(
+    /*private void updatePartnerHistory() {
+        final Timestamp tsDeletePoint = Timestamp.valueOf(
                 new SimpleDateFormat("yyyy-MM-dd ")
                         .format(new Date())
                         .concat(FirebaseService.HISTORY_RESET_TIME));
 
         Timestamp currentTime = new Timestamp(System.currentTimeMillis());
+
+        if(currentTime.after(tsDeletePoint)) {
+
+            final Firebase sub = root.child(firebaseRegistrationManager.getPartnerKey()).child("history");
+
+            sub.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    for (DataSnapshot child : dataSnapshot.getChildren()) {
+                        JSONEntry subexample = dataSnapshot.getValue(JSONEntry.class);
+                        Timestamp subTime = new Timestamp(subexample.getTimestamp());
+                        Firebase subsub = sub.child(child.toString());
+                        if(subTime.after(tsDeletePoint))
+                        {
+                            subsub.removeValue();
+                        }
+
+                    }
+                }
+
+                @Override
+                public void onCancelled(FirebaseError firebaseError) {
+
+                }
+            });
+        }
 
         for (int i = 0; i < partnerHistory.size(); i++) {
             if (partnerHistory.get(i).getTimestamp().before(tsDeletePoint) && currentTime.after(tsDeletePoint)) {
@@ -118,7 +187,8 @@ public class FirebaseHistoryManager extends FirebaseManager {
             }
         }
 
-    }
+
+    }*/
 
     public void onUserRegistered(String userKey) {
         Firebase userRef = root.child(userKey);
@@ -129,16 +199,22 @@ public class FirebaseHistoryManager extends FirebaseManager {
         //TODO: add listener to clear partner's history at 3 AM (clear both Firebase and local)
         //TODO: partnerRef.child("history").addChildEventListener(historyListener);
 
-        Firebase partnerRef = root.child(partnerKey);
-        partnerRef.child("history").addChildEventListener(historyListener);
+        Firebase historyRef = root.child(partnerKey).child("history");
+        historyRef.addChildEventListener(historyListener);
+        historyRef.addValueEventListener(historyMultipleEventListner);
+
+
     }
 
-    public void onUserCleared() {
+    public void onUserCleared(String userKey) {
         this.lastVisitedLocation = new JSONEntry();
     }
 
-    public void onPartnerCleared() {
-        root.child("" + firebaseRegistrationManager.getPartnerKey()).child("history").removeEventListener(historyListener);
+    public void onPartnerCleared(String partnerKey) {
+        partnerHistory.clear();
+        Firebase historyRef = root.child(partnerKey).child("history");
+        historyRef.removeEventListener(historyListener);
+        historyRef.removeEventListener(historyMultipleEventListner);
     }
 
     public void onFavoriteAdded(FavoriteEntry entry){}

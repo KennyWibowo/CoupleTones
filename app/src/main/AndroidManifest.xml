@@ -41,7 +41,7 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".firebase.FirebaseNotificationIntentService"/>
+        <service android:name=".firebase.intents.FirebaseNotificationIntentService"/>
 
         <meta-data
             android:name="com.google.android.gms.version"

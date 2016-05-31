@@ -138,7 +138,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         // setup left and right drawer adapters
         favoriteSwipeAdapter = new FavoriteSwipeAdapter<FavoriteEntry>(me, R.layout.listview_item, R.id.listview_item_text, favorites.getAllEntries());
-        partnerHistorySwipeAdapter = new FavoriteSwipeAdapter<>(me, R.layout.listview_item, R.id.listview_item_text, firebaseHistoryManager.getPartnerHistory());
+        partnerHistorySwipeAdapter = firebaseHistoryManager.getPartnerHistoryAdapter();
         rightDrawer.setAdapter(favoriteSwipeAdapter);
         listHistory.setAdapter(partnerHistorySwipeAdapter);
 
@@ -386,16 +386,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         register.setPositiveButton("Submit", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 EditText email = (EditText) store.findViewById(R.id.partner_email);
+                firebaseService.registerPartner(email.getText().toString());
+                buttonAddPartner.setVisibility(View.GONE);
+                buttonRemovePartner.setVisibility(View.VISIBLE);
+                Toast.makeText(me, "Partner successfully registered", Toast.LENGTH_SHORT).show();
 
-                if (firebaseService.registerPartner(email.getText().toString())) {
-                    buttonAddPartner.setVisibility(View.GONE);
-                    buttonRemovePartner.setVisibility(View.VISIBLE);
-                    Toast.makeText(me, "Partner successfully registered", Toast.LENGTH_SHORT).show();
+                /*  TODO: handle this
                 } else {
                     buttonAddPartner.setVisibility(View.VISIBLE);
                     buttonRemovePartner.setVisibility(View.GONE);
                     Toast.makeText(me, "Oops! Partner already registered", Toast.LENGTH_SHORT).show();
-                }
+                }*/
 
             }
         });

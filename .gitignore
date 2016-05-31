@@ -7,3 +7,4 @@
 /build
 /captures
 .idea
+/firebase_backend/node_modules

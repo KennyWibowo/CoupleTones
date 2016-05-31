@@ -1,0 +1,16 @@
+{
+  "name": "firebase_backend",
+  "version": "1.0.0",
+  "description": "Backend of server to delete all history at 3am every day",
+  "main": "firebase_server.js",
+  "dependencies": {
+    "cron": "^1.1.0",
+    "firebase": "2.x.x"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Kenny Wibowo",
+  "license": "ISC"
+}

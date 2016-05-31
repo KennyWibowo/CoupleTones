@@ -83,11 +83,19 @@ public class FirebaseRegistrationManager extends FirebaseManager {
         return partnerEmail;
     }
 
-    public String getUserKey() {
+    public String getUserKey() throws UserNotRegisteredException {
+        if (!selfRegistered) {
+            throw new UserNotRegisteredException("Self not yet registered");
+        }
+
         return email.hashCode() + "";
     }
 
-    public String getPartnerKey() {
+    public String getPartnerKey() throws PartnerNotRegisteredException{
+        if(!partnerRegistered) {
+            throw new PartnerNotRegisteredException("Partner not yet registered");
+        }
+
         return partnerEmail.hashCode() + "";
     }
 
@@ -103,12 +111,12 @@ public class FirebaseRegistrationManager extends FirebaseManager {
         Firebase partnerRef = root.child(partnerKey);
     }
 
-    public void onUserCleared() {
+    public void onUserCleared(String userKey) {
         this.email = null;
         this.selfRegistered = false;
     }
 
-    public void onPartnerCleared() {
+    public void onPartnerCleared(String partnerKey) {
         this.partnerEmail = null;
         this.partnerRegistered = false;
     }
