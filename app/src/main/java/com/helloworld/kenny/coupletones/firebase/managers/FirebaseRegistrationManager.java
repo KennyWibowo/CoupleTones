@@ -117,5 +117,9 @@ public class FirebaseRegistrationManager extends FirebaseManager {
 
     }
 
+    public void onFavoriteAdded(FavoriteEntry entry) {
+
+    }
+
 }
 

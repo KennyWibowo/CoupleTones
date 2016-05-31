@@ -18,6 +18,7 @@ public class JSONEntry {
         this.longitude = entry.getLocation().longitude;
     }
 
+
     public String getName() {
         return name;
     }

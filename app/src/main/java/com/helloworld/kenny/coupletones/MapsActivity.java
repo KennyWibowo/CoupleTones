@@ -44,6 +44,7 @@ import com.helloworld.kenny.coupletones.favorites.FavoriteEntry;
 import com.helloworld.kenny.coupletones.favorites.Favorites;
 import com.helloworld.kenny.coupletones.favorites.PartnerFavoriteEntry;
 import com.helloworld.kenny.coupletones.firebase.FirebaseService;
+import com.helloworld.kenny.coupletones.firebase.managers.FirebaseFavoriteManager;
 import com.helloworld.kenny.coupletones.firebase.managers.FirebaseHistoryManager;
 import com.helloworld.kenny.coupletones.firebase.managers.FirebaseRegistrationManager;
 import com.helloworld.kenny.coupletones.firebase.exceptions.PartnerAlreadyRegisteredException;
@@ -91,6 +92,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private FirebaseService firebaseService;
     private FirebaseRegistrationManager firebaseRegistrationManager;
     private FirebaseHistoryManager firebaseHistoryManager;
+    private FirebaseFavoriteManager firebaseFavoriteManager;
     private Settings settings;
 
     private String PROJECT_NUMBER = "366742322722";
@@ -130,7 +132,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         firebaseService = new FirebaseService(this);
         firebaseRegistrationManager = firebaseService.getRegistrationManager();
         firebaseHistoryManager = new FirebaseHistoryManager(firebaseRegistrationManager, this);
+        firebaseFavoriteManager = new FirebaseFavoriteManager(firebaseRegistrationManager,this);
         firebaseService.addManager(firebaseHistoryManager);
+        firebaseService.addManager(firebaseFavoriteManager);
 
         // setup left and right drawer adapters
         favoriteSwipeAdapter = new FavoriteSwipeAdapter<FavoriteEntry>(me, R.layout.listview_item, R.id.listview_item_text, favorites.getAllEntries());
@@ -581,7 +585,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             favorites.addEntry(et.getText().toString(), pointFinal);
                             favoriteSwipeAdapter.notifyDataSetChanged();
                             Marker marker = mMap.addMarker(new MarkerOptions().position(point).title(et.getText().toString()));
-                            favorites.getEntry(favorites.size() - 1).setMarker(marker);
+                            FavoriteEntry favoriteEntry = favorites.getEntry(favorites.size()-1);
+                            onAddedFavoriteLocation(favoriteEntry);
+                            favoriteEntry.setMarker(marker);
                             Toast.makeText(me, "Favorite location added successfully", Toast.LENGTH_SHORT).show();
 
                             System.out.println(favorites.toString());
@@ -616,6 +622,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         firebaseService.visitLocation(entry);
     }
 
+    public void onAddedFavoriteLocation( FavoriteEntry entry) {
+        entry.visit();
+        System.out.println("Favorite Location Added: "+entry.getName());
+        firebaseService.partnerFavortieLocation(entry);
+    }
     private SharedPreferences getPrefs() {
         return PreferenceManager.getDefaultSharedPreferences(this);
     }

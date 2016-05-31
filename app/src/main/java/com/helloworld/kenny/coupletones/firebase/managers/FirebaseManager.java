@@ -20,4 +20,6 @@ public abstract class FirebaseManager {
     public abstract void onPartnerRegistered(String partnerKey);
 
     public abstract void onLocationVisited(FavoriteEntry entry);
+
+    public abstract void onFavoriteAdded(FavoriteEntry entry);
 }

@@ -140,4 +140,7 @@ public class FirebaseHistoryManager extends FirebaseManager {
     public void onPartnerCleared() {
         root.child("" + firebaseRegistrationManager.getPartnerKey()).child("history").removeEventListener(historyListener);
     }
+
+    public void onFavoriteAdded(FavoriteEntry entry){}
+
 }
