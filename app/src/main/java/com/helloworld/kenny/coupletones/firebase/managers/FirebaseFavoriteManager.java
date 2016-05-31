@@ -25,6 +25,7 @@ import java.util.ArrayList;
  */
 public class FirebaseFavoriteManager extends FirebaseManager {
 
+    //TODO: handle when user/partner delete favorites.
 
     private ChildEventListener favoriteListner;
     //TODO: move adapter here and call "notifyDataSetChanged" on it when modifying arraylist
