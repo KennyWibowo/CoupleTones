@@ -14,7 +14,7 @@ import com.helloworld.kenny.coupletones.favorites.JSONEntry;
 import com.helloworld.kenny.coupletones.favorites.PartnerFavoriteEntry;
 import com.helloworld.kenny.coupletones.favorites.exceptions.InvalidNameException;
 import com.helloworld.kenny.coupletones.favorites.exceptions.NameInUseException;
-import com.helloworld.kenny.coupletones.firebase.FirebaseNotificationIntentService;
+import com.helloworld.kenny.coupletones.firebase.intents.FirebaseNotificationIntentService;
 import com.helloworld.kenny.coupletones.firebase.FirebaseService;
 import com.helloworld.kenny.coupletones.firebase.exceptions.UserNotRegisteredException;
 
@@ -93,13 +93,13 @@ public class FirebaseFavoriteManager extends FirebaseManager {
         partnerRef.child("favorite").addChildEventListener(favoriteListner);
     }
 
-    public void onUserCleared() {
+    public void onUserCleared(String userKey) {
         this.lastAddedFavorite = new JSONEntry();
     }
 
-    public void onPartnerCleared() {
-        root.child(""+firebaseRegistrationManager.
-                getPartnerKey()).child("favorite").removeEventListener(favoriteListner);
+    public void onPartnerCleared(String partnerKey) {
+        Firebase favoriteRef = root.child(partnerKey).child("favorite");
+        favoriteRef.removeEventListener(favoriteListner);
     }
 
     public void onFavoriteAdded(FavoriteEntry entry) {
