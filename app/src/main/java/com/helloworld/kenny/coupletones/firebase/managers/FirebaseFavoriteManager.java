@@ -26,14 +26,14 @@ import java.util.ArrayList;
 public class FirebaseFavoriteManager extends FirebaseManager {
 
     private ChildEventListener favoriteListner;
-    private Favorites partnerFavorites;
+    private final ArrayList<PartnerFavoriteEntry> partnerFavorites;
     private JSONEntry lastAddedFavorite;
     private FirebaseRegistrationManager firebaseRegistrationManager;
     private Firebase root;
 
     public FirebaseFavoriteManager(FirebaseRegistrationManager firebaseRegistrationManager, final Context context) {
         this.root = new Firebase(FirebaseService.ENDPOINT);
-        partnerFavorites = new Favorites();
+        partnerFavorites = new ArrayList<>();
         lastAddedFavorite = new JSONEntry();
         this.firebaseRegistrationManager = firebaseRegistrationManager;
         favoriteListner = new ChildEventListener() {
@@ -43,18 +43,12 @@ public class FirebaseFavoriteManager extends FirebaseManager {
                 PartnerFavoriteEntry favoriteEntry =
                         new PartnerFavoriteEntry(child.getName(),
                                 new LatLng(child.getLatitude(),child.getLongitude()));
-                try {
-                    partnerFavorites.addEntry(favoriteEntry.getName(),new LatLng(child.getLatitude(),child.getLongitude()));
-                }catch (InvalidNameException e)
-                {
-                    //do nothing
-                }catch (NameInUseException e)
-                {
-                    //do nothing
-                }
+
+                partnerFavorites.add(favoriteEntry);
+
 
                 Intent notifyUser = new Intent(context, FirebaseNotificationIntentService.class);
-                notifyUser.putExtra("title", "Partner added a new favortie location!");
+                notifyUser.putExtra("title", "Partner added a new favorite location!");
                 notifyUser.putExtra("content", "Partner added: "+ favoriteEntry.getName());
 
                 context.startService(notifyUser);
@@ -94,37 +88,37 @@ public class FirebaseFavoriteManager extends FirebaseManager {
     }
 
     public void onUserCleared(String userKey) {
+        //TODO: clear Firebase of user's favorites here
         this.lastAddedFavorite = new JSONEntry();
     }
 
     public void onPartnerCleared(String partnerKey) {
+        partnerFavorites.clear();
         Firebase favoriteRef = root.child(partnerKey).child("favorite");
         favoriteRef.removeEventListener(favoriteListner);
     }
 
     public void onFavoriteAdded(FavoriteEntry entry) {
         try {
-            String email = firebaseRegistrationManager.getEmail();
+            String key = firebaseRegistrationManager.getUserKey();
             System.out.println("Adding favorite to Firebase");
-            if(lastAddedFavorite.getName() == null ||
-                    !lastAddedFavorite.getName().equals(entry.getName()))
-            {
-                Firebase favoriteEntryRef = root.child(""+email.hashCode()).child("favorite").push();
-                lastAddedFavorite = new JSONEntry(entry);
-                System.out.println("Favorite uploaded: "+lastAddedFavorite.getName());
-                favoriteEntryRef.setValue(new JSONEntry(entry));
-            }
+
+            Firebase favoriteEntryRef = root.child(key).child("favorite").push();
+            lastAddedFavorite = new JSONEntry(entry);
+            System.out.println("Favorite uploaded: "+lastAddedFavorite.getName());
+            favoriteEntryRef.setValue(new JSONEntry(entry));
 
         } catch (UserNotRegisteredException e) {
             //do nothing
         }
     }
+
     public void onLocationVisited(FavoriteEntry entry) {
 
     }
 
-    public ArrayList<FavoriteEntry> getPartnerFavorite()
+    public ArrayList<PartnerFavoriteEntry> getPartnerFavorite()
     {
-        return partnerFavorites.getAllEntries();
+        return partnerFavorites;
     }
 }

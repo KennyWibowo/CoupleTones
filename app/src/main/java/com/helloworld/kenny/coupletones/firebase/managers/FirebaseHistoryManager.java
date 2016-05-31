@@ -124,10 +124,10 @@ public class FirebaseHistoryManager extends FirebaseManager {
     public void onLocationVisited(FavoriteEntry entry) {
 
         try {
-            String email = firebaseRegistrationManager.getEmail();
+            String key = firebaseRegistrationManager.getUserKey();
 
             if (lastVisitedLocation.getName() == null || !lastVisitedLocation.getName().equals(entry.getName())) {
-                Firebase historyEntryRef = root.child("" + email.hashCode()).child("history").push();
+                Firebase historyEntryRef = root.child(key).child("history").push();
 
                 lastVisitedLocation = new JSONEntry(entry);
                 historyEntryRef.setValue(new JSONEntry(entry));

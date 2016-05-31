@@ -47,8 +47,6 @@ import com.helloworld.kenny.coupletones.firebase.FirebaseService;
 import com.helloworld.kenny.coupletones.firebase.managers.FirebaseFavoriteManager;
 import com.helloworld.kenny.coupletones.firebase.managers.FirebaseHistoryManager;
 import com.helloworld.kenny.coupletones.firebase.managers.FirebaseRegistrationManager;
-import com.helloworld.kenny.coupletones.firebase.exceptions.PartnerAlreadyRegisteredException;
-import com.helloworld.kenny.coupletones.firebase.exceptions.UserAlreadyRegisteredException;
 import com.helloworld.kenny.coupletones.settings.Settings;
 
 import android.widget.LinearLayout;
@@ -138,9 +136,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         // setup left and right drawer adapters
         favoriteSwipeAdapter = new FavoriteSwipeAdapter<FavoriteEntry>(me, R.layout.listview_item, R.id.listview_item_text, favorites.getAllEntries());
+        partnerSwipeAdapter = new FavoriteSwipeAdapter<PartnerFavoriteEntry>(me, R.layout.listview_item, R.id.listview_item_text, firebaseFavoriteManager.getPartnerFavorite());
         partnerHistorySwipeAdapter = firebaseHistoryManager.getPartnerHistoryAdapter();
         rightDrawer.setAdapter(favoriteSwipeAdapter);
         listHistory.setAdapter(partnerHistorySwipeAdapter);
+        listFavorite.setAdapter(partnerSwipeAdapter);
 
         settings = new Settings();
 
@@ -623,10 +623,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         firebaseService.visitLocation(entry);
     }
 
-    public void onAddedFavoriteLocation( FavoriteEntry entry) {
-        entry.visit();
-        System.out.println("Favorite Location Added: "+entry.getName());
-        firebaseService.partnerFavortieLocation(entry);
+    public void onAddedFavoriteLocation(FavoriteEntry entry) {
+        System.out.println("Favorite Location Added: " + entry.getName());
+        firebaseService.addFavorite(entry);
     }
     private SharedPreferences getPrefs() {
         return PreferenceManager.getDefaultSharedPreferences(this);
