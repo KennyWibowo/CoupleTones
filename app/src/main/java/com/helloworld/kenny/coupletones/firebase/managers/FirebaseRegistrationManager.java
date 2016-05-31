@@ -57,16 +57,6 @@ public class FirebaseRegistrationManager extends FirebaseManager {
         this.partnerRegistered = true;
     }
 
-
-    //TODO: deprecate
-    public void changeEmail(String email) {
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString("email", email);
-        editor.apply();
-
-        this.email = email;
-    }
-
     public String getEmail() throws UserNotRegisteredException {
         if (!selfRegistered) {
             throw new UserNotRegisteredException("Self not yet registered");

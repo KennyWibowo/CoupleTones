@@ -146,49 +146,6 @@ public class FirebaseHistoryManager extends FirebaseManager {
         return partnerHistory;
     }
 
-    // TODO: deprecate this, only use this as reference?
-    /*private void updatePartnerHistory() {
-        final Timestamp tsDeletePoint = Timestamp.valueOf(
-                new SimpleDateFormat("yyyy-MM-dd ")
-                        .format(new Date())
-                        .concat(FirebaseService.HISTORY_RESET_TIME));
-
-        Timestamp currentTime = new Timestamp(System.currentTimeMillis());
-
-        if(currentTime.after(tsDeletePoint)) {
-
-            final Firebase sub = root.child(firebaseRegistrationManager.getPartnerKey()).child("history");
-
-            sub.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    for (DataSnapshot child : dataSnapshot.getChildren()) {
-                        JSONEntry subexample = dataSnapshot.getValue(JSONEntry.class);
-                        Timestamp subTime = new Timestamp(subexample.getTimestamp());
-                        Firebase subsub = sub.child(child.toString());
-                        if(subTime.after(tsDeletePoint))
-                        {
-                            subsub.removeValue();
-                        }
-
-                    }
-                }
-
-                @Override
-                public void onCancelled(FirebaseError firebaseError) {
-
-                }
-            });
-        }
-
-        for (int i = 0; i < partnerHistory.size(); i++) {
-            if (partnerHistory.get(i).getTimestamp().before(tsDeletePoint) && currentTime.after(tsDeletePoint)) {
-                partnerHistory.remove(i--);
-            }
-        }
-
-
-    }*/
 
     public void onUserRegistered(String userKey) {
         Firebase userRef = root.child(userKey);
@@ -196,8 +153,6 @@ public class FirebaseHistoryManager extends FirebaseManager {
     }
 
     public void onPartnerRegistered(String partnerKey) {
-        //TODO: add listener to clear partner's history at 3 AM (clear both Firebase and local)
-        //TODO: partnerRef.child("history").addChildEventListener(historyListener);
 
         Firebase historyRef = root.child(partnerKey).child("history");
         historyRef.addChildEventListener(historyListener);

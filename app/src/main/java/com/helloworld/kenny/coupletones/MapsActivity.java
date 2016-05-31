@@ -615,8 +615,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      * @param entry
      */
     public void onReachedFavoriteLocation(FavoriteEntry entry) {
-        // Message: Partner has reached location "(blah blah)"
-
         entry.visit();
 
         System.out.println("Reached: " + entry.getName());
