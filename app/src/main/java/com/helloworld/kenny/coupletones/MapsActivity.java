@@ -285,6 +285,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         long[] DEFAULT_8 = {0L, 2500L};
         long[] DEFAULT_9 = {0L, 3000L};
         long[] DEFAULT_10 = {0L,3250L};
+        options = new ArrayList<VibrationNotification>();
         options.add(0,new VibrationNotification("default1", DEFAULT_1, getApplicationContext()));
         options.add(1,new VibrationNotification("default2", DEFAULT_2, getApplicationContext()));
         options.add(2,new VibrationNotification("default3", DEFAULT_3, getApplicationContext()));
