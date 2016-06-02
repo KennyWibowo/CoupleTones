@@ -638,7 +638,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         //Button arrivalTone = (Button) dialogView.findViewById(R.id.arrival_tone);
         //Button vibration = (Button) dialogView.findViewById(R.id.departure_tone);
 
-        builder.setNeutralButton("Select Arrival Time", new DialogInterface.OnClickListener() {
+        /*builder.setNeutralButton("Select Arrival Time", new DialogInterface.OnClickListener() {
            public void onClick(DialogInterface dialog, int i) {
                Toast.makeText(me, "select arrival time", Toast.LENGTH_SHORT).show();
            }
@@ -648,7 +648,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
            public void onClick(DialogInterface dialog, int i) {
                Toast.makeText(me, "select departure time", Toast.LENGTH_SHORT).show();
            }
-        });
+        });*/
 
         builder.setTitle("Select Tones and Vibrations");
         builder.setCancelable(true);
