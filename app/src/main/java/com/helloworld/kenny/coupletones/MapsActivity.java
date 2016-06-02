@@ -51,6 +51,7 @@ import com.helloworld.kenny.coupletones.firebase.exceptions.UserNotRegisteredExc
 import com.helloworld.kenny.coupletones.firebase.managers.FirebaseFavoriteManager;
 import com.helloworld.kenny.coupletones.firebase.managers.FirebaseHistoryManager;
 import com.helloworld.kenny.coupletones.firebase.managers.FirebaseRegistrationManager;
+import com.helloworld.kenny.coupletones.notification.DefaultNotifications;
 import com.helloworld.kenny.coupletones.settings.Settings;
 
 import android.widget.LinearLayout;
@@ -109,6 +110,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        DefaultNotifications defaultNotifications = new DefaultNotifications(this); //init default notifications
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
 
