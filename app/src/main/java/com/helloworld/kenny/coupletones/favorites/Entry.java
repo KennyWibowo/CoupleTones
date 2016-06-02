@@ -15,6 +15,7 @@ public abstract class Entry {
     public Entry(String name, LatLng location) {
         this.name = name;
         this.location = location;
+        this.timestamp = new Timestamp(0);
     }
 
     public void setName(String name) {
