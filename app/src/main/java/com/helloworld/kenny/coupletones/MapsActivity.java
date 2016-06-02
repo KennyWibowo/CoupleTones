@@ -20,6 +20,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -59,6 +60,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.IOException;
+import java.sql.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -89,7 +91,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private Favorites favorites;
     private FavoriteSwipeAdapter<FavoriteEntry> favoriteSwipeAdapter;
     private FavoriteSwipeAdapter<PartnerFavoriteEntry> partnerSwipeAdapter;
-    private FavoriteSwipeAdapter<PartnerFavoriteEntry> partnerHistorySwipeAdapter;
+    private ArrayAdapter<PartnerFavoriteEntry> partnerHistorySwipeAdapter;
 
     private FirebaseService firebaseService;
     private FirebaseRegistrationManager firebaseRegistrationManager;

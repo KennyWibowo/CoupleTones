@@ -4,6 +4,11 @@ import android.app.AlarmManager;
 import android.content.Context;
 import android.content.Intent;
 import android.provider.ContactsContract;
+import android.view.LayoutInflater;
+import android.view.ViewGroup;
+import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.TextView;
 
 import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
@@ -21,6 +26,9 @@ import com.helloworld.kenny.coupletones.firebase.intents.FirebaseNotificationInt
 import com.helloworld.kenny.coupletones.firebase.FirebaseService;
 import com.helloworld.kenny.coupletones.firebase.exceptions.UserNotRegisteredException;
 
+import org.w3c.dom.Text;
+
+import java.sql.Array;
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
@@ -37,7 +45,8 @@ public class FirebaseHistoryManager extends FirebaseManager {
     private ValueEventListener historyMultipleEventListner;
     private FirebaseRegistrationManager firebaseRegistrationManager;
     private final ArrayList<PartnerFavoriteEntry> partnerHistory;
-    private final FavoriteSwipeAdapter<PartnerFavoriteEntry> partnerHistoryAdapter;
+    //private final FavoriteSwipeAdapter<PartnerFavoriteEntry> partnerHistoryAdapter;
+    private final HistoryAdapter partnerHistoryAdapter;
     private JSONEntry lastVisitedLocation;
 
     private Firebase root;
@@ -48,7 +57,7 @@ public class FirebaseHistoryManager extends FirebaseManager {
 
         this.firebaseRegistrationManager = firebaseRegistrationManager;
         this.lastVisitedLocation = new JSONEntry();
-        this.partnerHistoryAdapter = new FavoriteSwipeAdapter<>(context, R.layout.listview_item, R.id.listview_item_text, partnerHistory);
+        this.partnerHistoryAdapter = new HistoryAdapter(context, partnerHistory);
 
         historyListener= new ChildEventListener() {
             @Override
@@ -138,7 +147,7 @@ public class FirebaseHistoryManager extends FirebaseManager {
 
     }
 
-    public FavoriteSwipeAdapter<PartnerFavoriteEntry> getPartnerHistoryAdapter() {
+    public ArrayAdapter<PartnerFavoriteEntry> getPartnerHistoryAdapter() {
         return partnerHistoryAdapter;
     }
 
@@ -173,5 +182,31 @@ public class FirebaseHistoryManager extends FirebaseManager {
     }
 
     public void onFavoriteAdded(FavoriteEntry entry){}
+
+    public class HistoryAdapter extends ArrayAdapter<PartnerFavoriteEntry> {
+        Context context;
+
+        public HistoryAdapter(Context context, ArrayList<PartnerFavoriteEntry> historyItems) {
+            super(context, 0, historyItems);
+            this.context = context;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            PartnerFavoriteEntry entry = getItem(position);
+
+            if(convertView == null) {
+                convertView = LayoutInflater.from(context).inflate(R.layout.history_view, parent, false);
+            }
+
+            TextView name = (TextView) convertView.findViewById(R.id.history_name_text);
+            TextView time = (TextView) convertView.findViewById(R.id.history_time_text);
+
+            name.setText(entry.getName());
+            time.setText(entry.getTimestamp().toString());
+
+            return convertView;
+        }
+    }
 
 }
