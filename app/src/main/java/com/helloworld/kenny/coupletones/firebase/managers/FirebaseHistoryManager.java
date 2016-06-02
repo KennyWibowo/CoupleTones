@@ -136,7 +136,7 @@ public class FirebaseHistoryManager extends FirebaseManager {
             String key = firebaseRegistrationManager.getUserKey();
 
             if (lastVisitedLocation.getName() == null || !lastVisitedLocation.getName().equals(entry.getName())) {
-                Firebase historyEntryRef = root.child(key).child("history").push();
+                Firebase historyEntryRef = root.child(key).child("history").child(entry.getTimestamp().getTime() + "");
 
                 lastVisitedLocation = new JSONEntry(entry);
                 historyEntryRef.setValue(new JSONEntry(entry));
@@ -148,7 +148,16 @@ public class FirebaseHistoryManager extends FirebaseManager {
     }
 
     public void onLocationDeparted() {
+        try {
+            String key = firebaseRegistrationManager.getUserKey();
 
+            if (lastVisitedLocation.getName() != null) {
+                //depart last location
+                root.child(key).child("history").child(lastVisitedLocation.getTimestamp() + "").child("departed").setValue(true);
+            }
+        } catch (UserNotRegisteredException e) {
+            //do nothing
+        }
     }
 
     public ArrayAdapter<PartnerFavoriteEntry> getPartnerHistoryAdapter() {
