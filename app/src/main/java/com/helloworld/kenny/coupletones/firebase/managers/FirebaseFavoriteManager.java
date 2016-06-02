@@ -49,11 +49,12 @@ public class FirebaseFavoriteManager extends FirebaseManager {
                 partnerFavorites.add(favoriteEntry);
 
 
-                Intent notifyUser = new Intent(context, FirebaseNotificationIntentService.class);
+                // No need to notify user when partner added a new favorite location
+                /*Intent notifyUser = new Intent(context, FirebaseNotificationIntentService.class);
                 notifyUser.putExtra("title", "Partner added a new favorite location!");
                 notifyUser.putExtra("content", "Partner added: "+ favoriteEntry.getName());
 
-                context.startService(notifyUser);
+                context.startService(notifyUser);*/
 
             }
 
