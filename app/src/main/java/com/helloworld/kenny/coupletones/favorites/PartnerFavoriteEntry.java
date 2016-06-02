@@ -10,13 +10,17 @@ import com.helloworld.kenny.coupletones.notification.VibrationNotification;
  * Created by Kenny on 5/24/2016.
  */
 public class PartnerFavoriteEntry extends Entry {
-    private ToneNotification tone;
-    private VibrationNotification vibration;
+    private ToneNotification arriveTone;
+    private ToneNotification departTone;
+    private VibrationNotification arriveVibration;
+    private VibrationNotification departVibration;
 
     public PartnerFavoriteEntry(String name, LatLng location) {
         super(name, location);
-        vibration = DefaultNotifications.getDefaultVibration();
+        arriveVibration = DefaultNotifications.getDefaultArrivalVibration();
+        departVibration = DefaultNotifications.getDefaultDepartureVibration();
+
+        //TODO: assign default tones
     }
 
-    //TODO: add functionality to bind tones/vibrations
 }

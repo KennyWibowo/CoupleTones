@@ -6,15 +6,22 @@ import android.content.Context;
  * Created by Kenny on 6/1/2016.
  */
 public class DefaultNotifications {
-    private static final long[] DEFAULT_VIBRATION_PATTERN = {0L, 500L};
+    private static final long[] DEFAULT_ARRIVAL_VIBRATION_PATTERN = {0L, 500L};
+    private static final long[] DEFAULT_DEPARTURE_VIBRATION_PATTERN = {0L, 750L};
 
-    private static VibrationNotification defaultVibration;
+    private static VibrationNotification defaultArrivalVibration;
+    private static VibrationNotification defaultDepartureVibration;
 
     public DefaultNotifications(Context context) {
-        defaultVibration = new VibrationNotification("Default Vibration", DEFAULT_VIBRATION_PATTERN, context);
+        defaultArrivalVibration = new VibrationNotification("Default Vibration", DEFAULT_ARRIVAL_VIBRATION_PATTERN, context);
+        defaultArrivalVibration = new VibrationNotification("Default Vibration", DEFAULT_DEPARTURE_VIBRATION_PATTERN, context);
     }
 
-    public static VibrationNotification getDefaultVibration() {
-        return defaultVibration;
+    public static VibrationNotification getDefaultArrivalVibration() {
+        return defaultArrivalVibration;
+    }
+
+    public static VibrationNotification getDefaultDepartureVibration() {
+        return defaultDepartureVibration;
     }
 }
