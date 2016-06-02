@@ -202,8 +202,10 @@ public class FirebaseHistoryManager extends FirebaseManager {
             TextView name = (TextView) convertView.findViewById(R.id.history_name_text);
             TextView time = (TextView) convertView.findViewById(R.id.history_time_text);
 
+            String t = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss").format(entry.getTimestamp());
+
             name.setText(entry.getName());
-            time.setText(entry.getTimestamp().toString());
+            time.setText(t);
 
             return convertView;
         }
