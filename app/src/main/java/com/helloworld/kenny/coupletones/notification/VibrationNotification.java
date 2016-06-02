@@ -3,6 +3,8 @@ package com.helloworld.kenny.coupletones.notification;
 import android.content.Context;
 import android.os.Vibrator;
 
+import com.helloworld.kenny.coupletones.settings.Settings;
+
 /**
  * Created by Kenny on 6/1/2016.
  */
@@ -22,7 +24,9 @@ public class VibrationNotification extends Notification {
     }
 
     public void play() {
-        v.vibrate(pattern, -1);
+        if(Settings.vibrationsEnabled()) {
+            v.vibrate(pattern, -1);
+        }
     }
 
     public String toString() {
