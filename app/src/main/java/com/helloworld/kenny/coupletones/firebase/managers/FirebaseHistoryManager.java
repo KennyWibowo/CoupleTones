@@ -67,7 +67,7 @@ public class FirebaseHistoryManager extends FirebaseManager {
 
                 Time timeRange = new Time(System.currentTimeMillis() - AlarmManager.INTERVAL_HALF_HOUR);
 
-                if(timeRange.before(historyEntry.getTimestamp())) { //TODO: fix this
+                if(timeRange.before(historyEntry.getTimestamp())) {
                     context.startService(notifyUser);
                 }
 
