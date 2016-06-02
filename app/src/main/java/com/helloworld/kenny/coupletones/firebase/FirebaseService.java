@@ -41,60 +41,36 @@ public class FirebaseService {
         extraManagers.add(manager);
     }
 
-    public void registerUser(String email) {
-        try {
-            registrationManager.registerUser(email);
+    public void registerUser(String email) throws UserAlreadyRegisteredException, UserNotRegisteredException {
+        registrationManager.registerUser(email);
 
-            for (int i = 0; i < extraManagers.size(); i++) {
-                extraManagers.get(i).onUserRegistered(registrationManager.getUserKey());
-            }
-
-        } catch (UserAlreadyRegisteredException e) {
-            //TODO
-        } catch (UserNotRegisteredException e) {
-            //TODO
-        }
-    }
-
-    public void registerPartner(String email) {
-        try {
-
-            registrationManager.registerPartner(email);
-
-            for (int i = 0; i < extraManagers.size(); i++) {
-                extraManagers.get(i).onPartnerRegistered(registrationManager.getPartnerKey());
-            }
-
-        } catch (PartnerAlreadyRegisteredException e) {
-            //TODO
-        } catch (PartnerNotRegisteredException e ) {
-            //TODO
-        }
-    }
-
-    public void clearUser() {
-
-        try {
-            String userKey = registrationManager.getUserKey();
-
-            for (int i = 0; i < extraManagers.size(); i++) {
-                extraManagers.get(i).onUserCleared(userKey);
-            }
-        } catch (UserNotRegisteredException e) {
-            //TODO
+        for (int i = 0; i < extraManagers.size(); i++) {
+            extraManagers.get(i).onUserRegistered(registrationManager.getUserKey());
         }
 
     }
 
-    public void clearPartner() {
-        try {
-            String partnerKey = registrationManager.getPartnerKey();
+    public void registerPartner(String email) throws PartnerAlreadyRegisteredException, PartnerNotRegisteredException {
+        registrationManager.registerPartner(email);
 
-            for (int i = 0; i < extraManagers.size(); i++) {
-                extraManagers.get(i).onPartnerCleared(partnerKey);
-            }
-        } catch( PartnerNotRegisteredException e ) {
-            //TODO
+        for (int i = 0; i < extraManagers.size(); i++) {
+            extraManagers.get(i).onPartnerRegistered(registrationManager.getPartnerKey());
+        }
+    }
+
+    public void clearUser() throws UserNotRegisteredException {
+        String userKey = registrationManager.getUserKey();
+
+        for (int i = 0; i < extraManagers.size(); i++) {
+            extraManagers.get(i).onUserCleared(userKey);
+        }
+    }
+
+    public void clearPartner() throws PartnerNotRegisteredException {
+        String partnerKey = registrationManager.getPartnerKey();
+
+        for (int i = 0; i < extraManagers.size(); i++) {
+            extraManagers.get(i).onPartnerCleared(partnerKey);
         }
     }
 

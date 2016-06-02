@@ -44,6 +44,10 @@ import com.helloworld.kenny.coupletones.favorites.FavoriteEntry;
 import com.helloworld.kenny.coupletones.favorites.Favorites;
 import com.helloworld.kenny.coupletones.favorites.PartnerFavoriteEntry;
 import com.helloworld.kenny.coupletones.firebase.FirebaseService;
+import com.helloworld.kenny.coupletones.firebase.exceptions.PartnerAlreadyRegisteredException;
+import com.helloworld.kenny.coupletones.firebase.exceptions.PartnerNotRegisteredException;
+import com.helloworld.kenny.coupletones.firebase.exceptions.UserAlreadyRegisteredException;
+import com.helloworld.kenny.coupletones.firebase.exceptions.UserNotRegisteredException;
 import com.helloworld.kenny.coupletones.firebase.managers.FirebaseFavoriteManager;
 import com.helloworld.kenny.coupletones.firebase.managers.FirebaseHistoryManager;
 import com.helloworld.kenny.coupletones.firebase.managers.FirebaseRegistrationManager;
@@ -174,10 +178,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             String emailAddress = et.getText().toString();
 
                             if (emailAddress != null && !emailAddress.isEmpty()) {
-                                firebaseService.registerUser(emailAddress);
+                                try {
+                                    firebaseService.registerUser(emailAddress);
+                                } catch(UserNotRegisteredException e) {
+                                    Toast.makeText(me, "Registration Failed.", Toast.LENGTH_SHORT).show();
+                                } catch(UserAlreadyRegisteredException e) {
+                                    Toast.makeText(me, "User is already registered.", Toast.LENGTH_SHORT).show();
+                                }
                                 buttonUnregisterEmail.setVisibility(View.VISIBLE);
                                 buttonRegisterEmail.setVisibility(View.GONE);
-                                Toast.makeText(me, "Email successfully registered", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(me, "Email successfully registered.", Toast.LENGTH_SHORT).show();
                             } else {
                                 Toast.makeText(me, "Invalid email. Please retry.", Toast.LENGTH_SHORT).show();
                                 et.setText("");
@@ -340,7 +350,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         String emailAddress = et.getText().toString();
 
                         if (emailAddress != null && !emailAddress.isEmpty()) {
-                            firebaseService.registerUser(emailAddress);
+                            try {
+                                firebaseService.registerUser(emailAddress);
+                            } catch(UserAlreadyRegisteredException e) {
+                                Toast.makeText(me, "User is already registered.", Toast.LENGTH_SHORT).show();
+                            } catch(UserNotRegisteredException e) {
+                                Toast.makeText(me, "Registration Failed.", Toast.LENGTH_SHORT).show();
+                            }
                             buttonUnregisterEmail.setVisibility(View.VISIBLE);
                             buttonRegisterEmail.setVisibility(View.GONE);
                             Toast.makeText(me, "Email successfully changed", Toast.LENGTH_SHORT).show();
@@ -362,7 +378,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      * @param view
      */
     public void buttonUnregisterEmail(View view) {
-        firebaseService.clearUser();
+        try {
+            firebaseService.clearUser();
+        } catch(UserNotRegisteredException e) {
+            Toast.makeText(me, "User is not registered.", Toast.LENGTH_SHORT).show();
+        }
+
         buttonUnregisterEmail.setVisibility(View.GONE);
         buttonRegisterEmail.setVisibility(View.VISIBLE);
         Toast.makeText(me, "Successfully unregistered email.", Toast.LENGTH_SHORT).show();
@@ -386,7 +407,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         register.setPositiveButton("Submit", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 EditText email = (EditText) store.findViewById(R.id.partner_email);
-                firebaseService.registerPartner(email.getText().toString());
+
+                try {
+                    firebaseService.registerPartner(email.getText().toString());
+                } catch(PartnerAlreadyRegisteredException e) {
+                    Toast.makeText(me, "Partner is already registered.", Toast.LENGTH_SHORT).show();
+                } catch(PartnerNotRegisteredException e) {
+                    Toast.makeText(me, "Partner registration failed.", Toast.LENGTH_SHORT).show();
+                }
+
                 buttonAddPartner.setVisibility(View.GONE);
                 buttonRemovePartner.setVisibility(View.VISIBLE);
                 Toast.makeText(me, "Partner successfully registered", Toast.LENGTH_SHORT).show();
@@ -422,10 +451,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         remove.setMessage("Are you sure you want to remove your partner?");
         remove.setPositiveButton("Yes!", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-                firebaseService.clearPartner();
+                try {
+                    firebaseService.clearPartner();
+                } catch(PartnerNotRegisteredException e) {
+                    Toast.makeText(me, "Partner is not registered.", Toast.LENGTH_SHORT).show();
+                }
                 buttonAddPartner.setVisibility(View.VISIBLE);
                 buttonRemovePartner.setVisibility(View.GONE);
-                Toast.makeText(me, "Partner successfully removed", Toast.LENGTH_SHORT).show();
+                Toast.makeText(me, "Partner successfully removed.", Toast.LENGTH_SHORT).show();
             }
         });
         remove.setNegativeButton("No!", new DialogInterface.OnClickListener() {
