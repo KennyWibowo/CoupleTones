@@ -390,14 +390,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 buttonAddPartner.setVisibility(View.GONE);
                 buttonRemovePartner.setVisibility(View.VISIBLE);
                 Toast.makeText(me, "Partner successfully registered", Toast.LENGTH_SHORT).show();
-
-                /*  TODO: handle this
-                } else {
-                    buttonAddPartner.setVisibility(View.VISIBLE);
-                    buttonRemovePartner.setVisibility(View.GONE);
-                    Toast.makeText(me, "Oops! Partner already registered", Toast.LENGTH_SHORT).show();
-                }*/
-
             }
         });
         register.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
