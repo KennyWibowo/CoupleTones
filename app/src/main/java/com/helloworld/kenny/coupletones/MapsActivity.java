@@ -625,6 +625,39 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     /**
+     * Button Method for selecting tones and vibrations
+     *
+     * @param view
+     */
+    public void buttonSelections(View view) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(MapsActivity.this);
+        LayoutInflater inflater = this.getLayoutInflater();
+        final View dialogView = inflater.inflate(R.layout.selections, null);
+        builder.setView(dialogView);
+
+        //Button arrivalTone = (Button) dialogView.findViewById(R.id.arrival_tone);
+        //Button vibration = (Button) dialogView.findViewById(R.id.departure_tone);
+
+        builder.setNeutralButton("Select Arrival Time", new DialogInterface.OnClickListener() {
+           public void onClick(DialogInterface dialog, int i) {
+               Toast.makeText(me, "select arrival time", Toast.LENGTH_SHORT).show();
+           }
+        });
+
+        builder.setNeutralButton("Select Departure Time", new DialogInterface.OnClickListener() {
+           public void onClick(DialogInterface dialog, int i) {
+               Toast.makeText(me, "select departure time", Toast.LENGTH_SHORT).show();
+           }
+        });
+
+        builder.setTitle("Select Tones and Vibrations");
+        builder.setCancelable(true);
+
+        AlertDialog selections = builder.create();
+        selections.show();
+    }
+
+    /**
      * Button for searching locations
      *
      * @param view
