@@ -120,6 +120,10 @@ public class FirebaseFavoriteManager extends FirebaseManager {
 
     }
 
+    public void onLocationDeparted() {
+
+    }
+
     public ArrayList<PartnerFavoriteEntry> getPartnerFavorite()
     {
         return partnerFavorites;

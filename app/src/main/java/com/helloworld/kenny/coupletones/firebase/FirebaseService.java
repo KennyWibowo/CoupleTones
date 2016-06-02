@@ -80,6 +80,12 @@ public class FirebaseService {
         }
     }
 
+    public void departLocation() {
+        for(int i = 0; i < extraManagers.size(); i++) {
+            extraManagers.get(i).onLocationDeparted();
+        }
+    }
+
     public void addFavorite(FavoriteEntry entry){
         for ( int i = 0; i <extraManagers.size();i++) {
             extraManagers.get(i).onFavoriteAdded(entry);

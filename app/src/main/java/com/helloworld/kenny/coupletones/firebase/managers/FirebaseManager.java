@@ -21,5 +21,7 @@ public abstract class FirebaseManager {
 
     public abstract void onLocationVisited(FavoriteEntry entry);
 
+    public abstract void onLocationDeparted();
+
     public abstract void onFavoriteAdded(FavoriteEntry entry);
 }

@@ -347,6 +347,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 }
                 if (inRange == false) {
                     //System.out.print("Out of Range!!!\n");
+                    firebaseService.departLocation();
                     reached = false;
                 }
             }
@@ -716,6 +717,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         System.out.println("Favorite Location Added: " + entry.getName());
         firebaseService.addFavorite(entry);
     }
+
     private SharedPreferences getPrefs() {
         return PreferenceManager.getDefaultSharedPreferences(this);
     }

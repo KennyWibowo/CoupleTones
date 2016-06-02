@@ -147,6 +147,10 @@ public class FirebaseHistoryManager extends FirebaseManager {
 
     }
 
+    public void onLocationDeparted() {
+
+    }
+
     public ArrayAdapter<PartnerFavoriteEntry> getPartnerHistoryAdapter() {
         return partnerHistoryAdapter;
     }
