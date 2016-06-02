@@ -29,14 +29,13 @@ public class FirebaseFavoriteManager extends FirebaseManager {
 
     private ChildEventListener favoriteListner;
     //TODO: move adapter here and call "notifyDataSetChanged" on it when modifying arraylist
-    private final ArrayList<PartnerFavoriteEntry> partnerFavorites;
+    private final static ArrayList<PartnerFavoriteEntry> partnerFavorites = new ArrayList<>();
     private JSONEntry lastAddedFavorite;
     private FirebaseRegistrationManager firebaseRegistrationManager;
     private Firebase root;
 
     public FirebaseFavoriteManager(FirebaseRegistrationManager firebaseRegistrationManager, final Context context) {
         this.root = new Firebase(FirebaseService.ENDPOINT);
-        partnerFavorites = new ArrayList<>();
         lastAddedFavorite = new JSONEntry();
         this.firebaseRegistrationManager = firebaseRegistrationManager;
         favoriteListner = new ChildEventListener() {
@@ -79,6 +78,16 @@ public class FirebaseFavoriteManager extends FirebaseManager {
             }
         };
 
+    }
+
+    public static PartnerFavoriteEntry getPartnerFavoriteEntry(String name) {
+        for( int i = 0; i < partnerFavorites.size(); i++ ) {
+            if(partnerFavorites.get(i).getName().equals(name)) {
+                return partnerFavorites.get(i);
+            }
+        }
+
+        return null;
     }
 
     public void onUserRegistered(String userKey) {

@@ -49,7 +49,7 @@ public class FirebaseHistoryManager extends FirebaseManager {
     private final HistoryAdapter partnerHistoryAdapter;
     private JSONEntry lastVisitedLocation;
 
-    private Firebase root;
+    private final Firebase root;
 
     public FirebaseHistoryManager(FirebaseRegistrationManager firebaseRegistrationManager, final Context context) {
         root = new Firebase(FirebaseService.ENDPOINT);
@@ -61,14 +61,13 @@ public class FirebaseHistoryManager extends FirebaseManager {
 
         historyListener= new ChildEventListener() {
             @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                JSONEntry child = dataSnapshot.getValue(JSONEntry.class);
+            public void onChildAdded(final DataSnapshot dataSnapshot, String s) {
+                final JSONEntry child = dataSnapshot.getValue(JSONEntry.class);
                 PartnerFavoriteEntry historyEntry = new PartnerFavoriteEntry(child.getName(), new LatLng(child.getLatitude(), child.getLongitude()));
+                PartnerFavoriteEntry departedEntry = FirebaseFavoriteManager.getPartnerFavoriteEntry(child.getName());
                 historyEntry.setTimestamp(child.getTimestamp());
 
                 System.out.println("Partner visited: " + historyEntry.getName());
-
-                System.out.println(partnerHistory.toString());
 
                 Intent notifyUser = new Intent(context, FirebaseNotificationIntentService.class);
                 notifyUser.putExtra("title", "Partner reached a favorite location!");
@@ -78,6 +77,36 @@ public class FirebaseHistoryManager extends FirebaseManager {
 
                 if(timeRange.before(historyEntry.getTimestamp())) {
                     context.startService(notifyUser);
+
+                    if( departedEntry != null ) {
+                        //TODO: call this when ready
+                        //departedEntry.onPartnerArrived();
+                        System.out.println("Partner has arrived - playing arrived tone/vibration");
+                    }
+                }
+
+                if(!child.getDeparted()) {
+                    dataSnapshot.getRef().child("departed").addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot departedSnapshot) {
+                            if(departedSnapshot.getValue().equals(true)) {
+                                PartnerFavoriteEntry departedEntry = FirebaseFavoriteManager.getPartnerFavoriteEntry(child.getName());
+
+                                if( departedEntry != null ) {
+                                    //TODO: call this when ready:
+                                    // departedEntry.onPartnerDeparted();
+                                    System.out.println("Partner has departed - playing departed tone/vibration");
+                                }
+
+                                dataSnapshot.getRef().child("departed").removeEventListener(this);
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(FirebaseError firebaseError) {
+
+                        }
+                    });
                 }
 
             }
@@ -159,6 +188,7 @@ public class FirebaseHistoryManager extends FirebaseManager {
             //do nothing
         }
     }
+
 
     public ArrayAdapter<PartnerFavoriteEntry> getPartnerHistoryAdapter() {
         return partnerHistoryAdapter;
