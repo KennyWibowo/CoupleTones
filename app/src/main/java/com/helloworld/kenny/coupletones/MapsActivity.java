@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Address;
@@ -11,6 +12,8 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
 import android.location.LocationListener;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
 import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.support.v4.app.ActivityCompat;
@@ -52,6 +55,7 @@ import com.helloworld.kenny.coupletones.firebase.exceptions.UserNotRegisteredExc
 import com.helloworld.kenny.coupletones.firebase.managers.FirebaseFavoriteManager;
 import com.helloworld.kenny.coupletones.firebase.managers.FirebaseHistoryManager;
 import com.helloworld.kenny.coupletones.firebase.managers.FirebaseRegistrationManager;
+import com.helloworld.kenny.coupletones.notification.ToneNotification;
 import com.helloworld.kenny.coupletones.notification.DefaultNotifications;
 import com.helloworld.kenny.coupletones.settings.Settings;
 
@@ -331,6 +335,30 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         };
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
     }
+
+
+    public void selectTone()
+    {
+        Intent selection = new Intent(RingtoneManager.ACTION_RINGTONE_PICKER);
+        selection.putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, "Select Ringtone for selected option");
+        selection.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_DEFAULT, true);
+        selection.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, RingtoneManager.TYPE_NOTIFICATION);
+        MapsActivity.this.startActivityForResult(selection, 456);
+
+    }
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        if(requestCode == 456)
+        {
+            if(resultCode == RESULT_OK)
+            {
+                Uri baseTone = data.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
+                Ringtone selected = RingtoneManager.getRingtone(getApplicationContext(), baseTone);
+            }
+        }
+    }
+
 
     /**
      * Button Method for register user's email
