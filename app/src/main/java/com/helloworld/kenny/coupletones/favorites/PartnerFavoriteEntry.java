@@ -19,6 +19,8 @@ public class PartnerFavoriteEntry extends Entry {
         super(name, location);
         arriveVibration = DefaultNotifications.getDefaultArrivalVibration();
         departVibration = DefaultNotifications.getDefaultDepartureVibration();
+        arriveTone = DefaultNotifications.getDefaultArrivalTone();
+        departTone = DefaultNotifications.getDefaultDepartureTone();
 
         //TODO: assign default tones
     }
