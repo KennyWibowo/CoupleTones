@@ -23,4 +23,14 @@ public class PartnerFavoriteEntry extends Entry {
         //TODO: assign default tones
     }
 
+    public void onPartnerArrived() {
+        arriveVibration.play();
+        arriveTone.play();
+    }
+
+    public void onPartnerDeparted() {
+        departVibration.play();
+        departTone.play();
+    }
+
 }
