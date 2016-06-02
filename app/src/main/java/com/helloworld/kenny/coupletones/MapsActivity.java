@@ -348,7 +348,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 }
                 if (inRange == false) {
                     //System.out.print("Out of Range!!!\n");
-                    firebaseService.departLocation();
+                    firebaseService.departLocation(); //TODO: don't always be calling this, or fix inside references
                     reached = false;
                 }
             }
