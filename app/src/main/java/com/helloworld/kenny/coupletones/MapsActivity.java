@@ -57,6 +57,7 @@ import com.helloworld.kenny.coupletones.firebase.managers.FirebaseHistoryManager
 import com.helloworld.kenny.coupletones.firebase.managers.FirebaseRegistrationManager;
 import com.helloworld.kenny.coupletones.notification.ToneNotification;
 import com.helloworld.kenny.coupletones.notification.DefaultNotifications;
+import com.helloworld.kenny.coupletones.notification.VibrationNotification;
 import com.helloworld.kenny.coupletones.settings.Settings;
 
 import android.widget.LinearLayout;
@@ -83,6 +84,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private ListView rightDrawer;
     private UiSettings myUiSetting;
     private DrawerLayout drawer;
+    private Ringtone selected;
+    private ArrayList<VibrationNotification> options;
 
     private Button buttonRemovePartner;
     private Button buttonAddPartner;
@@ -160,6 +163,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         //setupDeviceId();
         setupRightDrawer();
         setupLeftDrawer();
+        setupList();
         setupLocationListener();
         setupEmailRegistration();
 
@@ -268,6 +272,35 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         drawer.addDrawerListener(drawerListener);
     }
 
+
+    public void setupList()
+    {
+        long[] DEFAULT_1 = {0L, 500L};
+        long[] DEFAULT_2 = {0L, 750L};
+        long[] DEFAULT_3 = {0L, 1000L};
+        long[] DEFAULT_4 = {0L, 1250L};
+        long[] DEFAULT_5 = {0L, 1500L};
+        long[] DEFAULT_6 = {0L, 1750L};
+        long[] DEFAULT_7 = {0L, 2000L};
+        long[] DEFAULT_8 = {0L, 2500L};
+        long[] DEFAULT_9 = {0L, 3000L};
+        long[] DEFAULT_10 = {0L,3250L};
+        options.add(0,new VibrationNotification("default1", DEFAULT_1, getApplicationContext()));
+        options.add(1,new VibrationNotification("default2", DEFAULT_2, getApplicationContext()));
+        options.add(2,new VibrationNotification("default3", DEFAULT_3, getApplicationContext()));
+        options.add(3,new VibrationNotification("default4", DEFAULT_4, getApplicationContext()));
+        options.add(4,new VibrationNotification("default5", DEFAULT_5, getApplicationContext()));
+        options.add(5,new VibrationNotification("default6", DEFAULT_6, getApplicationContext()));
+        options.add(6,new VibrationNotification("default7", DEFAULT_7, getApplicationContext()));
+        options.add(7,new VibrationNotification("default8", DEFAULT_8, getApplicationContext()));
+        options.add(8,new VibrationNotification("default9", DEFAULT_9, getApplicationContext()));
+        options.add(9,new VibrationNotification("default10", DEFAULT_10, getApplicationContext()));
+
+    }
+
+
+
+
     /**
      * Creates the Location Listener for acquiring current locations
      */
@@ -337,14 +370,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
 
-    public void selectTone()
+    public ToneNotification selectTone(String name)
     {
         Intent selection = new Intent(RingtoneManager.ACTION_RINGTONE_PICKER);
         selection.putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, "Select Ringtone for selected option");
         selection.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_DEFAULT, true);
         selection.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, RingtoneManager.TYPE_NOTIFICATION);
         MapsActivity.this.startActivityForResult(selection, 456);
-
+        ToneNotification ex = new ToneNotification(name, selected);
+        return ex;
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
@@ -354,7 +388,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             if(resultCode == RESULT_OK)
             {
                 Uri baseTone = data.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
-                Ringtone selected = RingtoneManager.getRingtone(getApplicationContext(), baseTone);
+                selected = RingtoneManager.getRingtone(getApplicationContext(), baseTone);
             }
         }
     }
