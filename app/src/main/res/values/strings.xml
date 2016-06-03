@@ -6,6 +6,6 @@
     <string name="arrivalTone">Select\nArrival Tone</string>
     <string name="departureTone">Select\nDeparture Tone</string>
     <string name="arrivalVibration">Select\nArrival Vibration</string>
-    <string name="departureVibration">Select\nDeparture Vibration</string>
+    <string name="departureVibration">Select Departure\nVibration</string>
     <string name="partnerFavoritesSelection">Change Tone\n and Vibrations</string>
 </resources>
