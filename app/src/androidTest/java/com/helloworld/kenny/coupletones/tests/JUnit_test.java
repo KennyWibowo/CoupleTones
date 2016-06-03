@@ -1,5 +1,8 @@
 package com.helloworld.kenny.coupletones.tests;
 
+import android.media.Ringtone;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.test.ActivityInstrumentationTestCase2;
 
 import com.google.android.gms.maps.model.LatLng;
@@ -7,6 +10,13 @@ import com.helloworld.kenny.coupletones.MapsActivity;
 import com.helloworld.kenny.coupletones.favorites.FavoriteEntry;
 import com.helloworld.kenny.coupletones.favorites.Favorites;
 import com.helloworld.kenny.coupletones.favorites.exceptions.NameInUseException;
+import com.helloworld.kenny.coupletones.firebase.exceptions.PartnerAlreadyRegisteredException;
+import com.helloworld.kenny.coupletones.firebase.exceptions.UserAlreadyRegisteredException;
+import com.helloworld.kenny.coupletones.firebase.exceptions.UserNotRegisteredException;
+import com.helloworld.kenny.coupletones.firebase.managers.FirebaseRegistrationManager;
+import com.helloworld.kenny.coupletones.notification.DefaultNotifications;
+import com.helloworld.kenny.coupletones.notification.ToneNotification;
+import com.helloworld.kenny.coupletones.notification.VibrationNotification;
 
 /**
  * Created by Karen on 5/8/2016.
@@ -94,22 +104,97 @@ public class JUnit_test extends ActivityInstrumentationTestCase2<MapsActivity> {
     }
 
     /**
-     * Tests existence method of FirebaseRegistrationManager data structure
+     * Tests User data from FirebaseRegistrationManager
      * @throws Exception
      */
-    /*public void test_partnerInfo() throws Exception {
-        FirebaseRegistrationManager registrationInformation = new FirebaseRegistrationManager();
-        String id = "someID";
-        String partnerId = "somePartner";
+    public void test_userEMail() throws Exception {
+        FirebaseRegistrationManager registrationInformation = new FirebaseRegistrationManager(getActivity().getApplicationContext());
+        boolean check = false;
         String email = "someemail@email.com";
 
-        registrationInformation.registerOwnRegId(id);
-        registrationInformation.registerPartner(partnerId, email);
+            registrationInformation.registerUser(email);
+        try {
+            registrationInformation.registerUser(email);
+        }
+        catch (UserAlreadyRegisteredException ex)
+        {
+            check = true;
+        }
+            assertTrue(check);
+            assertEquals(registrationInformation.getEmail(), email);
+            assertEquals(registrationInformation.isUserRegistered(), true);
+    }
 
-        assertEquals(FirebaseRegistrationManager.getOwnRegId(), id);
-        assertEquals(FirebaseRegistrationManager.getRegId(), partnerId);
-        assertEquals(FirebaseRegistrationManager.getEmail(), email);
-    }*/
+
+    /**
+     * Tests Partner data from FirebaseRegistrationManager
+     * @throws Exception
+     */
+    public void test_partnerEMail() throws Exception {
+        FirebaseRegistrationManager registrationInformation = new FirebaseRegistrationManager(getActivity().getApplicationContext());
+        String email = "someemail@email.com";
+
+        boolean check = false;
+
+
+        registrationInformation.registerPartner(email);
+        try {
+            registrationInformation.registerPartner(email);
+        }
+        catch (PartnerAlreadyRegisteredException ex)
+        {
+            check = true;
+        }
+
+        assertTrue(check);
+        assertEquals(registrationInformation.getPartnerEmail(), email);
+    }
+
+
+    /**
+     * Tests ToneNotification construction
+     * @throws Exception
+     */
+    public void test_Tone() throws Exception {
+        Uri base = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        Ringtone common = RingtoneManager.getRingtone(getActivity().getApplicationContext(),base);
+        ToneNotification testTone = new ToneNotification("Test", common);
+        assertEquals(testTone.toString(), "Test");
+        assertTrue(testTone.getTone().equals(common));
+    }
+
+    /**
+     * Tests VibrationNotification construction
+     * @throws Exception
+     */
+    public void test_Vibration() throws Exception {
+        final long[] VIBRATION_PATTERN = {0L, 999L};
+        VibrationNotification testVib = new VibrationNotification("Test", VIBRATION_PATTERN, getActivity().getApplicationContext());
+        assertEquals(testVib.toString(), "Test");
+        assertTrue(testVib.getPattern().equals(VIBRATION_PATTERN));
+    }
+
+
+
+    /**
+     * Tests Default ToneNotification construction
+     * @throws Exception
+     */
+    public void test_DefaultTone() throws Exception{
+        DefaultNotifications defaults = new DefaultNotifications(getActivity().getApplicationContext());
+        assertEquals(defaults.getDefaultArrivalTone().toString(), "Default Tone");
+        assertEquals(defaults.getDefaultDepartureTone().toString(), "Default Tone");
+    }
+
+    /**
+     * Tests Default VibrationNotification construction
+     * @throws Exception
+     */
+    public void test_DefaultVibration() throws Exception {
+        DefaultNotifications defaults = new DefaultNotifications(getActivity().getApplicationContext());
+        assertEquals(defaults.getDefaultArrivalVibration().toString(), "Default Vibration");
+        assertEquals(defaults.getDefaultDepartureVibration().toString(), "Default Vibration");
+    }
 
 
 

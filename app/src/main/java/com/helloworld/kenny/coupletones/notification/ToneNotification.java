@@ -35,4 +35,9 @@ public class ToneNotification extends Notification {
 
         return name;
     }
+
+    public Ringtone getTone() {
+        return tone;
+    }
+
 }

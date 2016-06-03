@@ -32,4 +32,8 @@ public class VibrationNotification extends Notification {
     public String toString() {
         return name;
     }
+
+    public long[] getPattern() {
+        return pattern;
+    }
 }
