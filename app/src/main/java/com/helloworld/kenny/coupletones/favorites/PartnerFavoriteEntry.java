@@ -25,6 +25,22 @@ public class PartnerFavoriteEntry extends Entry {
         //TODO: assign new tones based on user input
     }
 
+    public void setPartnerArrivedTone(ToneNotification arrivedTone) {
+        this.arriveTone = arrivedTone;
+    }
+
+    public void setPartnerDepartedTone(ToneNotification departTone) {
+        this.departTone = departTone;
+    }
+
+    public void setPartnerArrivedVibration(VibrationNotification arriveVibration) {
+        this.arriveVibration = arriveVibration;
+    }
+
+    public void setPartnerDepartedVibration(VibrationNotification departVibration) {
+        this.departVibration = departVibration;
+    }
+
     public void onPartnerArrived() {
         arriveVibration.play();
         arriveTone.play();

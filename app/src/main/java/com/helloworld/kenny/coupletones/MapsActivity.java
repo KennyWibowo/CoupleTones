@@ -60,6 +60,7 @@ import com.helloworld.kenny.coupletones.notification.DefaultNotifications;
 import com.helloworld.kenny.coupletones.notification.VibrationNotification;
 import com.helloworld.kenny.coupletones.settings.Settings;
 
+import android.widget.GridLayout;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -278,9 +279,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     public void setupList()
     {
-        long[] DEFAULT_1 = {0L, 500L};
-        long[] DEFAULT_2 = {0L, 750L};
-        long[] DEFAULT_3 = {0L, 1000L};
+        // Credit: http://android.konreu.com/developer-how-to/vibration-examples-for-android-phone-development/
+
+        long dot = 200L;      // Length of a Morse Code "dot" in milliseconds
+        long dash = 500L;     // Length of a Morse Code "dash" in milliseconds
+        long no_gap = 0L;
+        long short_gap = 200L;    // Length of Gap Between dots/dashes
+        long medium_gap = 500L;   // Length of Gap Between Letters
+        long long_gap = 1000L;    // Length of Gap Between Words
+
+        long[] default_arrive = {no_gap, dash};
+        long[] default_depart = {no_gap, dot, short_gap, dash};
+        long[] heartbeat = {medium_gap, dot, short_gap, dot};
         long[] DEFAULT_4 = {0L, 1250L};
         long[] DEFAULT_5 = {0L, 1500L};
         long[] DEFAULT_6 = {0L, 1750L};
@@ -288,10 +298,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         long[] DEFAULT_8 = {0L, 2500L};
         long[] DEFAULT_9 = {0L, 3000L};
         long[] DEFAULT_10 = {0L,3250L};
-
-        vibrationPatternOptions.add(0,new VibrationNotification("default1", DEFAULT_1, getApplicationContext()));
-        vibrationPatternOptions.add(1,new VibrationNotification("default2", DEFAULT_2, getApplicationContext()));
-        vibrationPatternOptions.add(2,new VibrationNotification("default3", DEFAULT_3, getApplicationContext()));
+        vibrationPatternOptions = new ArrayList<VibrationNotification>();
+        vibrationPatternOptions.add(0,new VibrationNotification("Default Arrival", default_arrive, getApplicationContext()));
+        vibrationPatternOptions.add(1,new VibrationNotification("Default Departure", heartbeat, getApplicationContext()));
+        vibrationPatternOptions.add(2,new VibrationNotification("default3", default_depart, getApplicationContext()));
         vibrationPatternOptions.add(3,new VibrationNotification("default4", DEFAULT_4, getApplicationContext()));
         vibrationPatternOptions.add(4,new VibrationNotification("default5", DEFAULT_5, getApplicationContext()));
         vibrationPatternOptions.add(5,new VibrationNotification("default6", DEFAULT_6, getApplicationContext()));
@@ -688,11 +698,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      */
     public void buttonArrivalVibration(View view) {
         AlertDialog.Builder builder = new AlertDialog.Builder(MapsActivity.this);
+        TextView favoriteName = (TextView) ((GridLayout) view.getParent()).findViewById(R.id.listview_favorite_name);
 
         builder.setTitle("Pick an Arrival Vibration");
         builder.setCancelable(true);
 
-        String[] vibrations = new String[vibrationPatternOptions.size()];
+        final String[] vibrations = new String[vibrationPatternOptions.size()];
         int index = 0;
 
         for (VibrationNotification v : vibrationPatternOptions) {
@@ -700,13 +711,31 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             index++;
         }
 
+        final int[] selected = {0};
+
         builder.setSingleChoiceItems(vibrations, 0, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 //TODO
-                //save the item
+                selected[0] = which;
             }
         });
+
+        VibrationNotification selectedNotification = vibrationPatternOptions.get(selected[0]);
+        String name = favoriteName.getText().toString();
+        PartnerFavoriteEntry entry = null;
+
+        ArrayList<PartnerFavoriteEntry> partnerFavorites = firebaseFavoriteManager.getPartnerFavorite();
+
+        for( int i = 0; i < partnerFavorites.size(); i++ ) {
+            if(partnerFavorites.get(i).getName().equals(name)) {
+                entry = partnerFavorites.get(i);
+            }
+        }
+
+        if(entry != null) {
+            entry.setPartnerArrivedVibration(selectedNotification);
+        }
 
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
