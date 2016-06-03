@@ -85,7 +85,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private DrawerLayout drawer;
     private String name;
     private Ringtone selected;
-    private ArrayList<VibrationNotification> options;
+    private ArrayList<VibrationNotification> vibrationPatternOptions;
 
     private Button buttonRemovePartner;
     private Button buttonAddPartner;
@@ -285,17 +285,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         long[] DEFAULT_8 = {0L, 2500L};
         long[] DEFAULT_9 = {0L, 3000L};
         long[] DEFAULT_10 = {0L,3250L};
-        options = new ArrayList<VibrationNotification>();
-        options.add(0,new VibrationNotification("default1", DEFAULT_1, getApplicationContext()));
-        options.add(1,new VibrationNotification("default2", DEFAULT_2, getApplicationContext()));
-        options.add(2,new VibrationNotification("default3", DEFAULT_3, getApplicationContext()));
-        options.add(3,new VibrationNotification("default4", DEFAULT_4, getApplicationContext()));
-        options.add(4,new VibrationNotification("default5", DEFAULT_5, getApplicationContext()));
-        options.add(5,new VibrationNotification("default6", DEFAULT_6, getApplicationContext()));
-        options.add(6,new VibrationNotification("default7", DEFAULT_7, getApplicationContext()));
-        options.add(7,new VibrationNotification("default8", DEFAULT_8, getApplicationContext()));
-        options.add(8,new VibrationNotification("default9", DEFAULT_9, getApplicationContext()));
-        options.add(9,new VibrationNotification("default10", DEFAULT_10, getApplicationContext()));
+        vibrationPatternOptions = new ArrayList<VibrationNotification>();
+        vibrationPatternOptions.add(0,new VibrationNotification("default1", DEFAULT_1, getApplicationContext()));
+        vibrationPatternOptions.add(1,new VibrationNotification("default2", DEFAULT_2, getApplicationContext()));
+        vibrationPatternOptions.add(2,new VibrationNotification("default3", DEFAULT_3, getApplicationContext()));
+        vibrationPatternOptions.add(3,new VibrationNotification("default4", DEFAULT_4, getApplicationContext()));
+        vibrationPatternOptions.add(4,new VibrationNotification("default5", DEFAULT_5, getApplicationContext()));
+        vibrationPatternOptions.add(5,new VibrationNotification("default6", DEFAULT_6, getApplicationContext()));
+        vibrationPatternOptions.add(6,new VibrationNotification("default7", DEFAULT_7, getApplicationContext()));
+        vibrationPatternOptions.add(7,new VibrationNotification("default8", DEFAULT_8, getApplicationContext()));
+        vibrationPatternOptions.add(8,new VibrationNotification("default9", DEFAULT_9, getApplicationContext()));
+        vibrationPatternOptions.add(9,new VibrationNotification("default10", DEFAULT_10, getApplicationContext()));
 
     }
 
