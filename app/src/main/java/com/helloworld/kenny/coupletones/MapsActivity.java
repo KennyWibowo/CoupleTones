@@ -660,6 +660,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         builder.setTitle("Pick an Arrival Tone");
         builder.setCancelable(true);*/
+        selectTone();
         //TODO
     }
 
@@ -676,6 +677,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         builder.setTitle("Pick an Arrival Tone");
         builder.setCancelable(true);*/
+        selectTone();
         //TODO
     }
 
@@ -709,6 +711,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                //TODO
                 Toast.makeText(me, "New Tone Selected (not really but you get the idea)", Toast.LENGTH_SHORT).show();
             }
         });
