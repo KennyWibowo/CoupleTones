@@ -20,7 +20,7 @@ public class DefaultNotifications {
     public DefaultNotifications(Context context) {
         defaultArrivalVibration = new VibrationNotification("Default Vibration", DEFAULT_ARRIVAL_VIBRATION_PATTERN, context);
         defaultDepartureVibration = new VibrationNotification("Default Vibration", DEFAULT_DEPARTURE_VIBRATION_PATTERN, context);
-        Uri base = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
+        Uri base = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         Ringtone common = RingtoneManager.getRingtone(context,base);
         defaultArrivalTone = new ToneNotification("Default Tone", common);
         defaultDepartureTone = new ToneNotification("Default Tone", common);
