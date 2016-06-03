@@ -57,6 +57,7 @@ public class FirebaseHistoryManager extends FirebaseManager {
 
         this.firebaseRegistrationManager = firebaseRegistrationManager;
         this.lastVisitedLocation = new JSONEntry();
+        this.lastVisitedLocation.setDeparted(true);
         this.partnerHistoryAdapter = new HistoryAdapter(context, partnerHistory);
 
         historyListener= new ChildEventListener() {
@@ -89,7 +90,7 @@ public class FirebaseHistoryManager extends FirebaseManager {
                     dataSnapshot.getRef().child("departed").addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot departedSnapshot) {
-                            if(departedSnapshot.getValue().equals(true)) {
+                            if(departedSnapshot.getValue() != null && departedSnapshot.getValue().equals(true)) {
                                 PartnerFavoriteEntry departedEntry = FirebaseFavoriteManager.getPartnerFavoriteEntry(child.getName());
 
                                 if( departedEntry != null ) {
