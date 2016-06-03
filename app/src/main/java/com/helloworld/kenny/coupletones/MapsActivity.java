@@ -653,13 +653,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      * @param view
      */
     public void buttonArrivalTone(View view) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(MapsActivity.this);
+        /*AlertDialog.Builder builder = new AlertDialog.Builder(MapsActivity.this);
         LayoutInflater inflater = this.getLayoutInflater();
         final View dialogView = inflater.inflate(R.layout.single_vibration, null);
         builder.setView(dialogView);
 
         builder.setTitle("Pick an Arrival Tone");
-        builder.setCancelable(true);
+        builder.setCancelable(true);*/
         //TODO
     }
 
@@ -669,13 +669,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      * @param view
      */
     public void buttonDepartureTone(View view) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(MapsActivity.this);
+        /*AlertDialog.Builder builder = new AlertDialog.Builder(MapsActivity.this);
         LayoutInflater inflater = this.getLayoutInflater();
         final View dialogView = inflater.inflate(R.layout.single_vibration, null);
         builder.setView(dialogView);
 
         builder.setTitle("Pick an Arrival Tone");
-        builder.setCancelable(true);
+        builder.setCancelable(true);*/
         //TODO
     }
 
@@ -702,7 +702,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 //TODO
-                //set the vibration of that item
+                //save the item
+            }
+        });
+
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Toast.makeText(me, "New Tone Selected (not really but you get the idea)", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -717,13 +724,35 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      */
     public void buttonDepartureVibration(View view) {
         AlertDialog.Builder builder = new AlertDialog.Builder(MapsActivity.this);
-        LayoutInflater inflater = this.getLayoutInflater();
-        final View dialogView = inflater.inflate(R.layout.single_vibration, null);
-        builder.setView(dialogView);
 
         builder.setTitle("Pick an Arrival Tone");
         builder.setCancelable(true);
-        //TODO
+
+        String[] vibrations = new String[vibrationPatternOptions.size()];
+        int index = 0;
+
+        for (VibrationNotification v : vibrationPatternOptions) {
+            vibrations[index] = v.toString();
+            index++;
+        }
+
+        builder.setSingleChoiceItems(vibrations, 0, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                //TODO
+                //save the item
+            }
+        });
+
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Toast.makeText(me, "New Tone Selected (not really but you get the idea)", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
     }
 
     /**
