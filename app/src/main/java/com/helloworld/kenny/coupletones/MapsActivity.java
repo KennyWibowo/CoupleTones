@@ -123,6 +123,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
 
+        //List of Vibrations
+        vibrationPatternOptions = new ArrayList<VibrationNotification>();
+
         // Reference setup
         searchLayout = (LinearLayout) findViewById(R.id.search_layout);
         searchBar = (EditText) findViewById(R.id.search_bar);
@@ -285,7 +288,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         long[] DEFAULT_8 = {0L, 2500L};
         long[] DEFAULT_9 = {0L, 3000L};
         long[] DEFAULT_10 = {0L,3250L};
-        vibrationPatternOptions = new ArrayList<VibrationNotification>();
+
         vibrationPatternOptions.add(0,new VibrationNotification("default1", DEFAULT_1, getApplicationContext()));
         vibrationPatternOptions.add(1,new VibrationNotification("default2", DEFAULT_2, getApplicationContext()));
         vibrationPatternOptions.add(2,new VibrationNotification("default3", DEFAULT_3, getApplicationContext()));
@@ -637,26 +640,90 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         final View dialogView = inflater.inflate(R.layout.selections, null);
         builder.setView(dialogView);
 
-        //Button arrivalTone = (Button) dialogView.findViewById(R.id.arrival_tone);
-        //Button vibration = (Button) dialogView.findViewById(R.id.departure_tone);
-
-        /*builder.setNeutralButton("Select Arrival Time", new DialogInterface.OnClickListener() {
-           public void onClick(DialogInterface dialog, int i) {
-               Toast.makeText(me, "select arrival time", Toast.LENGTH_SHORT).show();
-           }
-        });
-
-        builder.setNeutralButton("Select Departure Time", new DialogInterface.OnClickListener() {
-           public void onClick(DialogInterface dialog, int i) {
-               Toast.makeText(me, "select departure time", Toast.LENGTH_SHORT).show();
-           }
-        });*/
-
         builder.setTitle("Select Tones and Vibrations");
         builder.setCancelable(true);
 
         AlertDialog selections = builder.create();
         selections.show();
+    }
+
+    /**
+     * Button for selecting arrival tone
+     *
+     * @param view
+     */
+    public void buttonArrivalTone(View view) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(MapsActivity.this);
+        LayoutInflater inflater = this.getLayoutInflater();
+        final View dialogView = inflater.inflate(R.layout.single_vibration, null);
+        builder.setView(dialogView);
+
+        builder.setTitle("Pick an Arrival Tone");
+        builder.setCancelable(true);
+        //TODO
+    }
+
+    /**
+     * Button for selecting departure tone
+     *
+     * @param view
+     */
+    public void buttonDepartureTone(View view) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(MapsActivity.this);
+        LayoutInflater inflater = this.getLayoutInflater();
+        final View dialogView = inflater.inflate(R.layout.single_vibration, null);
+        builder.setView(dialogView);
+
+        builder.setTitle("Pick an Arrival Tone");
+        builder.setCancelable(true);
+        //TODO
+    }
+
+    /**
+     * Button for selecting arrival vibration
+     *
+     * @param view
+     */
+    public void buttonArrivalVibration(View view) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(MapsActivity.this);
+
+        builder.setTitle("Pick an Arrival Tone");
+        builder.setCancelable(true);
+
+        String[] vibrations = new String[vibrationPatternOptions.size()];
+        int index = 0;
+
+        for (VibrationNotification v : vibrationPatternOptions) {
+            vibrations[index] = v.toString();
+            index++;
+        }
+
+        builder.setSingleChoiceItems(vibrations, 0, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                //TODO
+                //set the vibration of that item
+            }
+        });
+
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
+
+    /**
+     * Button for selecting departure vibration
+     *
+     * @param view
+     */
+    public void buttonDepartureVibration(View view) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(MapsActivity.this);
+        LayoutInflater inflater = this.getLayoutInflater();
+        final View dialogView = inflater.inflate(R.layout.single_vibration, null);
+        builder.setView(dialogView);
+
+        builder.setTitle("Pick an Arrival Tone");
+        builder.setCancelable(true);
+        //TODO
     }
 
     /**
