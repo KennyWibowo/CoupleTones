@@ -84,6 +84,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private ListView rightDrawer;
     private UiSettings myUiSetting;
     private DrawerLayout drawer;
+    private String name;
     private Ringtone selected;
     private ArrayList<VibrationNotification> options;
 
@@ -372,7 +373,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
 
-    public ToneNotification selectTone(String name)
+    public ToneNotification selectTone()
     {
         Intent selection = new Intent(RingtoneManager.ACTION_RINGTONE_PICKER);
         selection.putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, "Select Ringtone for selected option");
@@ -391,6 +392,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             {
                 Uri baseTone = data.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
                 selected = RingtoneManager.getRingtone(getApplicationContext(), baseTone);
+                name = baseTone.toString();
             }
         }
     }
