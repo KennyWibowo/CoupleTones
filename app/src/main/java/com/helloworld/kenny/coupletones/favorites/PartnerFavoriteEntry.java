@@ -22,7 +22,7 @@ public class PartnerFavoriteEntry extends Entry {
         arriveTone = DefaultNotifications.getDefaultArrivalTone();
         departTone = DefaultNotifications.getDefaultDepartureTone();
 
-        //TODO: assign default tones
+        //TODO: assign new tones based on user input
     }
 
     public void onPartnerArrived() {
