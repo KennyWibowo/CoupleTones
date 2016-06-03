@@ -64,7 +64,7 @@ public class FirebaseHistoryManager extends FirebaseManager {
             public void onChildAdded(final DataSnapshot dataSnapshot, String s) {
                 final JSONEntry child = dataSnapshot.getValue(JSONEntry.class);
                 PartnerFavoriteEntry historyEntry = new PartnerFavoriteEntry(child.getName(), new LatLng(child.getLatitude(), child.getLongitude()));
-                PartnerFavoriteEntry departedEntry = FirebaseFavoriteManager.getPartnerFavoriteEntry(child.getName());
+                PartnerFavoriteEntry partnerEntry = FirebaseFavoriteManager.getPartnerFavoriteEntry(child.getName());
                 historyEntry.setTimestamp(child.getTimestamp());
 
                 System.out.println("Partner visited: " + historyEntry.getName());
@@ -78,9 +78,9 @@ public class FirebaseHistoryManager extends FirebaseManager {
                 if(timeRange.before(historyEntry.getTimestamp())) {
                     context.startService(notifyUser);
 
-                    if( departedEntry != null ) {
+                    if( partnerEntry != null ) {
                         //TODO: call this when ready
-                        //departedEntry.onPartnerArrived();
+                        partnerEntry.onPartnerArrived();
                         System.out.println("Partner has arrived - playing arrived tone/vibration");
                     }
                 }
@@ -94,7 +94,7 @@ public class FirebaseHistoryManager extends FirebaseManager {
 
                                 if( departedEntry != null ) {
                                     //TODO: call this when ready:
-                                    // departedEntry.onPartnerDeparted();
+                                    departedEntry.onPartnerDeparted();
                                     System.out.println("Partner has departed - playing departed tone/vibration");
                                 }
 
