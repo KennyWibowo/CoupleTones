@@ -40,4 +40,8 @@ public class JSONEntry {
     public boolean getDeparted() {
         return departed;
     }
+
+    public void setDeparted(boolean departed) {
+        this.departed = departed;
+    }
 }

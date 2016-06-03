@@ -180,9 +180,10 @@ public class FirebaseHistoryManager extends FirebaseManager {
         try {
             String key = firebaseRegistrationManager.getUserKey();
 
-            if (lastVisitedLocation.getName() != null) {
+            if (lastVisitedLocation.getName() != null && !lastVisitedLocation.getDeparted()) {
                 //depart last location
                 root.child(key).child("history").child(lastVisitedLocation.getTimestamp() + "").child("departed").setValue(true);
+                lastVisitedLocation.setDeparted(true);
             }
         } catch (UserNotRegisteredException e) {
             //do nothing
