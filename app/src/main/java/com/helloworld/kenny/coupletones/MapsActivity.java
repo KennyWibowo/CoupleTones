@@ -66,7 +66,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.IOException;
-import java.sql.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -151,8 +150,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         firebaseService.addManager(firebaseFavoriteManager);
 
         // setup left and right drawer adapters
-        favoriteSwipeAdapter = new FavoriteSwipeAdapter<FavoriteEntry>(me, R.layout.listview_item, R.id.listview_item_text, favorites.getAllEntries());
-        partnerSwipeAdapter = new FavoriteSwipeAdapter<PartnerFavoriteEntry>(me, R.layout.listview_item, R.id.listview_item_text, firebaseFavoriteManager.getPartnerFavorite());
+        favoriteSwipeAdapter = new FavoriteSwipeAdapter<FavoriteEntry>(me, R.layout.favorites_view, R.id.listview_item_text, favorites.getAllEntries());
+        partnerSwipeAdapter = new FavoriteSwipeAdapter<PartnerFavoriteEntry>(me, R.layout.partner_favorites_view, R.id.listview_item_text, firebaseFavoriteManager.getPartnerFavorite());
         partnerHistorySwipeAdapter = firebaseHistoryManager.getPartnerHistoryAdapter();
         rightDrawer.setAdapter(favoriteSwipeAdapter);
         listHistory.setAdapter(partnerHistorySwipeAdapter);
