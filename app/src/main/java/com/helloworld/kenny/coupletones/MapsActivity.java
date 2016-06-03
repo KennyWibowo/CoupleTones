@@ -687,7 +687,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void buttonArrivalVibration(View view) {
         AlertDialog.Builder builder = new AlertDialog.Builder(MapsActivity.this);
 
-        builder.setTitle("Pick an Arrival Tone");
+        builder.setTitle("Pick an Arrival Vibration");
         builder.setCancelable(true);
 
         String[] vibrations = new String[vibrationPatternOptions.size()];
@@ -725,7 +725,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void buttonDepartureVibration(View view) {
         AlertDialog.Builder builder = new AlertDialog.Builder(MapsActivity.this);
 
-        builder.setTitle("Pick an Arrival Tone");
+        builder.setTitle("Pick an Departure Vibration");
         builder.setCancelable(true);
 
         String[] vibrations = new String[vibrationPatternOptions.size()];
