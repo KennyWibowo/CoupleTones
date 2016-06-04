@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.os.CountDownTimer;
 import android.os.IBinder;
 
 import com.google.android.gms.maps.model.LatLng;
@@ -33,8 +34,8 @@ public class PartnerFavoriteEntry extends Entry {
         this.context = context;
         arriveVibration = DefaultNotifications.getDefaultArrivalVibration();
         departVibration = DefaultNotifications.getDefaultDepartureVibration();
-        arriveTone = DefaultNotifications.getDefaultArrivalTone();
-        departTone = DefaultNotifications.getDefaultDepartureTone();
+        arriveTone = null;//DefaultNotifications.getDefaultArrivalTone();
+        departTone = null;//DefaultNotifications.getDefaultDepartureTone();
         Uri base = Uri.parse("android.resource://" + "com.helloworld.kenny.coupletones" + "/" + R.raw.wilhelm);
         Uri base1 = Uri.parse("android.resource://" + "com.helloworld.kenny.coupletones" + "/" + R.raw.wilhelm_reversed);
         Ringtone common = RingtoneManager.getRingtone(context ,base);
@@ -63,34 +64,63 @@ public class PartnerFavoriteEntry extends Entry {
     public void onPartnerArrived() {
         arriveVibration.play();
         arriveStandard.play();
-        Intent intent = new Intent(context,ArriveMediaService.class);
-        context.startService(intent);
+        //arriveTone.play();
+
+        new CountDownTimer(2000, 2000) {
+            public void onTick(long millisUntilFinished) {
+
+            }
+            public void onFinish() {
+                if( arriveTone !=null ) {
+                    arriveTone.play();
+                } else {
+                    System.out.println("null arrival");
+                }
+            }
+        }.start();
     }
 
     public void onPartnerDeparted() {
         departVibration.play();
         departStandard.play();
-        Intent intent = new Intent(context,DepartMediaService.class);
-        context.startService(intent);
-    }
+        //departTone.play();
 
-    class ArriveMediaService extends Service {
+        new CountDownTimer(2000, 2000) {
+            public void onTick(long millisUntilFinished) {
+
+            }
+            public void onFinish() {
+                if( departTone !=null ) {
+                    departTone.play();
+                } else {
+                    System.out.println("null depart");
+                }
+            }
+        }.start();
+    }
+/*
+    public class ArriveMediaService extends Service {
 
         public ArriveMediaService(){
 
         }
 
         public int onStartCommand(Intent intent, int flags, int startId){
-            try{
-                wait(2000);
-                if (arriveTone != null) {
-                    arriveTone.play();
+
+                try{
+                    wait(2000);
+                    if (arriveTone != null) {
+                        arriveTone.play();
+                        System.out.println("this works");
+                    } else {
+                        System.out.println("Arrive tone is null");
+                    }
+
+                }
+                catch (InterruptedException w){
+                    w.printStackTrace();
                 }
 
-            }
-            catch (InterruptedException w){
-                w.printStackTrace();
-            }
             return super.onStartCommand(intent, flags, startId);
         }
 
@@ -105,23 +135,24 @@ public class PartnerFavoriteEntry extends Entry {
 
     }
 
-    class DepartMediaService extends Service {
+    public class DepartMediaService extends Service {
 
         public DepartMediaService(){
 
         }
 
         public int onStartCommand(Intent intent, int flags, int startId){
-            try{
-                wait(2000);
-                if (departTone != null) {
-                    departTone.play();
+                try{
+                    wait(2000);
+                    if (departTone != null) {
+                        departTone.play();
+                    }
+
+                }
+                catch (InterruptedException w){
+                    w.printStackTrace();
                 }
 
-            }
-            catch (InterruptedException w){
-                w.printStackTrace();
-            }
             return super.onStartCommand(intent, flags, startId);
         }
 
@@ -134,6 +165,6 @@ public class PartnerFavoriteEntry extends Entry {
 
         }
 
-    }
+    }*/
 
 }

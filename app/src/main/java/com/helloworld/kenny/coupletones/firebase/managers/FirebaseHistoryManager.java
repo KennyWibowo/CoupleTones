@@ -64,7 +64,7 @@ public class FirebaseHistoryManager extends FirebaseManager {
             @Override
             public void onChildAdded(final DataSnapshot dataSnapshot, String s) {
                 final JSONEntry child = dataSnapshot.getValue(JSONEntry.class);
-                PartnerFavoriteEntry historyEntry = new PartnerFavoriteEntry(child.getName(), new LatLng(child.getLatitude(), child.getLongitude()));
+                PartnerFavoriteEntry historyEntry = new PartnerFavoriteEntry(child.getName(), new LatLng(child.getLatitude(), child.getLongitude()), context);
                 PartnerFavoriteEntry partnerEntry = FirebaseFavoriteManager.getPartnerFavoriteEntry(child.getName());
                 historyEntry.setTimestamp(child.getTimestamp());
 
@@ -140,7 +140,7 @@ public class FirebaseHistoryManager extends FirebaseManager {
                 for(DataSnapshot childSnapshot: dataSnapshot.getChildren())
                 {
                     JSONEntry child = childSnapshot.getValue(JSONEntry.class);
-                    PartnerFavoriteEntry historyEntry = new PartnerFavoriteEntry(child.getName(), new LatLng(child.getLatitude(), child.getLongitude()));
+                    PartnerFavoriteEntry historyEntry = new PartnerFavoriteEntry(child.getName(), new LatLng(child.getLatitude(), child.getLongitude()), context);
                     historyEntry.setTimestamp(child.getTimestamp());
                     copy.add(historyEntry);
                 }

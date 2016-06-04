@@ -15,6 +15,7 @@ import android.location.LocationListener;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.os.CountDownTimer;
 import android.preference.PreferenceManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
@@ -385,27 +386,43 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     public ToneNotification selectToneArrival()
     {
-        Uri base = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.wilhelm);
-        Ringtone common = RingtoneManager.getRingtone(getApplicationContext(),base);
         Intent selection = new Intent(RingtoneManager.ACTION_RINGTONE_PICKER);
         selection.putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, "Select Ringtone for selected option");
         selection.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_DEFAULT, true);
         selection.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, RingtoneManager.TYPE_NOTIFICATION);
         MapsActivity.this.startActivityForResult(selection, 456);
-        ToneNotification ex = new ToneNotification(name, selected,getApplicationContext());
+        System.out.println("arrival tonenotification created");
+        final ToneNotification ex = new ToneNotification(name, selected, getApplicationContext());
+        new CountDownTimer(7000, 7000) {
+            public void onTick(long millisUntilFinished) {
+
+            }
+            public void onFinish() {
+                System.out.println("arival selected gotten from timer");
+                ex.setTone(selected);
+            }
+        }.start();
         return ex;
     }
 
     public ToneNotification selectToneDeparture()
     {
-        Uri base = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.wilhelm_reversed);
-        Ringtone common = RingtoneManager.getRingtone(getApplicationContext(),base);
         Intent selection = new Intent(RingtoneManager.ACTION_RINGTONE_PICKER);
         selection.putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, "Select Ringtone for selected option");
         selection.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_DEFAULT, true);
         selection.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, RingtoneManager.TYPE_NOTIFICATION);
         MapsActivity.this.startActivityForResult(selection, 456);
-        ToneNotification ex = new ToneNotification(name, selected, getApplicationContext());
+        System.out.println("departed tonenotification created");
+        final ToneNotification ex = new ToneNotification(name, selected, getApplicationContext());
+        new CountDownTimer(7000, 7000) {
+            public void onTick(long millisUntilFinished) {
+
+            }
+            public void onFinish() {
+                System.out.println("departed selected gotten from timer");
+                ex.setTone(selected);
+            }
+        }.start();
         return ex;
     }
 
@@ -417,6 +434,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             {
                 Uri baseTone = data.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
                 selected = RingtoneManager.getRingtone(getApplicationContext(), baseTone);
+                System.out.println("selected set");
                 if(baseTone != null)
                     name = baseTone.toString();
             }
@@ -741,7 +759,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         if(entry != null) {
             System.out.println("Set departure tone to " + newDepartureTone.toString() + " for " + entry.getName());
-            entry.setPartnerArrivedTone(newDepartureTone);
+            entry.setPartnerDepartedTone(newDepartureTone);
         } else {
             System.out.println("Entry is null, but tone is: " + newDepartureTone.toString());
             System.out.println("Selected entry: " + name);

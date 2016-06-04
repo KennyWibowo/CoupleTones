@@ -31,6 +31,10 @@ public class ToneNotification extends Notification {
         this.context = context;
     }
 
+    public void setTone(Ringtone tone) {
+        this.tone = tone;
+    }
+
 
     public void play() {
         if(Settings.tonesEnabled()) {

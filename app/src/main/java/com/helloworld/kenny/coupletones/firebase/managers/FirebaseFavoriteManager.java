@@ -145,6 +145,7 @@ public class FirebaseFavoriteManager extends FirebaseManager {
     }
 
     public void onUserRegistered(String userKey) {
+        //TODO
         Firebase userRef = root.child(userKey);
     }
 
@@ -155,9 +156,8 @@ public class FirebaseFavoriteManager extends FirebaseManager {
     }
 
     public void onUserCleared(String userKey) {
-
-        Firebase favoriteEntryRef = root.child(userKey).child("favorite");
-        favoriteEntryRef.removeValue();
+        Firebase ref = root.child(userKey);
+        ref.removeValue();
     }
 
     public void onPartnerCleared(String partnerKey) {
