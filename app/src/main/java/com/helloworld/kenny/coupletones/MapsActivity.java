@@ -301,8 +301,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         long[] DEFAULT_10 = {0L,3250L};
         vibrationPatternOptions = new ArrayList<VibrationNotification>();
         vibrationPatternOptions.add(0,new VibrationNotification("Default Arrival", default_arrive, getApplicationContext()));
-        vibrationPatternOptions.add(1,new VibrationNotification("Default Departure", heartbeat, getApplicationContext()));
-        vibrationPatternOptions.add(2,new VibrationNotification("default3", default_depart, getApplicationContext()));
+        vibrationPatternOptions.add(1,new VibrationNotification("Default Departure", default_depart, getApplicationContext()));
+        vibrationPatternOptions.add(2,new VibrationNotification("Heartbeat", default_depart, getApplicationContext()));
         vibrationPatternOptions.add(3,new VibrationNotification("default4", DEFAULT_4, getApplicationContext()));
         vibrationPatternOptions.add(4,new VibrationNotification("default5", DEFAULT_5, getApplicationContext()));
         vibrationPatternOptions.add(5,new VibrationNotification("default6", DEFAULT_6, getApplicationContext()));
@@ -721,32 +721,36 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         builder.setSingleChoiceItems(vibrations, 0, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                //TODO
                 selected[0] = which;
             }
         });
 
-        VibrationNotification selectedNotification = vibrationPatternOptions.get(selected[0]);
-        String name = selectedPartnerFavorite;
-        PartnerFavoriteEntry entry = null;
 
-        ArrayList<PartnerFavoriteEntry> partnerFavorites = firebaseFavoriteManager.getPartnerFavorite();
 
-        for( int i = 0; i < partnerFavorites.size(); i++ ) {
-            if(partnerFavorites.get(i).getName().equals(name)) {
-                entry = partnerFavorites.get(i);
-            }
-        }
-
-        if(entry != null) {
-            entry.setPartnerArrivedVibration(selectedNotification);
-        }
 
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                //TODO
-                Toast.makeText(me, "New Tone Selected (not really but you get the idea)", Toast.LENGTH_SHORT).show();
+                VibrationNotification selectedNotification = vibrationPatternOptions.get(selected[0]);
+                String name = selectedPartnerFavorite;
+                PartnerFavoriteEntry entry = null;
+                Toast.makeText(me, "Arrival vibration set for " + selectedPartnerFavorite, Toast.LENGTH_SHORT).show();
+
+                ArrayList<PartnerFavoriteEntry> partnerFavorites = firebaseFavoriteManager.getPartnerFavorite();
+
+                for( int i = 0; i < partnerFavorites.size(); i++ ) {
+                    if(partnerFavorites.get(i).getName().equals(name)) {
+                        entry = partnerFavorites.get(i);
+                    }
+                }
+
+                if(entry != null) {
+                    System.out.println("Set vibration to " + selectedNotification.toString() + " for " + entry.getName());
+                    entry.setPartnerArrivedVibration(selectedNotification);
+                } else {
+                    System.out.println("Entry is null, but vibration is: " + selectedNotification.toString());
+                    System.out.println("Selected entry: " + name);
+                }
             }
         });
 
@@ -780,18 +784,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             index++;
         }
 
+        final int[] selected = {0};
+
         builder.setSingleChoiceItems(vibrations, 0, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 //TODO
-                //save the item
             }
         });
 
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                Toast.makeText(me, "New Tone Selected (not really but you get the idea)", Toast.LENGTH_SHORT).show();
             }
         });
 
