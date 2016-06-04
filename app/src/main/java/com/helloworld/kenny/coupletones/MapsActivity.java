@@ -727,7 +727,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
 
-
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -789,13 +788,33 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         builder.setSingleChoiceItems(vibrations, 0, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                //TODO
+                selected[0] = which;
             }
         });
 
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                VibrationNotification selectedNotification = vibrationPatternOptions.get(selected[0]);
+                String name = selectedPartnerFavorite;
+                PartnerFavoriteEntry entry = null;
+                Toast.makeText(me, "Departure vibration set for " + selectedPartnerFavorite, Toast.LENGTH_SHORT).show();
+
+                ArrayList<PartnerFavoriteEntry> partnerFavorites = firebaseFavoriteManager.getPartnerFavorite();
+
+                for( int i = 0; i < partnerFavorites.size(); i++ ) {
+                    if(partnerFavorites.get(i).getName().equals(name)) {
+                        entry = partnerFavorites.get(i);
+                    }
+                }
+
+                if(entry != null) {
+                    System.out.println("Set vibration to " + selectedNotification.toString() + " for " + entry.getName());
+                    entry.setPartnerArrivedVibration(selectedNotification);
+                } else {
+                    System.out.println("Entry is null, but vibration is: " + selectedNotification.toString());
+                    System.out.println("Selected entry: " + name);
+                }
             }
         });
 
