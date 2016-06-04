@@ -3,6 +3,7 @@ package com.helloworld.kenny.coupletones.notification;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.media.audiofx.BassBoost;
@@ -21,23 +22,35 @@ public class ToneNotification extends Notification {
     Ringtone tone;
     Context context;
     Ringtone standardTone;
+    MediaPlayer m = new MediaPlayer();
+    Uri uri;
 
 
 
-    public ToneNotification(String name, Ringtone tone, Ringtone standardTone, Context context) {
+    public ToneNotification(String name, Ringtone tone, Ringtone standardTone, Context context, Uri uri) {
         this.name = name;
         this.tone = tone;
         this.context = context;
         this.standardTone = standardTone;
+        this.uri = uri;
     }
 
 
     public void play() {
 
-        Intent intent = new Intent(context, MediaService.class);
-        context.startService(intent);
+        //Intent intent = new Intent(context, MediaService.class);
+        //context.startService(intent);
         if(Settings.tonesEnabled()) {
-            standardTone.play();
+            //standardTone.play();
+            m.create(context,uri);
+            m.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                @Override
+                public void onCompletion(MediaPlayer mp) {
+                    m.stop();
+                    tone.play();
+                }
+            });
+            m.start();
         }
     }
 
@@ -50,7 +63,7 @@ public class ToneNotification extends Notification {
         return standardTone;
     }
 
-    class MediaService extends Service{
+    /*class MediaService extends Service{
 
         public MediaService(){
 
@@ -79,6 +92,6 @@ public class ToneNotification extends Notification {
 
         }
 
-    }
+    }*/
 
 }
