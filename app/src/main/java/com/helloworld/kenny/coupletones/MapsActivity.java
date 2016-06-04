@@ -393,7 +393,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         MapsActivity.this.startActivityForResult(selection, 456);
         System.out.println("arrival tonenotification created");
         final ToneNotification ex = new ToneNotification(name, selected, getApplicationContext());
-        new CountDownTimer(7000, 7000) {
+        new CountDownTimer(10000, 10000) {
             public void onTick(long millisUntilFinished) {
 
             }
@@ -414,7 +414,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         MapsActivity.this.startActivityForResult(selection, 456);
         System.out.println("departed tonenotification created");
         final ToneNotification ex = new ToneNotification(name, selected, getApplicationContext());
-        new CountDownTimer(7000, 7000) {
+        new CountDownTimer(10000, 10000) {
             public void onTick(long millisUntilFinished) {
 
             }
