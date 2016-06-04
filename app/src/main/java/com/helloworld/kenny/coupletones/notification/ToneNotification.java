@@ -22,7 +22,6 @@ public class ToneNotification extends Notification {
     Ringtone tone;
     Context context;
     Ringtone standardTone;
-    MediaPlayer m = new MediaPlayer();
     Uri uri;
 
 
@@ -38,21 +37,10 @@ public class ToneNotification extends Notification {
 
     public void play() {
 
-        //Intent intent = new Intent(context, MediaService.class);
-        //context.startService(intent);
+        Intent intent = new Intent(context, MediaService.class);
         if(Settings.tonesEnabled()) {
-            //standardTone.play();
-            m = m.create(context,uri);
-            m.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                @Override
-                public void onCompletion(MediaPlayer mp) {
-                    m.stop();
-                    if (tone != null) {
-                        tone.play();
-                    }
-                }
-            });
-            m.start();
+            standardTone.play();
+            context.startService(intent);
         }
     }
 
@@ -65,7 +53,7 @@ public class ToneNotification extends Notification {
         return standardTone;
     }
 
-    /*class MediaService extends Service{
+    class MediaService extends Service{
 
         public MediaService(){
 
@@ -94,6 +82,6 @@ public class ToneNotification extends Notification {
 
         }
 
-    }*/
+    }
 
 }
