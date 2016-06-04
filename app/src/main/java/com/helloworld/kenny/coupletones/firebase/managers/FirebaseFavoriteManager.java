@@ -88,10 +88,12 @@ public class FirebaseFavoriteManager extends FirebaseManager {
                 }
 
                 partnerSwipeAdapter.notifyDataSetChanged();
-                Intent notifyUser =  new Intent(context, FirebaseNotificationIntentService.class);
+
+                // Don't notify when deleted
+                /*Intent notifyUser =  new Intent(context, FirebaseNotificationIntentService.class);
                 notifyUser.putExtra("title", "Partner deleted a favorite location");
                 notifyUser.putExtra("content","Partner deleted: "+ partnerFavoriteEntry.getName());
-                context.startService(notifyUser);
+                context.startService(notifyUser);*/
             }
 
             @Override
