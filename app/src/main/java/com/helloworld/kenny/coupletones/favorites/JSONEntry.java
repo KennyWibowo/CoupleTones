@@ -34,4 +34,5 @@ public class JSONEntry {
     public double getLongitude() {
         return longitude;
     }
+
 }

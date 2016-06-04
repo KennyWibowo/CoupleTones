@@ -174,4 +174,6 @@ public class FirebaseHistoryManager extends FirebaseManager {
 
     public void onFavoriteAdded(FavoriteEntry entry){}
 
+    public void onFavoriteDeleted(FavoriteEntry entry){}
+
 }

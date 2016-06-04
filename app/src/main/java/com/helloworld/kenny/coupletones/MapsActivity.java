@@ -450,7 +450,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         int pos = favorites.lookupPosition(name);
 
         // Delete the marker from the map, then the actual entry
-        favorites.getEntry(pos).getMarker().remove();
+        FavoriteEntry toDelete = favorites.getEntry(pos);
+        System.out.println("Delete: "+toDelete.getName());
+        onDeleteFavoriteLocation(toDelete);
+        toDelete.getMarker().remove();
         favorites.deleteEntry(pos);
 
         // Notify the swipeAdapter and close everything
@@ -622,8 +625,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     public void onAddedFavoriteLocation(FavoriteEntry entry) {
+        entry.visit();
         System.out.println("Favorite Location Added: " + entry.getName());
         firebaseService.addFavorite(entry);
+    }
+
+    public void onDeleteFavoriteLocation(FavoriteEntry entry) {
+        entry.visit();
+        System.out.println("Favorite Location Deleted: " + entry.getName());
+        firebaseService.deleteFavorite(entry);
     }
     private SharedPreferences getPrefs() {
         return PreferenceManager.getDefaultSharedPreferences(this);

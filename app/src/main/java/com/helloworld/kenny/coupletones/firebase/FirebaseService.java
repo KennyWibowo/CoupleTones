@@ -104,9 +104,15 @@ public class FirebaseService {
         }
     }
 
-    public void addFavorite(FavoriteEntry entry){
+    public void addFavorite(FavoriteEntry entry) {
         for ( int i = 0; i <extraManagers.size();i++) {
             extraManagers.get(i).onFavoriteAdded(entry);
+        }
+    }
+
+    public void deleteFavorite(FavoriteEntry entry) {
+        for (int i = 0; i<extraManagers.size();i++) {
+            extraManagers.get(i).onFavoriteDeleted(entry);
         }
     }
 }
