@@ -115,6 +115,10 @@ public class FirebaseRegistrationManager extends FirebaseManager {
 
     }
 
+    public void onLocationDeparted() {
+
+    }
+
     public void onFavoriteAdded(FavoriteEntry entry) {
 
     }

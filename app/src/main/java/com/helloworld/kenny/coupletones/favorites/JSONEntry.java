@@ -8,6 +8,7 @@ public class JSONEntry {
     private long timestamp;
     private double latitude;
     private double longitude;
+    private boolean departed;
 
     public JSONEntry() {}
 
@@ -16,6 +17,7 @@ public class JSONEntry {
         this.timestamp = entry.getTimestamp().getTime();
         this.latitude = entry.getLocation().latitude;
         this.longitude = entry.getLocation().longitude;
+        this.departed = false;
     }
 
 
@@ -35,4 +37,11 @@ public class JSONEntry {
         return longitude;
     }
 
+    public boolean getDeparted() {
+        return departed;
+    }
+
+    public void setDeparted(boolean departed) {
+        this.departed = departed;
+    }
 }

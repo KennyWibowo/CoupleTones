@@ -3,4 +3,9 @@
     <string name="zoom_buttons">Zoom Buttons</string>
     <string name="title_activity_maps">Map</string>
     <string name="google_app_id">366742322722</string>
+    <string name="arrivalTone">Select\nArrival Tone</string>
+    <string name="departureTone">Select\nDeparture Tone</string>
+    <string name="arrivalVibration">Select\nArrival Vibration</string>
+    <string name="departureVibration">Select Departure\nVibration</string>
+    <string name="partnerFavoritesSelection">Change Tone\n and Vibrations</string>
 </resources>

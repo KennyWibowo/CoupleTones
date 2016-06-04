@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Address;
@@ -11,6 +12,8 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
 import android.location.LocationListener;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
 import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.support.v4.app.ActivityCompat;
@@ -20,6 +23,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -44,11 +48,19 @@ import com.helloworld.kenny.coupletones.favorites.FavoriteEntry;
 import com.helloworld.kenny.coupletones.favorites.Favorites;
 import com.helloworld.kenny.coupletones.favorites.PartnerFavoriteEntry;
 import com.helloworld.kenny.coupletones.firebase.FirebaseService;
+import com.helloworld.kenny.coupletones.firebase.exceptions.PartnerAlreadyRegisteredException;
+import com.helloworld.kenny.coupletones.firebase.exceptions.PartnerNotRegisteredException;
+import com.helloworld.kenny.coupletones.firebase.exceptions.UserAlreadyRegisteredException;
+import com.helloworld.kenny.coupletones.firebase.exceptions.UserNotRegisteredException;
 import com.helloworld.kenny.coupletones.firebase.managers.FirebaseFavoriteManager;
 import com.helloworld.kenny.coupletones.firebase.managers.FirebaseHistoryManager;
 import com.helloworld.kenny.coupletones.firebase.managers.FirebaseRegistrationManager;
+import com.helloworld.kenny.coupletones.notification.ToneNotification;
+import com.helloworld.kenny.coupletones.notification.DefaultNotifications;
+import com.helloworld.kenny.coupletones.notification.VibrationNotification;
 import com.helloworld.kenny.coupletones.settings.Settings;
 
+import android.widget.GridLayout;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -72,6 +84,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private ListView rightDrawer;
     private UiSettings myUiSetting;
     private DrawerLayout drawer;
+    private String name;
+    private Ringtone selected;
+    private ArrayList<VibrationNotification> vibrationPatternOptions;
 
     private Button buttonRemovePartner;
     private Button buttonAddPartner;
@@ -85,13 +100,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private Favorites favorites;
     private FavoriteSwipeAdapter<FavoriteEntry> favoriteSwipeAdapter;
     private FavoriteSwipeAdapter<PartnerFavoriteEntry> partnerSwipeAdapter;
-    private FavoriteSwipeAdapter<PartnerFavoriteEntry> partnerHistorySwipeAdapter;
+    private ArrayAdapter<PartnerFavoriteEntry> partnerHistorySwipeAdapter;
 
     private FirebaseService firebaseService;
     private FirebaseRegistrationManager firebaseRegistrationManager;
     private FirebaseHistoryManager firebaseHistoryManager;
     private FirebaseFavoriteManager firebaseFavoriteManager;
     private Settings settings;
+    private String selectedPartnerFavorite;
 
     private String PROJECT_NUMBER = "366742322722";
     private boolean autoRegistered = false;
@@ -105,8 +121,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        DefaultNotifications defaultNotifications = new DefaultNotifications(this); //init default notifications
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+
+        //List of Vibrations
+        vibrationPatternOptions = new ArrayList<VibrationNotification>();
 
         // Reference setup
         searchLayout = (LinearLayout) findViewById(R.id.search_layout);
@@ -135,8 +156,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         firebaseService.addManager(firebaseFavoriteManager);
 
         // setup left and right drawer adapters
-        favoriteSwipeAdapter = new FavoriteSwipeAdapter<FavoriteEntry>(me, R.layout.listview_item, R.id.listview_item_text, favorites.getAllEntries());
-        partnerSwipeAdapter = new FavoriteSwipeAdapter<PartnerFavoriteEntry>(me, R.layout.listview_item, R.id.listview_item_text, firebaseFavoriteManager.getPartnerFavorite());
+        favoriteSwipeAdapter = new FavoriteSwipeAdapter<FavoriteEntry>(me, R.layout.favorites_view, R.id.listview_item_text, favorites.getAllEntries());
+        partnerSwipeAdapter = new FavoriteSwipeAdapter<PartnerFavoriteEntry>(me, R.layout.partner_favorites_view, R.id.listview_favorite_name, firebaseFavoriteManager.getPartnerFavorite());
         partnerHistorySwipeAdapter = firebaseHistoryManager.getPartnerHistoryAdapter();
         rightDrawer.setAdapter(favoriteSwipeAdapter);
         listHistory.setAdapter(partnerHistorySwipeAdapter);
@@ -148,6 +169,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         //setupDeviceId();
         setupRightDrawer();
         setupLeftDrawer();
+        setupList();
         setupLocationListener();
         setupEmailRegistration();
 
@@ -174,10 +196,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             String emailAddress = et.getText().toString();
 
                             if (emailAddress != null && !emailAddress.isEmpty()) {
-                                firebaseService.registerUser(emailAddress);
+                                try {
+                                    firebaseService.registerUser(emailAddress);
+                                } catch(UserNotRegisteredException e) {
+                                    Toast.makeText(me, "Registration Failed.", Toast.LENGTH_SHORT).show();
+                                } catch(UserAlreadyRegisteredException e) {
+                                    Toast.makeText(me, "User is already registered.", Toast.LENGTH_SHORT).show();
+                                }
                                 buttonUnregisterEmail.setVisibility(View.VISIBLE);
                                 buttonRegisterEmail.setVisibility(View.GONE);
-                                Toast.makeText(me, "Email successfully registered", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(me, "Email successfully registered.", Toast.LENGTH_SHORT).show();
                             } else {
                                 Toast.makeText(me, "Invalid email. Please retry.", Toast.LENGTH_SHORT).show();
                                 et.setText("");
@@ -250,6 +278,41 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         drawer.addDrawerListener(drawerListener);
     }
 
+
+    public void setupList()
+    {
+        // Credit: http://android.konreu.com/developer-how-to/vibration-examples-for-android-phone-development/
+
+        long dot = 200L;      // Length of a Morse Code "dot" in milliseconds
+        long dash = 500L;     // Length of a Morse Code "dash" in milliseconds
+        long no_gap = 0L;
+        long short_gap = 200L;    // Length of Gap Between dots/dashes
+        long medium_gap = 500L;   // Length of Gap Between Letters
+        long long_gap = 1000L;    // Length of Gap Between Words
+
+        long[] default_arrive = {no_gap, 500L};
+        long[] default_depart = {no_gap, 750L};
+        long[] heartbeat = {medium_gap, dot, short_gap, dot};
+        long[] dot_doot = {no_gap, dot, short_gap, dash};
+        long[] doot_doot = {no_gap, dash, short_gap, dash};
+        long[] doot_dot = {no_gap, dash, short_gap, dot};
+        long[] dot_dot = {no_gap, dot, short_gap, dot};
+        long[] sos = {no_gap, dot, short_gap, dot, short_gap, dot, medium_gap, dash, short_gap, dash, short_gap, dash, medium_gap, dot, short_gap, dot, short_gap, dot};
+        vibrationPatternOptions = new ArrayList<VibrationNotification>();
+        vibrationPatternOptions.add(0,new VibrationNotification("Default Arrival", default_arrive, getApplicationContext()));
+        vibrationPatternOptions.add(1,new VibrationNotification("Default Departure", default_depart, getApplicationContext()));
+        vibrationPatternOptions.add(2,new VibrationNotification("Heartbeat", default_depart, getApplicationContext()));
+        vibrationPatternOptions.add(3,new VibrationNotification("Dot Doot", dot_doot, getApplicationContext()));
+        vibrationPatternOptions.add(4,new VibrationNotification("Doot Doot", doot_doot, getApplicationContext()));
+        vibrationPatternOptions.add(5,new VibrationNotification("Doot Dot", doot_dot, getApplicationContext()));
+        vibrationPatternOptions.add(6,new VibrationNotification("Dot Dot", dot_dot, getApplicationContext()));
+        vibrationPatternOptions.add(7,new VibrationNotification("Save Our Souls", sos, getApplicationContext()));
+
+    }
+
+
+
+
     /**
      * Creates the Location Listener for acquiring current locations
      */
@@ -296,6 +359,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 }
                 if (inRange == false) {
                     //System.out.print("Out of Range!!!\n");
+                    firebaseService.departLocation(); //TODO: don't always be calling this, or fix inside references
                     reached = false;
                 }
             }
@@ -317,6 +381,48 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         };
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
     }
+
+
+    public ToneNotification selectToneArrival()
+    {
+        Uri base = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.wilhelm);
+        Ringtone common = RingtoneManager.getRingtone(getApplicationContext(),base);
+        Intent selection = new Intent(RingtoneManager.ACTION_RINGTONE_PICKER);
+        selection.putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, "Select Ringtone for selected option");
+        selection.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_DEFAULT, true);
+        selection.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, RingtoneManager.TYPE_NOTIFICATION);
+        MapsActivity.this.startActivityForResult(selection, 456);
+        ToneNotification ex = new ToneNotification(name, selected, common, getApplicationContext());
+        return ex;
+    }
+
+    public ToneNotification selectToneDeparture()
+    {
+        Uri base = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.wilhelm_reversed);
+        Ringtone common = RingtoneManager.getRingtone(getApplicationContext(),base);
+        Intent selection = new Intent(RingtoneManager.ACTION_RINGTONE_PICKER);
+        selection.putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, "Select Ringtone for selected option");
+        selection.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_DEFAULT, true);
+        selection.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, RingtoneManager.TYPE_NOTIFICATION);
+        MapsActivity.this.startActivityForResult(selection, 456);
+        ToneNotification ex = new ToneNotification(name, selected, common, getApplicationContext());
+        return ex;
+    }
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        if(requestCode == 456)
+        {
+            if(resultCode == RESULT_OK)
+            {
+                Uri baseTone = data.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
+                selected = RingtoneManager.getRingtone(getApplicationContext(), baseTone);
+                if(baseTone != null)
+                    name = baseTone.toString();
+            }
+        }
+    }
+
 
     /**
      * Button Method for register user's email
@@ -340,7 +446,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         String emailAddress = et.getText().toString();
 
                         if (emailAddress != null && !emailAddress.isEmpty()) {
-                            firebaseService.registerUser(emailAddress);
+                            try {
+                                firebaseService.registerUser(emailAddress);
+                            } catch(UserAlreadyRegisteredException e) {
+                                Toast.makeText(me, "User is already registered.", Toast.LENGTH_SHORT).show();
+                            } catch(UserNotRegisteredException e) {
+                                Toast.makeText(me, "Registration Failed.", Toast.LENGTH_SHORT).show();
+                            }
                             buttonUnregisterEmail.setVisibility(View.VISIBLE);
                             buttonRegisterEmail.setVisibility(View.GONE);
                             Toast.makeText(me, "Email successfully changed", Toast.LENGTH_SHORT).show();
@@ -362,7 +474,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      * @param view
      */
     public void buttonUnregisterEmail(View view) {
-        firebaseService.clearUser();
+        try {
+            firebaseService.clearUser();
+        } catch(UserNotRegisteredException e) {
+            Toast.makeText(me, "User is not registered.", Toast.LENGTH_SHORT).show();
+        }
+
         buttonUnregisterEmail.setVisibility(View.GONE);
         buttonRegisterEmail.setVisibility(View.VISIBLE);
         Toast.makeText(me, "Successfully unregistered email.", Toast.LENGTH_SHORT).show();
@@ -386,18 +503,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         register.setPositiveButton("Submit", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 EditText email = (EditText) store.findViewById(R.id.partner_email);
-                firebaseService.registerPartner(email.getText().toString());
+
+                try {
+                    firebaseService.registerPartner(email.getText().toString());
+                } catch(PartnerAlreadyRegisteredException e) {
+                    Toast.makeText(me, "Partner is already registered.", Toast.LENGTH_SHORT).show();
+                } catch(PartnerNotRegisteredException e) {
+                    Toast.makeText(me, "Partner registration failed.", Toast.LENGTH_SHORT).show();
+                }
+
                 buttonAddPartner.setVisibility(View.GONE);
                 buttonRemovePartner.setVisibility(View.VISIBLE);
                 Toast.makeText(me, "Partner successfully registered", Toast.LENGTH_SHORT).show();
-
-                /*  TODO: handle this
-                } else {
-                    buttonAddPartner.setVisibility(View.VISIBLE);
-                    buttonRemovePartner.setVisibility(View.GONE);
-                    Toast.makeText(me, "Oops! Partner already registered", Toast.LENGTH_SHORT).show();
-                }*/
-
             }
         });
         register.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -422,10 +539,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         remove.setMessage("Are you sure you want to remove your partner?");
         remove.setPositiveButton("Yes!", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-                firebaseService.clearPartner();
+                try {
+                    firebaseService.clearPartner();
+                } catch(PartnerNotRegisteredException e) {
+                    Toast.makeText(me, "Partner is not registered.", Toast.LENGTH_SHORT).show();
+                }
                 buttonAddPartner.setVisibility(View.VISIBLE);
                 buttonRemovePartner.setVisibility(View.GONE);
-                Toast.makeText(me, "Partner successfully removed", Toast.LENGTH_SHORT).show();
+                Toast.makeText(me, "Partner successfully removed.", Toast.LENGTH_SHORT).show();
             }
         });
         remove.setNegativeButton("No!", new DialogInterface.OnClickListener() {
@@ -536,6 +657,230 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     /**
+     * Button Method for selecting tones and vibrations
+     *
+     * @param view
+     */
+    public void buttonSelections(View view) {
+        TextView favoriteName = (TextView) ((GridLayout) view.getParent()).findViewById(R.id.listview_favorite_name);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(MapsActivity.this);
+        LayoutInflater inflater = this.getLayoutInflater();
+        final View dialogView = inflater.inflate(R.layout.selections, null);
+        builder.setView(dialogView);
+
+        builder.setTitle("Select Tones and Vibrations");
+        builder.setCancelable(true);
+
+        AlertDialog selections = builder.create();
+        selections.show();
+
+        selectedPartnerFavorite = favoriteName.getText().toString();
+    }
+
+    /**
+     * Button for selecting arrival tone
+     *
+     * @param view
+     */
+    public void buttonArrivalTone(View view) {
+        /*AlertDialog.Builder builder = new AlertDialog.Builder(MapsActivity.this);
+        LayoutInflater inflater = this.getLayoutInflater();
+        final View dialogView = inflater.inflate(R.layout.single_vibration, null);
+        builder.setView(dialogView);
+
+        builder.setTitle("Pick an Arrival Tone");
+        builder.setCancelable(true);*/
+        ToneNotification newArrivalTone = selectToneArrival();
+        String name = selectedPartnerFavorite;
+        PartnerFavoriteEntry entry = null;
+        Toast.makeText(me, "Arrival tone set for " + selectedPartnerFavorite, Toast.LENGTH_SHORT).show();
+
+        ArrayList<PartnerFavoriteEntry> partnerFavorites = firebaseFavoriteManager.getPartnerFavorite();
+
+        for( int i = 0; i < partnerFavorites.size(); i++ ) {
+            if(partnerFavorites.get(i).getName().equals(name)) {
+                entry = partnerFavorites.get(i);
+            }
+        }
+
+        if(entry != null) {
+            System.out.println("Set arrival tone to " + newArrivalTone.toString() + " for " + entry.getName());
+            entry.setPartnerArrivedTone(newArrivalTone);
+        } else {
+            System.out.println("Entry is null, but tone is: " + newArrivalTone.toString());
+            System.out.println("Selected entry: " + name);
+        }
+    }
+
+    /**
+     * Button for selecting departure tone
+     *
+     * @param view
+     */
+    public void buttonDepartureTone(View view) {
+        /*AlertDialog.Builder builder = new AlertDialog.Builder(MapsActivity.this);
+        LayoutInflater inflater = this.getLayoutInflater();
+        final View dialogView = inflater.inflate(R.layout.single_vibration, null);
+        builder.setView(dialogView);
+
+        builder.setTitle("Pick an Arrival Tone");
+        builder.setCancelable(true);*/
+        ToneNotification newDepartureTone = selectToneDeparture();
+        String name = selectedPartnerFavorite;
+        PartnerFavoriteEntry entry = null;
+        Toast.makeText(me, "Departure tone set for " + selectedPartnerFavorite, Toast.LENGTH_SHORT).show();
+
+        ArrayList<PartnerFavoriteEntry> partnerFavorites = firebaseFavoriteManager.getPartnerFavorite();
+
+        for( int i = 0; i < partnerFavorites.size(); i++ ) {
+            if(partnerFavorites.get(i).getName().equals(name)) {
+                entry = partnerFavorites.get(i);
+            }
+        }
+
+        if(entry != null) {
+            System.out.println("Set departure tone to " + newDepartureTone.toString() + " for " + entry.getName());
+            entry.setPartnerArrivedTone(newDepartureTone);
+        } else {
+            System.out.println("Entry is null, but tone is: " + newDepartureTone.toString());
+            System.out.println("Selected entry: " + name);
+        }
+    }
+
+    /**
+     * Button for selecting arrival vibration
+     *
+     * @param view
+     */
+    public void buttonArrivalVibration(View view) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(MapsActivity.this);
+
+        builder.setTitle("Pick an Arrival Vibration");
+        builder.setCancelable(true);
+
+        final String[] vibrations = new String[vibrationPatternOptions.size()];
+        int index = 0;
+
+        for (VibrationNotification v : vibrationPatternOptions) {
+            vibrations[index] = v.toString();
+            index++;
+        }
+
+        final int[] selected = {0};
+
+        builder.setSingleChoiceItems(vibrations, 0, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                selected[0] = which;
+            }
+        });
+
+
+
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                VibrationNotification selectedNotification = vibrationPatternOptions.get(selected[0]);
+                String name = selectedPartnerFavorite;
+                PartnerFavoriteEntry entry = null;
+                Toast.makeText(me, "Arrival vibration set for " + selectedPartnerFavorite, Toast.LENGTH_SHORT).show();
+
+                ArrayList<PartnerFavoriteEntry> partnerFavorites = firebaseFavoriteManager.getPartnerFavorite();
+
+                for( int i = 0; i < partnerFavorites.size(); i++ ) {
+                    if(partnerFavorites.get(i).getName().equals(name)) {
+                        entry = partnerFavorites.get(i);
+                    }
+                }
+
+                if(entry != null) {
+                    System.out.println("Set arrival vibration to " + selectedNotification.toString() + " for " + entry.getName());
+                    entry.setPartnerArrivedVibration(selectedNotification);
+                } else {
+                    System.out.println("Entry is null, but vibration is: " + selectedNotification.toString());
+                    System.out.println("Selected entry: " + name);
+                }
+            }
+        });
+
+        builder.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
+
+    /**
+     * Button for selecting departure vibration
+     *
+     * @param view
+     */
+    public void buttonDepartureVibration(View view) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(MapsActivity.this);
+
+        builder.setTitle("Pick an Departure Vibration");
+        builder.setCancelable(true);
+
+        String[] vibrations = new String[vibrationPatternOptions.size()];
+        int index = 0;
+
+        for (VibrationNotification v : vibrationPatternOptions) {
+            vibrations[index] = v.toString();
+            index++;
+        }
+
+        final int[] selected = {0};
+
+        builder.setSingleChoiceItems(vibrations, 0, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                selected[0] = which;
+            }
+        });
+
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                VibrationNotification selectedNotification = vibrationPatternOptions.get(selected[0]);
+                String name = selectedPartnerFavorite;
+                PartnerFavoriteEntry entry = null;
+                Toast.makeText(me, "Departure vibration set for " + selectedPartnerFavorite, Toast.LENGTH_SHORT).show();
+
+                ArrayList<PartnerFavoriteEntry> partnerFavorites = firebaseFavoriteManager.getPartnerFavorite();
+
+                for( int i = 0; i < partnerFavorites.size(); i++ ) {
+                    if(partnerFavorites.get(i).getName().equals(name)) {
+                        entry = partnerFavorites.get(i);
+                    }
+                }
+
+                if(entry != null) {
+                    System.out.println("Set departure vibration to " + selectedNotification.toString() + " for " + entry.getName());
+                    entry.setPartnerDepartedVibration(selectedNotification);
+                } else {
+                    System.out.println("Entry is null, but vibration is: " + selectedNotification.toString());
+                    System.out.println("Selected entry: " + name);
+                }
+            }
+        });
+
+        builder.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
+
+    /**
      * Button for searching locations
      *
      * @param view
@@ -635,6 +980,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         System.out.println("Favorite Location Deleted: " + entry.getName());
         firebaseService.deleteFavorite(entry);
     }
+
     private SharedPreferences getPrefs() {
         return PreferenceManager.getDefaultSharedPreferences(this);
     }

@@ -14,7 +14,8 @@
         android:layout_width="match_parent"
         android:layout_height="80dp"
         android:background="#FF5534"
-        android:gravity="center"
+        android:orientation="vertical"
+        android:gravity="center_vertical"
         android:tag="Bottom3"
         android:weightSum="10">
         <ImageView
@@ -24,25 +25,6 @@
             android:layout_weight="1"
             android:src="@drawable/trash"
             android:layout_gravity="center_vertical"/>
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="5"
-            android:text="Delete Favorite?"
-            android:textColor="#fff"
-            android:textSize="17sp"
-            android:layout_gravity="center_vertical" />
-
-        <Button
-            android:id="@+id/delete"
-            android:layout_width="0dp"
-            android:layout_height="40dp"
-            android:layout_weight="4"
-            android:background="@drawable/white"
-            android:text="Delete"
-            android:textColor="#FF5534"
-            android:layout_gravity="center_vertical"
-            android:onClick="buttonDeleteFavorite"/>
     </LinearLayout>
     <!-- Bottom View End-->
 
@@ -52,17 +34,29 @@
         android:background="#ffffff"
         android:id="@+id/top_wrapper"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center_vertical"
+        android:weightSum="1">
 
         <TextView
-            android:id="@+id/listview_item_text"
+            android:id="@+id/history_name_text"
             android:textSize="20sp"
             android:textColor="@color/colorBlack"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:gravity="center"/>
+            android:layout_height="30dp"
+            android:gravity="center_vertical"
+            android:layout_gravity="center_horizontal" />
 
+        <TextView
+            android:id="@+id/history_time_text"
+            android:textSize="12sp"
+            android:textColor="@color/colorBlack"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:gravity="center_vertical"
+            android:layout_weight="4.05"
+            android:layout_gravity="center_horizontal" />
     </LinearLayout>
     <!-- Surface View End -->
 </com.daimajia.swipe.SwipeLayout>
