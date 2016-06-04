@@ -5,6 +5,8 @@ import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
 
+import com.helloworld.kenny.coupletones.R;
+
 /**
  * Created by Kenny on 6/1/2016.
  */
@@ -20,10 +22,12 @@ public class DefaultNotifications {
     public DefaultNotifications(Context context) {
         defaultArrivalVibration = new VibrationNotification("Default Vibration", DEFAULT_ARRIVAL_VIBRATION_PATTERN, context);
         defaultDepartureVibration = new VibrationNotification("Default Vibration", DEFAULT_DEPARTURE_VIBRATION_PATTERN, context);
-        Uri base = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        Uri base = Uri.parse("android.resource://" + "com.helloworld.kenny.coupletones" + "/" + R.raw.wilhelm);
         Ringtone common = RingtoneManager.getRingtone(context,base);
-        defaultArrivalTone = new ToneNotification("Default Tone", common, null);
-        defaultDepartureTone = new ToneNotification("Default Tone", common, null);
+        Uri base1 = Uri.parse("android.resource://" + "com.helloworld.kenny.coupletones" + "/" + R.raw.wilhelm_reversed);
+        Ringtone common1 = RingtoneManager.getRingtone(context,base);
+        defaultArrivalTone = new ToneNotification("Default Tone", null, common);
+        defaultDepartureTone = new ToneNotification("Default Tone", null, common1);
 
     }
 
