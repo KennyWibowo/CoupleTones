@@ -386,14 +386,29 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
 
-    public ToneNotification selectTone()
+    public ToneNotification selectToneArrival()
     {
+        Uri base = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.wilhelm);
+        Ringtone common = RingtoneManager.getRingtone(getApplicationContext(),base);
         Intent selection = new Intent(RingtoneManager.ACTION_RINGTONE_PICKER);
         selection.putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, "Select Ringtone for selected option");
         selection.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_DEFAULT, true);
         selection.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, RingtoneManager.TYPE_NOTIFICATION);
         MapsActivity.this.startActivityForResult(selection, 456);
-        ToneNotification ex = new ToneNotification(name, selected);
+        ToneNotification ex = new ToneNotification(name, selected, common);
+        return ex;
+    }
+
+    public ToneNotification selectToneDeparture()
+    {
+        Uri base = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.wilhelm_reversed);
+        Ringtone common = RingtoneManager.getRingtone(getApplicationContext(),base);
+        Intent selection = new Intent(RingtoneManager.ACTION_RINGTONE_PICKER);
+        selection.putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, "Select Ringtone for selected option");
+        selection.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_DEFAULT, true);
+        selection.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, RingtoneManager.TYPE_NOTIFICATION);
+        MapsActivity.this.startActivityForResult(selection, 456);
+        ToneNotification ex = new ToneNotification(name, selected, common);
         return ex;
     }
 
@@ -676,7 +691,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         builder.setTitle("Pick an Arrival Tone");
         builder.setCancelable(true);*/
-        selectTone();
+        selectToneArrival();
         //TODO
     }
 
@@ -693,7 +708,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         builder.setTitle("Pick an Arrival Tone");
         builder.setCancelable(true);*/
-        selectTone();
+        selectToneDeparture();
         //TODO
     }
 

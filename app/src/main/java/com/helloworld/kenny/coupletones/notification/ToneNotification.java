@@ -16,18 +16,23 @@ public class ToneNotification extends Notification {
 
     private String name;
     Ringtone tone;
+    Ringtone standardTone;
 
 
 
-    public ToneNotification(String name, Ringtone tone) {
+    public ToneNotification(String name, Ringtone tone, Ringtone standardTone) {
         this.name = name;
         this.tone = tone;
+        this.standardTone = standardTone;
     }
 
 
     public void play() {
         if(Settings.tonesEnabled()) {
-            tone.play();
+            standardTone.play();
+            if (tone != null) {
+                tone.play();
+            }
         }
     }
 
@@ -37,7 +42,7 @@ public class ToneNotification extends Notification {
     }
 
     public Ringtone getTone() {
-        return tone;
+        return standardTone;
     }
 
 }

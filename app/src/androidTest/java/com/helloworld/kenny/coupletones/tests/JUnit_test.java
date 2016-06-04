@@ -158,7 +158,7 @@ public class JUnit_test extends ActivityInstrumentationTestCase2<MapsActivity> {
     public void test_Tone() throws Exception {
         Uri base = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         Ringtone common = RingtoneManager.getRingtone(getActivity().getApplicationContext(),base);
-        ToneNotification testTone = new ToneNotification("Test", common);
+        ToneNotification testTone = new ToneNotification("Test", common, common);
         assertEquals(testTone.toString(), "Test");
         assertTrue(testTone.getTone().equals(common));
     }
