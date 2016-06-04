@@ -42,11 +42,10 @@ public class ToneNotification extends Notification {
         //context.startService(intent);
         if(Settings.tonesEnabled()) {
             //standardTone.play();
-            m = m.create(context,uri);
+            m.create(context,uri);
             m.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                 @Override
                 public void onCompletion(MediaPlayer mp) {
-                    m.stop();
                     if (tone != null) {
                         tone.play();
                     }
