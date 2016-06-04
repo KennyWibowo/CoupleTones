@@ -57,8 +57,6 @@ public class ToneNotification extends Notification {
         }
 
         public int onStartCommand(Intent intent, int flags, int startId){
-            synchronized (this)
-            {
                 try{
                     wait(2000);
                     if (tone != null) {
@@ -69,7 +67,6 @@ public class ToneNotification extends Notification {
                 catch (InterruptedException w){
                     w.printStackTrace();
                 }
-            }
             return super.onStartCommand(intent, flags, startId);
         }
 
