@@ -392,7 +392,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         selection.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_DEFAULT, true);
         selection.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, RingtoneManager.TYPE_NOTIFICATION);
         MapsActivity.this.startActivityForResult(selection, 456);
-        ToneNotification ex = new ToneNotification(name, selected, common, getApplicationContext(),base);
+        ToneNotification ex = new ToneNotification(name, selected,getApplicationContext());
         return ex;
     }
 
@@ -405,7 +405,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         selection.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_DEFAULT, true);
         selection.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, RingtoneManager.TYPE_NOTIFICATION);
         MapsActivity.this.startActivityForResult(selection, 456);
-        ToneNotification ex = new ToneNotification(name, selected, common, getApplicationContext(),base);
+        ToneNotification ex = new ToneNotification(name, selected, getApplicationContext());
         return ex;
     }
 

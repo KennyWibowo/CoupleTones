@@ -53,7 +53,7 @@ public class FirebaseFavoriteManager extends FirebaseManager {
                 JSONEntry child = dataSnapshot.getValue(JSONEntry.class);
                 PartnerFavoriteEntry favoriteEntry =
                         new PartnerFavoriteEntry(child.getName(),
-                                new LatLng(child.getLatitude(),child.getLongitude()));
+                                new LatLng(child.getLatitude(),child.getLongitude()), context);
 
                 partnerFavorites.add(favoriteEntry);
                 partnerSwipeAdapter.notifyDataSetChanged();
@@ -77,7 +77,7 @@ public class FirebaseFavoriteManager extends FirebaseManager {
             public void onChildRemoved(DataSnapshot dataSnapshot) {
                 JSONEntry child = dataSnapshot.getValue(JSONEntry.class);
                 PartnerFavoriteEntry partnerFavoriteEntry = new PartnerFavoriteEntry(child.getName(),
-                        new LatLng(child.getLatitude(),child.getLongitude()));
+                        new LatLng(child.getLatitude(),child.getLongitude()), context);
                 String nameHashCode = dataSnapshot.getKey();
 
                 for( int i = 0; i< partnerFavorites.size(); i++ ) {
