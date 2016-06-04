@@ -641,6 +641,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         CheckBox tones = (CheckBox) dialogView.findViewById(R.id.tone);
         CheckBox vibration = (CheckBox) dialogView.findViewById(R.id.vibration);
 
+        tones.setChecked(Settings.tonesEnabled());
+        vibration.setChecked(Settings.vibrationsEnabled());
+
         tones.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
