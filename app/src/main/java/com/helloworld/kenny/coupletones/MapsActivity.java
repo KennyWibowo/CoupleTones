@@ -107,6 +107,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private FirebaseHistoryManager firebaseHistoryManager;
     private FirebaseFavoriteManager firebaseFavoriteManager;
     private Settings settings;
+    private String selectedPartnerFavorite;
 
     private String PROJECT_NUMBER = "366742322722";
     private boolean autoRegistered = false;
@@ -155,7 +156,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         // setup left and right drawer adapters
         favoriteSwipeAdapter = new FavoriteSwipeAdapter<FavoriteEntry>(me, R.layout.favorites_view, R.id.listview_item_text, favorites.getAllEntries());
-        partnerSwipeAdapter = new FavoriteSwipeAdapter<PartnerFavoriteEntry>(me, R.layout.partner_favorites_view, R.id.listview_item_text, firebaseFavoriteManager.getPartnerFavorite());
+        partnerSwipeAdapter = new FavoriteSwipeAdapter<PartnerFavoriteEntry>(me, R.layout.partner_favorites_view, R.id.listview_favorite_name, firebaseFavoriteManager.getPartnerFavorite());
         partnerHistorySwipeAdapter = firebaseHistoryManager.getPartnerHistoryAdapter();
         rightDrawer.setAdapter(favoriteSwipeAdapter);
         listHistory.setAdapter(partnerHistorySwipeAdapter);
@@ -404,7 +405,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             {
                 Uri baseTone = data.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
                 selected = RingtoneManager.getRingtone(getApplicationContext(), baseTone);
-                name = baseTone.toString();
+                if(baseTone != null)
+                    name = baseTone.toString();
             }
         }
     }
@@ -645,6 +647,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      * @param view
      */
     public void buttonSelections(View view) {
+        TextView favoriteName = (TextView) ((GridLayout) view.getParent()).findViewById(R.id.listview_favorite_name);
+
         AlertDialog.Builder builder = new AlertDialog.Builder(MapsActivity.this);
         LayoutInflater inflater = this.getLayoutInflater();
         final View dialogView = inflater.inflate(R.layout.selections, null);
@@ -655,6 +659,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         AlertDialog selections = builder.create();
         selections.show();
+
+        selectedPartnerFavorite = favoriteName.getText().toString();
     }
 
     /**
@@ -698,7 +704,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      */
     public void buttonArrivalVibration(View view) {
         AlertDialog.Builder builder = new AlertDialog.Builder(MapsActivity.this);
-        TextView favoriteName = (TextView) ((GridLayout) view.getParent()).findViewById(R.id.listview_favorite_name);
 
         builder.setTitle("Pick an Arrival Vibration");
         builder.setCancelable(true);
@@ -722,7 +727,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         });
 
         VibrationNotification selectedNotification = vibrationPatternOptions.get(selected[0]);
-        String name = favoriteName.getText().toString();
+        String name = selectedPartnerFavorite;
         PartnerFavoriteEntry entry = null;
 
         ArrayList<PartnerFavoriteEntry> partnerFavorites = firebaseFavoriteManager.getPartnerFavorite();
