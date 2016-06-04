@@ -858,7 +858,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                 if(entry != null) {
                     System.out.println("Set departure vibration to " + selectedNotification.toString() + " for " + entry.getName());
-                    entry.setPartnerArrivedVibration(selectedNotification);
+                    entry.setPartnerDepartedVibration(selectedNotification);
                 } else {
                     System.out.println("Entry is null, but vibration is: " + selectedNotification.toString());
                     System.out.println("Selected entry: " + name);
