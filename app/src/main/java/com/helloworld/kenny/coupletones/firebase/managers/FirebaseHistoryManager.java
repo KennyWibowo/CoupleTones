@@ -228,6 +228,8 @@ public class FirebaseHistoryManager extends FirebaseManager {
 
     public void onFavoriteAdded(FavoriteEntry entry){}
 
+    public void onFavoriteDeleted(FavoriteEntry entry){}
+
     public class HistoryAdapter extends ArrayAdapter<PartnerFavoriteEntry> {
         Context context;
 

@@ -123,5 +123,6 @@ public class FirebaseRegistrationManager extends FirebaseManager {
 
     }
 
+    public void onFavoriteDeleted(FavoriteEntry entry) {}
 }
 
