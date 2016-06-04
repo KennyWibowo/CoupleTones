@@ -46,7 +46,6 @@ public class ToneNotification extends Notification {
             m.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                 @Override
                 public void onCompletion(MediaPlayer mp) {
-                    m.stop();
                     if (tone != null) {
                         tone.play();
                     }
