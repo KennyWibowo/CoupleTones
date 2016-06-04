@@ -26,8 +26,8 @@ public class DefaultNotifications {
         Ringtone common = RingtoneManager.getRingtone(context,base);
         Uri base1 = Uri.parse("android.resource://" + "com.helloworld.kenny.coupletones" + "/" + R.raw.wilhelm_reversed);
         Ringtone common1 = RingtoneManager.getRingtone(context,base1);
-        defaultArrivalTone = new ToneNotification("Default Tone", null, common, context);
-        defaultDepartureTone = new ToneNotification("Default Tone", null, common1,context);
+        defaultArrivalTone = new ToneNotification("Default Tone", null, common, context, base);
+        defaultDepartureTone = new ToneNotification("Default Tone", null, common1,context, base1);
 
     }
 
