@@ -21,26 +21,20 @@ public class ToneNotification extends Notification {
     private String name;
     Ringtone tone;
     Context context;
-    Ringtone standardTone;
     Uri uri;
 
 
 
-    public ToneNotification(String name, Ringtone tone, Ringtone standardTone, Context context, Uri uri) {
+    public ToneNotification(String name, Ringtone tone, Context context) {
         this.name = name;
         this.tone = tone;
         this.context = context;
-        this.standardTone = standardTone;
-        this.uri = uri;
     }
 
 
     public void play() {
-
-        Intent intent = new Intent(context, MediaService.class);
         if(Settings.tonesEnabled()) {
-            standardTone.play();
-            context.startService(intent);
+            tone.play();
         }
     }
 
@@ -50,38 +44,9 @@ public class ToneNotification extends Notification {
     }
 
     public Ringtone getTone() {
-        return standardTone;
+        return tone;
     }
 
-    class MediaService extends Service{
 
-        public MediaService(){
-
-        }
-
-        public int onStartCommand(Intent intent, int flags, int startId){
-                try{
-                    wait(2000);
-                    if (tone != null) {
-                        tone.play();
-                    }
-
-                }
-                catch (InterruptedException w){
-                    w.printStackTrace();
-                }
-            return super.onStartCommand(intent, flags, startId);
-        }
-
-        public IBinder onBind(Intent intent){
-            throw new UnsupportedOperationException("Not yet");
-        }
-
-        public void onDestroy() {
-            super.onDestroy();
-
-        }
-
-    }
 
 }

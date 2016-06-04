@@ -22,12 +22,8 @@ public class DefaultNotifications {
     public DefaultNotifications(Context context) {
         defaultArrivalVibration = new VibrationNotification("Default Vibration", DEFAULT_ARRIVAL_VIBRATION_PATTERN, context);
         defaultDepartureVibration = new VibrationNotification("Default Vibration", DEFAULT_DEPARTURE_VIBRATION_PATTERN, context);
-        Uri base = Uri.parse("android.resource://" + "com.helloworld.kenny.coupletones" + "/" + R.raw.wilhelm);
-        Ringtone common = RingtoneManager.getRingtone(context,base);
-        Uri base1 = Uri.parse("android.resource://" + "com.helloworld.kenny.coupletones" + "/" + R.raw.wilhelm_reversed);
-        Ringtone common1 = RingtoneManager.getRingtone(context,base1);
-        defaultArrivalTone = new ToneNotification("Default Tone", null, common, context, base);
-        defaultDepartureTone = new ToneNotification("Default Tone", null, common1,context, base1);
+        defaultArrivalTone = new ToneNotification("Default Tone", null,  context);
+        defaultDepartureTone = new ToneNotification("Default Tone", null, context);
 
     }
 
