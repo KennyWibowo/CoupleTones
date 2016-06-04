@@ -688,8 +688,26 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         builder.setTitle("Pick an Arrival Tone");
         builder.setCancelable(true);*/
-        selectToneArrival();
-        //TODO
+        ToneNotification newArrivalTone = selectToneArrival();
+        String name = selectedPartnerFavorite;
+        PartnerFavoriteEntry entry = null;
+        Toast.makeText(me, "Arrival tone set for " + selectedPartnerFavorite, Toast.LENGTH_SHORT).show();
+
+        ArrayList<PartnerFavoriteEntry> partnerFavorites = firebaseFavoriteManager.getPartnerFavorite();
+
+        for( int i = 0; i < partnerFavorites.size(); i++ ) {
+            if(partnerFavorites.get(i).getName().equals(name)) {
+                entry = partnerFavorites.get(i);
+            }
+        }
+
+        if(entry != null) {
+            System.out.println("Set arrival tone to " + newArrivalTone.toString() + " for " + entry.getName());
+            entry.setPartnerArrivedTone(newArrivalTone);
+        } else {
+            System.out.println("Entry is null, but tone is: " + newArrivalTone.toString());
+            System.out.println("Selected entry: " + name);
+        }
     }
 
     /**
@@ -705,8 +723,26 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         builder.setTitle("Pick an Arrival Tone");
         builder.setCancelable(true);*/
-        selectToneDeparture();
-        //TODO
+        ToneNotification newDepartureTone = selectToneDeparture();
+        String name = selectedPartnerFavorite;
+        PartnerFavoriteEntry entry = null;
+        Toast.makeText(me, "Departure tone set for " + selectedPartnerFavorite, Toast.LENGTH_SHORT).show();
+
+        ArrayList<PartnerFavoriteEntry> partnerFavorites = firebaseFavoriteManager.getPartnerFavorite();
+
+        for( int i = 0; i < partnerFavorites.size(); i++ ) {
+            if(partnerFavorites.get(i).getName().equals(name)) {
+                entry = partnerFavorites.get(i);
+            }
+        }
+
+        if(entry != null) {
+            System.out.println("Set departure tone to " + newDepartureTone.toString() + " for " + entry.getName());
+            entry.setPartnerArrivedTone(newDepartureTone);
+        } else {
+            System.out.println("Entry is null, but tone is: " + newDepartureTone.toString());
+            System.out.println("Selected entry: " + name);
+        }
     }
 
     /**
@@ -756,7 +792,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 }
 
                 if(entry != null) {
-                    System.out.println("Set departure vibration to " + selectedNotification.toString() + " for " + entry.getName());
+                    System.out.println("Set arrival vibration to " + selectedNotification.toString() + " for " + entry.getName());
                     entry.setPartnerArrivedVibration(selectedNotification);
                 } else {
                     System.out.println("Entry is null, but vibration is: " + selectedNotification.toString());
@@ -821,7 +857,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 }
 
                 if(entry != null) {
-                    System.out.println("Set arrival vibration to " + selectedNotification.toString() + " for " + entry.getName());
+                    System.out.println("Set departure vibration to " + selectedNotification.toString() + " for " + entry.getName());
                     entry.setPartnerArrivedVibration(selectedNotification);
                 } else {
                     System.out.println("Entry is null, but vibration is: " + selectedNotification.toString());
