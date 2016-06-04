@@ -226,9 +226,9 @@ public class FirebaseHistoryManager extends FirebaseManager {
         historyRef.removeEventListener(historyMultipleEventListner);
     }
 
-    public void onFavoriteAdded(FavoriteEntry entry){}
+    public void onFavoriteAdded(FavoriteEntry entry, int index){}
 
-    public void onFavoriteDeleted(FavoriteEntry entry){}
+    public void onFavoriteDeleted(FavoriteEntry entry, int index){}
 
     public class HistoryAdapter extends ArrayAdapter<PartnerFavoriteEntry> {
         Context context;

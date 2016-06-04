@@ -99,7 +99,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private Favorites favorites;
     private FavoriteSwipeAdapter<FavoriteEntry> favoriteSwipeAdapter;
-    private FavoriteSwipeAdapter<PartnerFavoriteEntry> partnerSwipeAdapter;
+    private ArrayAdapter<PartnerFavoriteEntry> partnerSwipeAdapter;
     private ArrayAdapter<PartnerFavoriteEntry> partnerHistorySwipeAdapter;
 
     private FirebaseService firebaseService;
@@ -157,7 +157,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         // setup left and right drawer adapters
         favoriteSwipeAdapter = new FavoriteSwipeAdapter<FavoriteEntry>(me, R.layout.favorites_view, R.id.listview_item_text, favorites.getAllEntries());
-        partnerSwipeAdapter = new FavoriteSwipeAdapter<PartnerFavoriteEntry>(me, R.layout.partner_favorites_view, R.id.listview_favorite_name, firebaseFavoriteManager.getPartnerFavorite());
+        partnerSwipeAdapter = firebaseFavoriteManager.getPartnerSwipeAdapter();
         partnerHistorySwipeAdapter = firebaseHistoryManager.getPartnerHistoryAdapter();
         rightDrawer.setAdapter(favoriteSwipeAdapter);
         listHistory.setAdapter(partnerHistorySwipeAdapter);
@@ -573,7 +573,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         // Delete the marker from the map, then the actual entry
         FavoriteEntry toDelete = favorites.getEntry(pos);
         System.out.println("Delete: "+toDelete.getName());
-        onDeleteFavoriteLocation(toDelete);
+        onDeleteFavoriteLocation(toDelete, pos);
         toDelete.getMarker().remove();
         favorites.deleteEntry(pos);
 
@@ -935,7 +935,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             favoriteSwipeAdapter.notifyDataSetChanged();
                             Marker marker = mMap.addMarker(new MarkerOptions().position(point).title(et.getText().toString()));
                             FavoriteEntry favoriteEntry = favorites.getEntry(favorites.size()-1);
-                            onAddedFavoriteLocation(favoriteEntry);
+                            onAddedFavoriteLocation(favoriteEntry, favorites.size()-1);
                             favoriteEntry.setMarker(marker);
                             Toast.makeText(me, "Favorite location added successfully", Toast.LENGTH_SHORT).show();
 
@@ -969,16 +969,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         firebaseService.visitLocation(entry);
     }
 
-    public void onAddedFavoriteLocation(FavoriteEntry entry) {
+    public void onAddedFavoriteLocation(FavoriteEntry entry, int index) {
         entry.visit();
         System.out.println("Favorite Location Added: " + entry.getName());
-        firebaseService.addFavorite(entry);
+        firebaseService.addFavorite(entry, index);
     }
 
-    public void onDeleteFavoriteLocation(FavoriteEntry entry) {
-        entry.visit();
+    public void onDeleteFavoriteLocation(FavoriteEntry entry, int index) {
         System.out.println("Favorite Location Deleted: " + entry.getName());
-        firebaseService.deleteFavorite(entry);
+        firebaseService.deleteFavorite(entry, index);
     }
 
     private SharedPreferences getPrefs() {

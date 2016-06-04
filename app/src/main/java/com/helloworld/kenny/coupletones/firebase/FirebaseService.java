@@ -86,15 +86,15 @@ public class FirebaseService {
         }
     }
 
-    public void addFavorite(FavoriteEntry entry){
+    public void addFavorite(FavoriteEntry entry, int index){
         for ( int i = 0; i <extraManagers.size();i++) {
-            extraManagers.get(i).onFavoriteAdded(entry);
+            extraManagers.get(i).onFavoriteAdded(entry, index);
         }
     }
 
-    public void deleteFavorite(FavoriteEntry entry) {
+    public void deleteFavorite(FavoriteEntry entry, int index) {
         for (int i = 0; i<extraManagers.size();i++) {
-            extraManagers.get(i).onFavoriteDeleted(entry);
+            extraManagers.get(i).onFavoriteDeleted(entry, index);
         }
     }
 }

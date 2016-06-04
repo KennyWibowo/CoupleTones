@@ -23,7 +23,7 @@ public abstract class FirebaseManager {
 
     public abstract void onLocationDeparted();
 
-    public abstract void onFavoriteAdded(FavoriteEntry entry);
+    public abstract void onFavoriteAdded(FavoriteEntry entry, int index);
 
-    public abstract void onFavoriteDeleted(FavoriteEntry entry);
+    public abstract void onFavoriteDeleted(FavoriteEntry entry, int index);
 }

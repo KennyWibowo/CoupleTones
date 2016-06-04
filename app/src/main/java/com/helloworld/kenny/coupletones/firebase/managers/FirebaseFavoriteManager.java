@@ -3,6 +3,7 @@ package com.helloworld.kenny.coupletones.firebase.managers;
 import android.content.Context;
 import android.content.Intent;
 
+import com.daimajia.swipe.adapters.ArraySwipeAdapter;
 import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
@@ -10,6 +11,7 @@ import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 import com.google.android.gms.maps.model.LatLng;
 import com.helloworld.kenny.coupletones.FavoriteSwipeAdapter;
+import com.helloworld.kenny.coupletones.R;
 import com.helloworld.kenny.coupletones.favorites.FavoriteEntry;
 import com.helloworld.kenny.coupletones.favorites.Favorites;
 import com.helloworld.kenny.coupletones.favorites.JSONEntry;
@@ -32,7 +34,7 @@ public class FirebaseFavoriteManager extends FirebaseManager {
     private ChildEventListener favoriteListner;
     //TODO: move adapter here and call "notifyDataSetChanged" on it when modifying arraylist
     private ValueEventListener partnerFavoriteEventListner;
-    private FavoriteSwipeAdapter<Favorites> favoriteSwipeAdapter;
+    private final FavoriteSwipeAdapter<PartnerFavoriteEntry> partnerSwipeAdapter;
     //private Favorites partnerFavorites;
     private final static ArrayList<PartnerFavoriteEntry> partnerFavorites = new ArrayList<>();
     private JSONEntry lastAddedFavorite;
@@ -44,6 +46,7 @@ public class FirebaseFavoriteManager extends FirebaseManager {
         this.root = new Firebase(FirebaseService.ENDPOINT);
         lastAddedFavorite = new JSONEntry();
         this.firebaseRegistrationManager = firebaseRegistrationManager;
+        this.partnerSwipeAdapter = new FavoriteSwipeAdapter<PartnerFavoriteEntry>(context, R.layout.partner_favorites_view, R.id.listview_favorite_name, partnerFavorites);
         favoriteListner = new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
@@ -53,6 +56,7 @@ public class FirebaseFavoriteManager extends FirebaseManager {
                                 new LatLng(child.getLatitude(),child.getLongitude()));
 
                 partnerFavorites.add(favoriteEntry);
+                partnerSwipeAdapter.notifyDataSetChanged();
 
 
                 // No need to notify user when partner added a new favorite location
@@ -74,17 +78,16 @@ public class FirebaseFavoriteManager extends FirebaseManager {
                 JSONEntry child = dataSnapshot.getValue(JSONEntry.class);
                 PartnerFavoriteEntry partnerFavoriteEntry = new PartnerFavoriteEntry(child.getName(),
                         new LatLng(child.getLatitude(),child.getLongitude()));
-                int i;
-                for(i=0;i<partnerFavorites.size();i++)
-                {
+                String nameHashCode = dataSnapshot.getKey();
 
-                    if(partnerFavorites.get(i).getName().equals(partnerFavoriteEntry.getName()))
-                    {
-                        System.out.println(partnerFavoriteEntry.getName());
-                        System.out.println(partnerFavorites.get(i).getName());
+                for( int i = 0; i< partnerFavorites.size(); i++ ) {
+                    if(nameHashCode.equals(partnerFavorites.get(i).getName().hashCode() + "")) {
                         partnerFavorites.remove(i);
+                        break;
                     }
                 }
+
+                partnerSwipeAdapter.notifyDataSetChanged();
                 Intent notifyUser =  new Intent(context, FirebaseNotificationIntentService.class);
                 notifyUser.putExtra("title", "Partner deleted a favorite location");
                 notifyUser.putExtra("content","Partner deleted: "+ partnerFavoriteEntry.getName());
@@ -102,7 +105,7 @@ public class FirebaseFavoriteManager extends FirebaseManager {
             }
         };
 
-        partnerFavoriteEventListner = new ValueEventListener() {
+        /*partnerFavoriteEventListner = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 ArrayList<PartnerFavoriteEntry> copy = new ArrayList<PartnerFavoriteEntry>();
@@ -120,14 +123,13 @@ public class FirebaseFavoriteManager extends FirebaseManager {
                 {
                     partnerFavorites.add(copy.get(i));
                 }
-                favoriteSwipeAdapter.notifyDataSetChanged();
             }
 
             @Override
             public void onCancelled(FirebaseError firebaseError) {
 
             }
-        };
+        };*/
     }
 
     public static PartnerFavoriteEntry getPartnerFavoriteEntry(String name) {
@@ -158,15 +160,16 @@ public class FirebaseFavoriteManager extends FirebaseManager {
 
     public void onPartnerCleared(String partnerKey) {
         partnerFavorites.clear();
+        partnerSwipeAdapter.notifyDataSetChanged();
         Firebase favoriteRef = root.child(partnerKey).child("favorite");
         favoriteRef.removeEventListener(favoriteListner);
     }
 
-    public void onFavoriteAdded(FavoriteEntry entry) {
+    public void onFavoriteAdded(FavoriteEntry entry, int index) {
         try {
             String key = firebaseRegistrationManager.getUserKey();
             lastAddedFavorite = new JSONEntry(entry);
-            Firebase favoriteEntryRef = root.child(key).child("favorite").child(lastAddedFavorite.getName());
+            Firebase favoriteEntryRef = root.child(key).child("favorite").child(entry.getName().hashCode() + "");
             System.out.println("Favorite uploaded: "+lastAddedFavorite.getName());
             favoriteEntryRef.setValue(new JSONEntry(entry));
 
@@ -175,13 +178,13 @@ public class FirebaseFavoriteManager extends FirebaseManager {
         }
     }
 
-    public void onFavoriteDeleted(FavoriteEntry entry) {
+    public void onFavoriteDeleted(FavoriteEntry entry, int index) {
         try {
             String key = firebaseRegistrationManager.getUserKey();
             lastDeletedFavorite = new JSONEntry(entry);
-            Firebase favoriteEntryRef = root.child(key).child("favorite").child(lastDeletedFavorite.getName());
+            Firebase favoriteEntryRef = root.child(key).child("favorite").child(entry.getName().hashCode() + "");
             favoriteEntryRef.removeValue();
-            System.out.println("Favorite Deleted: "+lastDeletedFavorite.getName());
+            System.out.println("Favorite Deleted: "+ lastDeletedFavorite.getName());
 
         }catch (UserNotRegisteredException e) {
 
@@ -199,5 +202,9 @@ public class FirebaseFavoriteManager extends FirebaseManager {
     public ArrayList<PartnerFavoriteEntry> getPartnerFavorite()
     {
         return partnerFavorites;
+    }
+
+    public ArraySwipeAdapter<PartnerFavoriteEntry> getPartnerSwipeAdapter() {
+        return partnerSwipeAdapter;
     }
 }

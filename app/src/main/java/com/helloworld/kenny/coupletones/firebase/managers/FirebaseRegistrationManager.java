@@ -119,10 +119,10 @@ public class FirebaseRegistrationManager extends FirebaseManager {
 
     }
 
-    public void onFavoriteAdded(FavoriteEntry entry) {
+    public void onFavoriteAdded(FavoriteEntry entry, int index) {
 
     }
 
-    public void onFavoriteDeleted(FavoriteEntry entry) {}
+    public void onFavoriteDeleted(FavoriteEntry entry, int index) {}
 }
 
