@@ -121,6 +121,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         DefaultNotifications defaultNotifications = new DefaultNotifications(this); //init default notifications
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
@@ -289,27 +290,23 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         long medium_gap = 500L;   // Length of Gap Between Letters
         long long_gap = 1000L;    // Length of Gap Between Words
 
-        long[] default_arrive = {no_gap, dash};
-        long[] default_depart = {no_gap, dot, short_gap, dash};
+        long[] default_arrive = {no_gap, 500L};
+        long[] default_depart = {no_gap, 750L};
         long[] heartbeat = {medium_gap, dot, short_gap, dot};
-        long[] DEFAULT_4 = {0L, 1250L};
-        long[] DEFAULT_5 = {0L, 1500L};
-        long[] DEFAULT_6 = {0L, 1750L};
-        long[] DEFAULT_7 = {0L, 2000L};
-        long[] DEFAULT_8 = {0L, 2500L};
-        long[] DEFAULT_9 = {0L, 3000L};
-        long[] DEFAULT_10 = {0L,3250L};
+        long[] dot_doot = {no_gap, dot, short_gap, dash};
+        long[] doot_doot = {no_gap, dash, short_gap, dash};
+        long[] doot_dot = {no_gap, dash, short_gap, dot};
+        long[] dot_dot = {no_gap, dot, short_gap, dot};
+        long[] sos = {no_gap, dot, short_gap, dot, short_gap, dot, medium_gap, dash, short_gap, dash, short_gap, dash, medium_gap, dot, short_gap, dot, short_gap, dot};
         vibrationPatternOptions = new ArrayList<VibrationNotification>();
         vibrationPatternOptions.add(0,new VibrationNotification("Default Arrival", default_arrive, getApplicationContext()));
         vibrationPatternOptions.add(1,new VibrationNotification("Default Departure", default_depart, getApplicationContext()));
         vibrationPatternOptions.add(2,new VibrationNotification("Heartbeat", default_depart, getApplicationContext()));
-        vibrationPatternOptions.add(3,new VibrationNotification("default4", DEFAULT_4, getApplicationContext()));
-        vibrationPatternOptions.add(4,new VibrationNotification("default5", DEFAULT_5, getApplicationContext()));
-        vibrationPatternOptions.add(5,new VibrationNotification("default6", DEFAULT_6, getApplicationContext()));
-        vibrationPatternOptions.add(6,new VibrationNotification("default7", DEFAULT_7, getApplicationContext()));
-        vibrationPatternOptions.add(7,new VibrationNotification("default8", DEFAULT_8, getApplicationContext()));
-        vibrationPatternOptions.add(8,new VibrationNotification("default9", DEFAULT_9, getApplicationContext()));
-        vibrationPatternOptions.add(9,new VibrationNotification("default10", DEFAULT_10, getApplicationContext()));
+        vibrationPatternOptions.add(3,new VibrationNotification("Dot Doot", dot_doot, getApplicationContext()));
+        vibrationPatternOptions.add(4,new VibrationNotification("Doot Doot", doot_doot, getApplicationContext()));
+        vibrationPatternOptions.add(5,new VibrationNotification("Doot Dot", doot_dot, getApplicationContext()));
+        vibrationPatternOptions.add(6,new VibrationNotification("Dot Dot", dot_dot, getApplicationContext()));
+        vibrationPatternOptions.add(7,new VibrationNotification("Save Our Souls", sos, getApplicationContext()));
 
     }
 
@@ -759,7 +756,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 }
 
                 if(entry != null) {
-                    System.out.println("Set vibration to " + selectedNotification.toString() + " for " + entry.getName());
+                    System.out.println("Set departure vibration to " + selectedNotification.toString() + " for " + entry.getName());
                     entry.setPartnerArrivedVibration(selectedNotification);
                 } else {
                     System.out.println("Entry is null, but vibration is: " + selectedNotification.toString());
@@ -824,7 +821,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 }
 
                 if(entry != null) {
-                    System.out.println("Set vibration to " + selectedNotification.toString() + " for " + entry.getName());
+                    System.out.println("Set arrival vibration to " + selectedNotification.toString() + " for " + entry.getName());
                     entry.setPartnerArrivedVibration(selectedNotification);
                 } else {
                     System.out.println("Entry is null, but vibration is: " + selectedNotification.toString());
